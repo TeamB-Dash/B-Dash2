@@ -40,6 +40,8 @@ services:
     volumes:
       - "./db1:/var/lib/postgresql/data"
       - "./work:/work"
+    ports:
+      - 5432:5432
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=${POSTGRES_HOST_AUTH_METHOD}"
       - "POSTGRES_USER=${POSTGRES_USER}"
