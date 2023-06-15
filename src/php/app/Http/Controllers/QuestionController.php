@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Question;
+use App\Models\User;
+use Illuminate\Auth;
 use Illuminate\Http\Request;
 
 class QuestionController extends Controller
@@ -14,7 +16,10 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        return view('Questions/index');
+        $user = User::where('id',1)->first();
+        $hoge = null;
+        $fuga = null;
+        return view('Questions/index',compact('user'));
     }
 
     /**
