@@ -16,10 +16,11 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        $user = User::where('id',1)->first();
-        $hoge = null;
-        $fuga = null;
-        return view('Questions/index',compact('user'));
+        // $user = User::where('id',1)->first();
+        // $questions = Question::where('is_deleted',false)->orderBy('created_at','desc')->paginate(5);
+        $questions = Question::with(['user','tags'])->where('is_deleted',false)->orderBy('created_at','desc')->paginate(5);
+        // dd($questions);
+        return view('Questions/index',compact('questions'));
     }
 
     /**
