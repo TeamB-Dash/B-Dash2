@@ -18,7 +18,7 @@ class QuestionController extends Controller
     {
         // $user = User::where('id',1)->first();
         // $questions = Question::where('is_deleted',false)->orderBy('created_at','desc')->paginate(5);
-        $questions = Question::with(['user','tags'])->where('is_deleted',false)->orderBy('created_at','desc')->paginate(5);
+        $questions = Question::with(['user','tags'])->where('is_deleted',false)->orderBy('created_at','desc')->paginate(2);
         // dd($questions);
         return view('Questions/index',compact('questions'));
     }

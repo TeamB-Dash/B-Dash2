@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Question;
+use App\Models\Department;
 
 class User extends Authenticatable
 {
@@ -46,5 +47,10 @@ class User extends Authenticatable
     // Questionへの関連を定義
     public function questions(){
         return $this->hasMany(Question::class);
+    }
+
+    // Departmentへの関連を定義
+    public function department(){
+        return $this->belongsTo(Department::class);
     }
 }
