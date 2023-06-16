@@ -605,12 +605,12 @@
                                     {{-- @if($report->shipped_at) --}}
                                     <a class="list-group-item" href="/monthly_reports/3769">
                                         <span>【</span>
-                                        <span class="tag label label-success">CL</span>
+                                        <span class="tag label label-success">{{$report->department_name}}</span>
                                         <span>{{ $report->entry_date->format('Y')}}年{{ $report->entry_date->format('m')}}月入社</span>
                                         <span>】</span>
                                         <span class="glyphicon glyphicon-user"></span>
                                         
-                                        <span>{{ $report->name }}</span>
+                                        <span>{{ $report->user_name }}</span>
                                         <span> - {{ $report->target_month->format('Y')}}年{{ $report->target_month->format('m')}}月分</span>
                                         <br class="visible-xs-block" />
                                         <div class="visible-xs-inline">　</div>
