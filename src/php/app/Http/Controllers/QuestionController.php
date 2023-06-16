@@ -55,10 +55,9 @@ class QuestionController extends Controller
                 'is_deleted' =>false,
                 'answer_count' => 0,
             ]);
-            $tags = $request->tags;
-            $question->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
+            $question->tags()->syncWithPivotValues($request->tags,['is_deleted' => false]);
             DB::commit();
-            return view('dashboard');
+            return to_route('questions.index');
         }catch(\Exception $e){
             DB::rollBack();
         }
