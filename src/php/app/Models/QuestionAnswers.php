@@ -10,14 +10,6 @@ class QuestionAnswers extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'answer',
-    ];
 
     // Questionへの関連を定義
     public function question(){

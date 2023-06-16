@@ -12,13 +12,21 @@ class Question extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'title',
+        'body',
+        'answer_count',
+        'is_deleted',
+    ];
+
     // Userへの関連を定義
     public function user(){
         return $this->belongsTo(User::class);
     }
     // Tagへの関連を定義
     public function tags(){
-        return $this->belongsToMany(Tag::class,'question_tags');
+        return $this->belongsToMany(Tag::class,'question_tags')->withTimestamps();
     }
     // QuestionAnswersへの関連を定義
     public function questionAnswers(){

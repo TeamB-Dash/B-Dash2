@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Question;
+use App\Models\Tag;
 use App\Models\User;
-use Illuminate\Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class QuestionController extends Controller
 {
@@ -30,7 +32,8 @@ class QuestionController extends Controller
      */
     public function create()
     {
-        return view('Questions/create');
+        $tags = Tag::where('status',1)->inRandomOrder()->take(10)->get();
+        return view('Questions/create',compact('tags'));
     }
 
     /**
@@ -41,7 +44,24 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        // DB::beginTransaction();
+        // try{
+            $user = Auth::user();
+            $question = Question::create([
+                'user_id' => $user->id,
+                'title' => $request->title,
+                'body' => $request->content,
+                'is_deleted' =>false,
+                'answer_count' => 0,
+            ]);
+        // dd($request->tags);
+            $question->tags()->sync($request->tags);
+            // DB::commit();
+            return view('dashboard');
+        // }catch(\Exception $e){
+        //     DB::rollBack();
+        // }
     }
 
     /**
