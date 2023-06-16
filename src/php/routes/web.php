@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MonthlyReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,3 +30,6 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// 月報関連のルート
+Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name('monthlyReport.index');

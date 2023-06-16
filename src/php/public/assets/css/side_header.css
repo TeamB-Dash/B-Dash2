@@ -1,0 +1,32 @@
+@charset "UTF-8";
+.side_scroll{
+	overflow-y: auto; 
+	overflow-x: hidden;
+
+/*IE(Internet Explorer)・Microsoft Edgeへの対応*/
+	-ms-overflow-style: none;
+	
+/*Firefoxへの対応*/
+	 scrollbar-width: none;
+}
+
+/*Google Chrome、Safariへの対応*/
+.side_scroll::-webkit-scrollbar{
+	display: none;
+}
+
+/*通知ボタン*/
+.notification{
+  position: absolute;   
+  margin-left: 10px;
+  /*color:  #DD4814;  */
+  color:  blue;            
+  font-weight: bold;      
+  line-height: 20px;      
+  text-align: center;     
+  background:white;   
+  border-radius: 10px;    
+  min-width: 20px;       
+  padding: 0 3px;         
+  box-sizing: border-box; 
+}

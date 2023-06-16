@@ -1,0 +1,16 @@
+@charset "UTF-8";
+tr[id^="month-"] {
+   display: none;
+}
+
+#delete-monthly-report-form{
+	display: inline;
+	margin-right: 5px;
+}
+
+.report-profimgList{
+	border-radius: 50%;
+	height: 20px;
+	width: 20px;
+	object-fit: cover;
+}

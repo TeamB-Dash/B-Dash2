@@ -41,4 +41,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // 日付フォーマットエラー回避のための定義
+    protected $dates = [
+        'entry_date',
+    ];
 }
