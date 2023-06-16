@@ -26,7 +26,7 @@ class Question extends Model
     }
     // Tagへの関連を定義
     public function tags(){
-        return $this->belongsToMany(Tag::class,'question_tags')->withTimestamps();
+        return $this->belongsToMany(Tag::class,'question_tags')->where('is_deleted','=',false)->withTimestamps();
     }
     // QuestionAnswersへの関連を定義
     public function questionAnswers(){

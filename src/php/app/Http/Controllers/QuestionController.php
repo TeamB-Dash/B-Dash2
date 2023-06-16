@@ -45,8 +45,8 @@ class QuestionController extends Controller
     public function store(Request $request)
     {
 
-        // DB::beginTransaction();
-        // try{
+        DB::beginTransaction();
+        try{
             $user = Auth::user();
             $question = Question::create([
                 'user_id' => $user->id,
@@ -55,13 +55,13 @@ class QuestionController extends Controller
                 'is_deleted' =>false,
                 'answer_count' => 0,
             ]);
-        // dd($request->tags);
-            $question->tags()->sync($request->tags);
-            // DB::commit();
+            $tags = $request->tags;
+            $question->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
+            DB::commit();
             return view('dashboard');
-        // }catch(\Exception $e){
-        //     DB::rollBack();
-        // }
+        }catch(\Exception $e){
+            DB::rollBack();
+        }
     }
 
     /**

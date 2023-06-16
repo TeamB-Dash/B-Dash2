@@ -13,6 +13,6 @@ class Tag extends Model
 
     // Questionへの関連を定義
     public function questions(){
-        return $this->belongsToMany(Question::class,'question_tags')->withTimestamps();
+        return $this->belongsToMany(Question::class,'question_tags')->where('is_deleted','=',false)->withTimestamps();
     }
 }
