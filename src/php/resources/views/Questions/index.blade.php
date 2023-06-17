@@ -39,7 +39,7 @@
                   </svg>{{ $question->questionAnswers->count() }}
                 </span>
               </div>
-              <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4">{{$question->title}}</h2>
+              <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4"><a href="{{route('questions.show',['question' => $question->id])}}">{{$question->title}}</a></h2>
               <p class="leading-relaxed mb-8">{{$question->body}}</p>
             </div>
             @endforeach
