@@ -49,7 +49,7 @@ class User extends Authenticatable
     ];
 
     // monthly_reportsテーブルと紐付け
-    // public function monthlyReports() {
-    //     return $this->hasMany(MonthlyReport::class);
-    // }
+    public function monthlyReports() {
+        return $this->hasMany(MonthlyReport::class);
+    }
 }

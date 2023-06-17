@@ -602,21 +602,22 @@
                             <div class="list-group monthly-report-index">
 
                                     @foreach ($reports as $report)
-                                    {{-- @if($report->shipped_at) --}}
-                                    <a class="list-group-item" href="/monthly_reports/3769">
+                                    {{-- <a class="list-group-item" href="{{ route('monthlyReport.show', $report->mr_id)}}"> --}}
                                         <span>【</span>
-                                        <span class="tag label label-success">{{$report->department_name}}</span>
-                                        <span>{{ $report->entry_date->format('Y')}}年{{ $report->entry_date->format('m')}}月入社</span>
+                                        <span class="tag label label-success">{{ $report->user->department_name }}</span>
+                                        <span>{{ $report->user->entry_date->format('Y')}}年{{ $report->user->entry_date->format('m')}}月入社</span>
                                         <span>】</span>
                                         <span class="glyphicon glyphicon-user"></span>
                                         
-                                        <span>{{ $report->user_name }}</span>
+                                        <span>{{ $report->user->name }}</span>
                                         <span> - {{ $report->target_month->format('Y')}}年{{ $report->target_month->format('m')}}月分</span>
                                         <br class="visible-xs-block" />
                                         <div class="visible-xs-inline">　</div>
                                         <small class="monthly-report-shipped-at text-muted hidden-xs">投稿日: {{ $report->shipped_at->format('Y-m-d') }}</small>
                                         <div class="pull-right">
-                                            <span class="tag label label-success">Linux</span><span class="tag label label-success">AWS</span><span class="tag label label-success">Terraform</span>
+                                            
+                                            <span class="tag label label-success">タグ</span>
+                                            
                                             <span class="comments_count">
                                                 <span aria-hidden="true" class="glyphicon glyphicon-comment"></span>
                                                 <span>1</span>
@@ -630,7 +631,6 @@
                                         <!-- プロジェクト概要 10文字以上の場合、9文字目まで表示させて、それ以降は「...」と表示 -->
                                         <h4>{{ Str::limit($report->project_summary, 30, '...') }}</h4>
                                             <!-- それ以外は普通に表示 -->
-                                            {{-- @endif --}}
                                             @endforeach            
                             </div>
                             {{-- {{ $reports->links() }} --}}

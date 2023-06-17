@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class MonthlyReport extends Model
 {
     use HasFactory;
+    
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 
     // 日付フォーマットエラー回避のための定義
     protected $dates = [
@@ -17,8 +21,4 @@ class MonthlyReport extends Model
         'entry_date',
     ];
 
-    // userと紐付け
-    // public function user() {
-    //     return $this->belognsTo(User::class);
-    // }
 }
