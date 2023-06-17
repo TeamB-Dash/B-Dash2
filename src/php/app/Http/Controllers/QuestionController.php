@@ -83,7 +83,10 @@ class QuestionController extends Controller
      */
     public function edit(Question $question)
     {
-        //
+        $tags = Tag::where('status',1)->inRandomOrder()->take(10)->get();
+        $question = Question::find($question->id);
+        // dd($question);
+        return view('Questions.edit',compact('question','tags'));
     }
 
     /**

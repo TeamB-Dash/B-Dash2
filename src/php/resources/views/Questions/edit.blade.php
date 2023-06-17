@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        質問投稿
+        質問編集
         </h2>
     </x-slot>
 
@@ -42,11 +42,12 @@
                         <div
                             class="mb-6 min-h-[1.5rem] items-center justify-center pl-[1.5rem]">
                             <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">質問内容</label>
-                            <textarea id="message" name="content" rows="30" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
+                            <textarea id="message" name="content" rows="30" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here...">{{$question->body}}</textarea>
                         </div>
 
 
                         <!--Submit button-->
+                        @if ($question->shipped_at !== null)
                         <button
                         type="submit"
                         data-te-ripple-init
@@ -55,6 +56,8 @@
                         style="background-color: #f21dab">
                         下書き保存する
                         </button>
+                        @endif
+
                         <button
                         type="submit"
                         data-te-ripple-init
