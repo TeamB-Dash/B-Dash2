@@ -108,4 +108,23 @@ class QuestionController extends Controller
     {
         //
     }
+
+    public function showMyQuestions($id){
+        $user = User::find($id);
+        $questions =  Question::with(['user','tags','questionAnswers'])
+        ->where('is_deleted','=',false)->where('user_id','=',$user->id)
+        ->orderBy('created_at','desc')
+        ->paginate(2);
+
+        return view('Questions/myQuestions',compact('questions'));
+    }
+
+    public function showMyDraftQuestions($id){
+        $user = User::find($id);
+        $questions =  Question::with(['user','tags','questionAnswers'])
+        ->whereNotNull('shipped_at')->where('user_id','=',$user->id)
+        ->orderBy('created_at','desc')
+        ->paginate(2);
+        return view('Questions/myDraftQuestions',compact('questions'));
+    }
 }
