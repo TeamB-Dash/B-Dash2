@@ -48,6 +48,7 @@
                             @endforeach
                         </div>
 
+                        <!--Body-->
                         <div
                             class="mb-6 min-h-[1.5rem] items-center justify-center pl-[1.5rem]">
                             <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">質問内容</label>

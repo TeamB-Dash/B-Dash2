@@ -8,6 +8,11 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                {{-- 自分の質問だったら編集ができる --}}
+                @if ($user->id === Auth::user()->id)
+                {{-- <x-answerpanel></x-answerpanel> --}}
+                {{-- 自分以外の質問だったら表示のみ --}}
+                @else
                 <div>
                     <a class="inline-flex items-center">
                     <img alt="blog" src="https://dummyimage.com/104x104" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
@@ -29,7 +34,11 @@
                     <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
                 </svg>{{ $question->questionAnswers->count() }}
                 </span>
+                @endif
             </div>
+
+
+            {{-- 質問に紐づく回答を表示 --}}
             <h3
             class="mt-4 mb-6 ml-3 text-2xl font-bold text-neutral-700 dark:text-neutral-300">
             {{ $question->questionAnswers->count() }}件の回答

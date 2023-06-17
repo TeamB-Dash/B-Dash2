@@ -116,7 +116,8 @@ class QuestionController extends Controller
         ->orderBy('created_at','desc')
         ->paginate(2);
 
-        return view('Questions/myQuestions',compact('questions'));
+        $answers = 'test';
+        return view('Questions/myQuestions',compact('questions','answers'));
     }
 
     public function showMyDraftQuestions($id){
@@ -125,6 +126,7 @@ class QuestionController extends Controller
         ->whereNotNull('shipped_at')->where('user_id','=',$user->id)
         ->orderBy('created_at','desc')
         ->paginate(2);
+
         return view('Questions/myDraftQuestions',compact('questions'));
     }
 }
