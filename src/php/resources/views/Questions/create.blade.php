@@ -19,6 +19,12 @@
                         </div>
 
                         <!--Tag input-->
+                        <div id="tagForm" class="mb-6">
+                            <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">tag</label>
+                            <button type="button" id="addTagForm">入力欄を増やす</button><br>
+                            <label>タグ（最低1つ）：</label>
+                            <input type="text" name="tag[]" id="tag" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                        </div>
                         <div class="flex flex-wrap relative mb-6 flex justify-center" data-te-input-wrapper-init>
                             <!--First checkbox-->
                             @foreach ($tags as $tag )
@@ -28,7 +34,7 @@
                                 name="tags[]"
                                 type="checkbox"
                                 id="inlineCheckbox1"
-                                value="{{$tag->id}}" />
+                                value="{{$tag->name}}" />
                                 <label
                                 class="inline-block pl-[0.15rem] hover:cursor-pointer"
                                 for=""
@@ -68,4 +74,19 @@
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById("addTagForm").addEventListener("click", () => {
+
+        const newForm = document.createElement("input");
+        newForm.type = "text";
+        newForm.className = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
+        newForm.setAttribute('name','tags[]');
+
+        const newLabel = document.createElement("label");
+        newLabel.textContent = "タグ：";
+
+        newLabel.appendChild(newForm);
+        document.getElementById("tagForm").appendChild(newLabel);
+    });
+    </script>
 </x-app-layout>
