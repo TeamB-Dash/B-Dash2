@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
+use App\Models\User;
 
 class ArticleController extends Controller
 {
@@ -12,11 +14,30 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::all()->sortByDesc('created_at');
+        // $articles = Article::all()->sortByDesc('created_at')->paginate(20);
+        $articles = Article::query()
+    ->orderByDesc('created_at')
+    ->paginate(20);
 
-        return view('articles.index', compact('articles'));
+    $keyword = $request->input('keyword');
+
+        $query = Article::query();
+
+
+        if(!empty($keyword)) {
+            $query->where('title', 'LIKE', "%{$keyword}%")
+                ->orWhere('body', 'LIKE', "%{$keyword}%");
+            $query->orWhereHas('user', function ($q) use ($keyword) {
+                    $q->where('name', 'LIKE', "%{$keyword}%");
+                });
+                
+                $articles = $query->paginate(20);
+        }
+
+
+        return view('articles.index', compact('articles', 'keyword'));
     }
 
     /**
@@ -26,7 +47,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        //
+        return view('articles.create');    
     }
 
     /**
@@ -35,9 +56,12 @@ class ArticleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ArticleRequest $request, Article $article)
     {
-        //
+        $article->fill($request->all());
+        // $article->user_id = $request->user()->id;
+        $article->save();
+        return redirect()->route('articles.index');
     }
 
     /**
@@ -46,9 +70,9 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Article $article)
     {
-        //
+        return view('articles.show', ['article' => $article]);
     }
 
     /**
@@ -83,5 +107,17 @@ class ArticleController extends Controller
     public function destroy($id)
     {
         //
+    }
+    // public function myblog(int $id)
+    public function myblog(int $id)
+    {
+        $user = User::where('id', $id)->first();
+        $articles = $user->articles;
+        // ->orderByDesc('created_at')->paginate(20);
+        
+        return view('articles.myblog', [
+            'user' => $user,
+            'articles' => $articles,
+        ]);
     }
 }

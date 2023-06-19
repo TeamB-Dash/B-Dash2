@@ -105,16 +105,13 @@
 			<!-- 		menuここまで  -->
 			<div class="ml-par20 col-sm-6">
 				<div class="page-header">
-					<h1>最新ブログ一覧</h1>
+					<h1>マイブログ一覧</h1>
 				</div>
 				<div class="article-user">
 					
-	
 					<!-- /* ブログ削除時メッセージ */ -->
-					
 					<!-- /* バッジ剥奪時メッセージ */ -->
-					
-					
+						
 		  			<div class="page-content mt-15px">
 						<!-- ブログ一覧 -->
 
@@ -147,7 +144,7 @@
                             @endforeach 
                           </div>	
                           <!-- ページング -->
-                          {{$articles->links('pagination::bootstrap-4')}}
+                          {{-- {{$articles->links('pagination::bootstrap-4')}} --}}
                         </div>
                     </div>
                 </div>
@@ -157,14 +154,6 @@
 	  		</div>
 			
 			<!-- side content -->
-			<div id="sideContent" class="col-sm-3" style="height: 2492px;">
-				<div class="m-search sticky">
-                    <div>
-                        <form action="{{ route('articles.index') }}" method="GET">
-                          <input type="text" name="keyword" value="{{ $keyword }}">
-                          <input type="submit" value="検索">
-                        </form>
-                      </div>
 					{{-- <div class="text-center" style="margin-bottom:1.5rem">
 						<span>
 							<a class="text-info side-dep" href="/articles?articleDepartmentId=1">【 WEB 】</a>
