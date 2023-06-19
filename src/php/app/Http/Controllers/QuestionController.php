@@ -18,10 +18,7 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        // $user = User::where('id',1)->first();
-        // $questions = Question::where('is_deleted',false)->orderBy('created_at','desc')->paginate(5);
         $questions = Question::with(['user','tags','questionAnswers'])->where('is_deleted',false)->orderBy('created_at','desc')->paginate(2);
-        // dd($questions);
         return view('Questions/index',compact('questions'));
     }
 
@@ -32,8 +29,7 @@ class QuestionController extends Controller
      */
     public function create()
     {
-        $tags = Tag::where('status',1)->inRandomOrder()->take(10)->get();
-        return view('Questions/create',compact('tags'));
+        return view('Questions/create');
     }
 
     /**
@@ -44,7 +40,6 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
         DB::beginTransaction();
         try{
             $user = Auth::user();
@@ -83,9 +78,9 @@ class QuestionController extends Controller
      */
     public function edit(Question $question)
     {
-        $tags = Tag::where('status',1)->inRandomOrder()->take(10)->get();
-        $question = Question::find($question->id);
+        $question = Question::with(['tags'])->find($question->id);
         // dd($question);
+        $tags = $question->tags;
         return view('Questions.edit',compact('question','tags'));
     }
 
