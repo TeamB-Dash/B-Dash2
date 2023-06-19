@@ -224,6 +224,33 @@
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('profile.edit')">
+                    月報トップ
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('profile.edit')">
+                    月報編集
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('profile.edit')">
+                    マイ月報
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('profile.edit')">
+                    ブログ新規投稿
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('profile.edit')">
+                    お気に入りブログ
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('profile.edit')">
+                    マイブログ
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('questions.index')">
+                    Q&A一覧
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('questions.create')">
+                    質問投稿
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('questions.showMyQuestions',Auth::user()->id)">
+                    マイ質問
+                </x-responsive-nav-link>
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
