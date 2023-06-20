@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\User;
 use App\Models\MonthlyReport;
 use Illuminate\Http\Request;	
@@ -89,11 +90,13 @@ class MonthlyReportController extends Controller
                             ->whereNotNull('shipped_at')
                             ->orderBy('shipped_at', 'desc')
                             ->paginate(10);
+        
+        $user = Department::with(['user'])->get();
         // dd($reports);
 
 
 
-        return view('monthlyReport.top', compact('reports'));
+        return view('monthlyReport.top', compact('reports', 'user'));
     }
 
     public function create() {

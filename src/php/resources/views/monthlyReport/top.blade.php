@@ -604,7 +604,7 @@
                                     @foreach ($reports as $report)
                                     {{-- <a class="list-group-item" href="{{ route('monthlyReport.show', $report->mr_id)}}"> --}}
                                         <span>【</span>
-                                        <span class="tag label label-success">{{ $report->user->department_name }}</span>
+                                        <span class="tag label label-success">職種</span>
                                         <span>{{ $report->user->entry_date->format('Y')}}年{{ $report->user->entry_date->format('m')}}月入社</span>
                                         <span>】</span>
                                         <span class="glyphicon glyphicon-user"></span>
@@ -616,17 +616,18 @@
                                         <small class="monthly-report-shipped-at text-muted hidden-xs">投稿日: {{ $report->shipped_at->format('Y-m-d') }}</small>
                                         <div class="pull-right">
                                             
-                                            <span class="tag label label-success">タグ</span>
+                                            @foreach($report->tags as $tag)
+                                            <span class="tag label label-success">{{ $tag->name }}</span>
+                                            @endforeach
                                             
-                                            <span class="comments_count">
+                                            {{-- <span class="comments_count">
                                                 <span aria-hidden="true" class="glyphicon glyphicon-comment"></span>
                                                 <span>1</span>
                                             </span>
-                                            <span class="likes_count">
-                                                
+                                            <span class="likes_count">    
                                                 <span aria-hidden="true" class="glyphicon glyphicon-thumbs-up"></span>
                                                 <span>5</span>
-                                            </span>
+                                            </span> --}}
                                         </div>
                                         <!-- プロジェクト概要 10文字以上の場合、9文字目まで表示させて、それ以降は「...」と表示 -->
                                         <h4>{{ Str::limit($report->project_summary, 30, '...') }}</h4>

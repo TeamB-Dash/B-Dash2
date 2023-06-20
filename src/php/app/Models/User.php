@@ -52,4 +52,9 @@ class User extends Authenticatable
     public function monthlyReports() {
         return $this->hasMany(MonthlyReport::class);
     }
+
+    // departmentsテーブルと紐付け
+    public function department() {
+        return $this->belognsTo(Department::class);
+    }
 }
