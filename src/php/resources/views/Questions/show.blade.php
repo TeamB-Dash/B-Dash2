@@ -7,10 +7,35 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white pt-2 pl-3 overflow-hidden shadow-sm sm:rounded-lg">
                 {{-- 自分の質問だったら編集ができる --}}
-                @if ($question->user->id === Auth::user()->id)
-                <a href="{{route('questions.edit',$question->id)}}">編集する</a>
+                <div>
+                    @if ($question->user->id === Auth::user()->id)
+                        @if(isset($question->shipped_at))
+                        <div class="rounded mb-2 rounded px-6 py-2.5 text-s text-center font-medium uppercase text-white" style="background-color:rgb(11, 146, 51)">公開済み</div>
+                        @else
+                        <div class="rounded mb-2 rounded px-6 py-2.5 text-s text-center font-medium uppercase text-white" style="background-color:rgb(142, 11, 146)">下書き</div>
+                        @endif
+                    <div>
+                    <button
+                    type="button"
+                    onclick="location.href='{{ route('questions.edit',$question->id) }}' "
+                    class="inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                    style="background-color:rgb(11, 146, 51)"
+                    data-te-ripple-init
+                    data-te-ripple-color="light">
+                    編集する
+                    </button>
+                    <button
+                    type="button"
+                    onclick="location.href='{{ route('questions.destroy',$question->id) }}' "
+                    class="inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                    style="background-color:rgb(241, 45, 45)"
+                    data-te-ripple-init
+                    data-te-ripple-color="light">
+                    削除する
+                    </button>
+                </div>
                 {{-- <x-answerpanel></x-answerpanel> --}}
                 <div>
                     <a class="inline-flex items-center">

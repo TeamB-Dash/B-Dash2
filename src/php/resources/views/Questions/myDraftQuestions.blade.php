@@ -31,7 +31,7 @@
                 <img alt="blog" src="https://dummyimage.com/104x104" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
                 <span class="flex-grow flex flex-col pl-4">
                     <span class="title-font font-medium text-gray-900">{{ $question->user->name }}</span>
-                    <span class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $question->created_at->format('Y-m-d')  }}</span><span>【{{$question->user->department->name}}】</span>
+                    <span class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $question->updated_at->format('Y-m-d')  }}に保存</span><span>【{{$question->user->department->name}}】</span>
                 </span>
                 </a>
                 @foreach ($question->tags as $tag )

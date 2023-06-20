@@ -10,6 +10,9 @@ class Tag extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name'
+    ];
 
     // Questionへの関連を定義
     public function questions(){

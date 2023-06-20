@@ -9,7 +9,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="mx-auto block max-w-lg rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-                    <form method="POST" action="{{ route('questions.store') }}">
+                    <form method="post" action="{{ route('questions.update',$question->id) }}">
+                        @method('PUT')
                         @csrf
                         <div class="grid grid-cols-1 gap-4">
                         <!--Title input-->
@@ -45,9 +46,6 @@
 
                             <button type="button" id="addTagBtn" class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg text-white" style="background-color:rgba(107, 159, 29, 0.89)">タグを増やす</button><br>
                             <div class="tag-item">
-                                <label>タグ：
-                                <input type="text" name="tags[]" id="tag" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
-                                </label>
                             </div>
                         </div>
 
@@ -60,25 +58,40 @@
 
 
                         <!--Submit button-->
-                        @if ($question->shipped_at !== null)
-                        <button
-                        type="submit"
-                        data-te-ripple-init
-                        data-te-ripple-color="light"
-                        class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
-                        style="background-color: #f21dab">
-                        下書き保存する
-                        </button>
+                        @if (isset($question->shipped_at))
+                            <button
+                            name="update"
+                            value="update"
+                            type="submit"
+                            data-te-ripple-init
+                            data-te-ripple-color="light"
+                            class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                            style="background-color: #1da1f2">
+                            質問を更新する
+                            </button>
+                        @else
+                            <button
+                            type="submit"
+                            name="saveAsDraft"
+                            value="saveAsDraft"
+                            data-te-ripple-init
+                            data-te-ripple-color="light"
+                            class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                            style="background-color: #f21dab">
+                            下書き保存する
+                            </button>
+                            <button
+                            type="submit"
+                            name="saveAsPublicQuestion"
+                            value="saveAsPublicQuestion"
+                            data-te-ripple-init
+                            data-te-ripple-color="light"
+                            class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                            style="background-color: #1da1f2">
+                            登録する
+                            </button>
                         @endif
 
-                        <button
-                        type="submit"
-                        data-te-ripple-init
-                        data-te-ripple-color="light"
-                        class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
-                        style="background-color: #1da1f2">
-                        登録する
-                        </button>
                     </form>
                 </div>
             </div>

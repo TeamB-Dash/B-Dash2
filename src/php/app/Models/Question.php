@@ -18,6 +18,7 @@ class Question extends Model
         'body',
         'answer_count',
         'is_deleted',
+        'shipped_at'
     ];
 
     // Userへの関連を定義

@@ -20,7 +20,7 @@
                 @foreach ($question->tags as $tag )
                 <span class="inline-block py-1 px-2 rounded bg-indigo-50 text-indigo-500 text-xs font-medium tracking-widest">{{ $tag->name }}</span>
                 @endforeach
-              <div class="flex items-center flex-wrap pb-4 mb-4 border-b-2 border-gray-100 mt-auto w-full">
+              <div class="flex items-center flex-wrap pb-4 mb-4 border-b-2 border-gray-100 w-full">
                 <a class="text-indigo-500 inline-flex items-center">Learn More
                   <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M5 12h14"></path>
