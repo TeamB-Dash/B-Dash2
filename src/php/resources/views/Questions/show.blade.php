@@ -26,15 +26,20 @@
                     data-te-ripple-color="light">
                     編集する
                     </button>
+                    <form action="{{ route('questions.destroy',$question->id) }}" method="POST" class="inline-block " >
+                    @csrf
+                    @method('DELETE')
                     <button
-                    type="button"
-                    onclick="location.href='{{ route('questions.destroy',$question->id) }}' "
-                    class="inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                    type="submit"
+                    class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
                     style="background-color:rgb(241, 45, 45)"
                     data-te-ripple-init
-                    data-te-ripple-color="light">
+                    data-te-ripple-color="light"
+                    onclick="return confirm('本当に削除しますか?')"
+                    >
                     削除する
                     </button>
+                    </form>
                 </div>
                 {{-- <x-answerpanel></x-answerpanel> --}}
                 <div>

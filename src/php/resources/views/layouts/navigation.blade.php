@@ -34,28 +34,20 @@
                                     </button>
                                 </x-slot>
 
-                            <x-slot name="content">
+                                <x-slot name="content">
 
-                                <x-dropdown-link :href="route('profile.edit')">
-                                    月報トップ
-                                </x-dropdown-link>
+                                    <x-dropdown-link :href="route('dashboard')">
+                                        月報トップ
+                                    </x-dropdown-link>
 
-                                <!-- Authentication -->
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-
-                                    <x-dropdown-link :href="route('dashboard')"
-                                            onclick="event.preventDefault();
-                                                        this.closest('form').submit();">
+                                    <x-dropdown-link :href="route('dashboard')">
                                         月報編集
                                     </x-dropdown-link>
-                                    <x-dropdown-link :href="route('dashboard')"
-                                            onclick="event.preventDefault();
-                                                        this.closest('form').submit();">
+
+                                    <x-dropdown-link :href="route('dashboard')">
                                         マイ月報
                                     </x-dropdown-link>
-                                </form>
-                            </x-slot>
+                                </x-slot>
                         </x-dropdown>
                     </div>
                 </div>
@@ -77,28 +69,20 @@
                                     </button>
                                 </x-slot>
 
-                            <x-slot name="content">
+                                <x-slot name="content">
 
-                                <x-dropdown-link :href="route('profile.edit')">
-                                    新規投稿
-                                </x-dropdown-link>
+                                    <x-dropdown-link :href="route('dashboard')">
+                                        ブログ新規投稿
+                                    </x-dropdown-link>
 
-                                <!-- Authentication -->
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-
-                                    <x-dropdown-link :href="route('dashboard')"
-                                            onclick="event.preventDefault();
-                                                        this.closest('form').submit();">
+                                    <x-dropdown-link :href="route('dashboard')">
                                         お気に入りブログ
                                     </x-dropdown-link>
-                                    <x-dropdown-link :href="route('dashboard')"
-                                            onclick="event.preventDefault();
-                                                        this.closest('form').submit();">
+
+                                    <x-dropdown-link :href="route('dashboard')">
                                         マイブログ
                                     </x-dropdown-link>
-                                </form>
-                            </x-slot>
+                                </x-slot>
                         </x-dropdown>
                     </div>
                 </div>

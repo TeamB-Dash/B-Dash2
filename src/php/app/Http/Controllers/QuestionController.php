@@ -77,7 +77,7 @@ class QuestionController extends Controller
 
             $question->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
             DB::commit();
-            return to_route('questions.index');
+            return to_route('questions.index')->with('status','投稿を作成しました。');
         }catch(\Exception $e){
             DB::rollBack();
             return route('dashboard');
@@ -144,7 +144,7 @@ class QuestionController extends Controller
         }
         $question->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
 
-        return to_route('questions.showMyDraftQuestions',Auth::user()->id);
+        return to_route('questions.showMyDraftQuestions',Auth::user()->id)->with('status','情報を更新しました。');
     }
 
     /**
@@ -158,7 +158,7 @@ class QuestionController extends Controller
         $question = Question::find($question)->first();
         $question->is_deleted = Carbon::now()->format('Y/m/d H:i:s');
 
-        return to_route('showMyQuestions',Auth::user()->id);
+        return to_route('questions.showMyQuestions',Auth::user()->id)->with('status','削除しました。');
     }
 
     public function showMyQuestions($id){
