@@ -91,12 +91,11 @@ class MonthlyReportController extends Controller
                             ->orderBy('shipped_at', 'desc')
                             ->paginate(10);
         
-        $user = Department::with(['user'])->get();
         // dd($reports);
 
 
 
-        return view('monthlyReport.top', compact('reports', 'user'));
+        return view('monthlyReport.top', compact('reports'));
     }
 
     public function create() {

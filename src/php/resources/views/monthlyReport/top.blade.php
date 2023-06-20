@@ -604,7 +604,7 @@
                                     @foreach ($reports as $report)
                                     {{-- <a class="list-group-item" href="{{ route('monthlyReport.show', $report->mr_id)}}"> --}}
                                         <span>【</span>
-                                        <span class="tag label label-success">職種</span>
+                                        <span class="tag label label-success">{{ $report->user->department->name }}</span>
                                         <span>{{ $report->user->entry_date->format('Y')}}年{{ $report->user->entry_date->format('m')}}月入社</span>
                                         <span>】</span>
                                         <span class="glyphicon glyphicon-user"></span>

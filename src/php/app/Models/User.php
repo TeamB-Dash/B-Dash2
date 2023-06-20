@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Department;
 use App\Models\MonthlyReport;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -54,7 +55,7 @@ class User extends Authenticatable
     }
 
     // departmentsテーブルと紐付け
-    public function department() {
-        return $this->belognsTo(Department::class);
+    public function department(){
+        return $this->belongsTo(Department::class);
     }
 }
