@@ -45,12 +45,20 @@
                 </span>
               </div>
               <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4"><a href="{{route('questions.show',['question' => $question->id])}}">{{$question->title}}</a></h2>
-              <p class="leading-relaxed mb-8">{{$question->body}}</p>
             </div>
             @endforeach
 
             {{ $questions->links() }}
           </div>
+        </div>
+
+        <div class="container px-5 py-24 mx-auto flex justify-around">
+            {{-- いいね獲得ランキング --}}
+            <x-ranking-of-likes>
+            </x-ranking-of-likes>
+            {{-- タグ別投稿数ランキング --}}
+            <x-ranking-of-count-by-tags>
+            </x-ranking-of-count-by-tags>
         </div>
       </section>
 </x-app-layout>
