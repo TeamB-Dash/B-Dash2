@@ -84,30 +84,6 @@ class QuestionController extends Controller
         }
     }
 
-    public function saveAsDraft(Request $request)
-    {
-        DB::beginTransaction();
-        try{
-            $user = Auth::user();
-            $today = Carbon::now()->format('Y/m/d H:i:s');
-            $question = Question::Create([
-                'user_id' => $user->id,
-                'title' => $request->title,
-                'body' => $request->content,
-                'is_deleted' =>false,
-                'answer_count' => 0,
-                'shipped_at' => $today,
-            ]);
-            $question->tags()->syncWithPivotValues($request->tags,['is_deleted' => false]);
-            DB::commit();
-            return to_route('questions.showMyDraftQuestions',$user->id);
-        }catch(\Exception $e){
-            DB::rollBack();
-            dd($e->getMessage());
-            return route('dashboard');
-        }
-    }
-
     /**
      * Display the specified resource.
      *
@@ -179,7 +155,10 @@ class QuestionController extends Controller
      */
     public function destroy(Question $question)
     {
-        dd($question);
+        $question = Question::find($question)->first();
+        $question->is_deleted = Carbon::now()->format('Y/m/d H:i:s');
+
+        return to_route('showMyQuestions',Auth::user()->id);
     }
 
     public function showMyQuestions($id){
