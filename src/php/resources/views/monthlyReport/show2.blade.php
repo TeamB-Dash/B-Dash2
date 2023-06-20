@@ -27,7 +27,7 @@
 	<script>
 	$(function(){
   		var target = $('#report-tag-list');
-  		var tagNames = [ "Python","Docker","FastAPI","GCP" ];
+  		var tagNames = ['タグの一覧表示'];
 
 		  target.tags({
     		readOnly: true,
@@ -102,7 +102,7 @@
 					<a aria-expanded="false" class="lead bg-primary dropdown-toggle" data-toggle="dropdown">
 						<span aria-hidden="true" class="glyphicon glyphicon-user"></span>
 						
-						<span>野口佳純</span>
+						<span>ユーザー名</span>
 					</a>
 					<ul class="dropdown-menu">
 						<li></li>
@@ -181,7 +181,7 @@
 						<a aria-expanded="false" class="lead bg-primary dropdown-toggle" data-toggle="dropdown">
 							<span aria-hidden="true" class="glyphicon glyphicon-user"></span>
 							
-							<span>野口佳純</span>
+							<span>ユーザー名</span>
 						</a>
 						<ul class="dropdown-menu">
 							<li></li>
@@ -228,7 +228,7 @@
 					<h1>
 					    <span class="glyphicon glyphicon-user"></span>
                         
-						<a href="/user_profiles/1373" class="text-profile-link">堀尾洋輔</a>
+						<a href="/user_profiles/1373" class="text-profile-link">{{ $report->user->name }}</a>
 					</h1>
 				</div>
 				
@@ -242,7 +242,7 @@
 								<div class="col-xs-8 monthly-report-panel-date">
 									<span class="label label-success monthly-report-status">登録済</span>
 									
-									<span>2023年05月の月報</span>
+									<span>{{ $report->target_month->format('Y')}}年{{ $report->target_month->format('m')}}月の月報</span>
 								</div>
 								<div class="col-xs-2">
 									
@@ -255,7 +255,13 @@
 									<label class="col-sm-3 control-label">今月のアサイン状況</label>
 									<div class="col-sm-9 form-control-static btn-group">
 										
-										<a class="btn btn-default none-pointer">待機中</a>
+										<a class="btn btn-default none-pointer">
+                                            @if ($report->assign == 1)
+                                                アサイン中
+                                            @elseif ($report->assign == 2)
+                                                待機中
+                                            @endif
+                                        </a>
 										
 									</div>
 								</div>
@@ -263,15 +269,7 @@
 									<label class="col-sm-3 control-label">プロジェクト概要</label>
 									<div class="col-sm-9 form-control-static">
 										<div class="markdown-view">
-											<textarea class="hidden">## CockPadにおけるレシピタイトルを用いた曖昧文章検索システムの開発
-
-内容としてはCockPadからレシピのタイトルデータを大量にスクレイピングし、ユーザの入力(query)を元にDBに保存しているタイトルから類似度の高い上位k個を表示するというシステム
-5月はデータの収集とアノテーション, モデルの作成、学習、API化を行った。
-
-## GCPを用いたリアルタイム分析
-GCPの各種サービスを用いて一週間に一回気象庁の気温データをスクレイピングしてきて次の一週間の気温を予測するというアーキテクチャを構築した。
-
-## StanfordのMOC &quot;NLP with DeepLeaning&quot;の受講および翻訳記事の投稿</textarea>
+											<textarea class="hidden">{{ $report->project_summary }}</textarea>
 											<div class="markdown-body"></div>
 										</div>
 									</div>
@@ -279,20 +277,18 @@ GCPの各種サービスを用いて一週間に一回気象庁の気温デー�
 								<div class="form-group">
 									<label class="col-sm-3 control-label">使用した技術</label>
 									<div class="col-sm-9 form-control-static">
-										<div id="report-tag-list" class="tag-list"></div>
+										<div id="report-tag-list" class="tag-list">
+                                            @foreach ($report->tags as $tag)
+                                                {{ $tag->name }}
+                                            @endforeach
+                                        </div>
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label">担当した工程</label>
 									<div class="col-sm-9 form-control-static btn-group">
-										<a class="btn btn-default none-pointer">要件定義</a>
-										<a class="btn btn-default none-pointer">設計</a>
-										<a class="btn btn-default none-pointer">実装</a>
-										
-										
-										
-										
-										<a class="btn btn-default none-pointer">構築</a>
+										<a class="btn btn-default none-pointer">担当した工程</a>
+                                        <a class="btn btn-default none-pointer">担当した工程</a>
 										
 									</div>
 								</div>
@@ -300,38 +296,7 @@ GCPの各種サービスを用いて一週間に一回気象庁の気温デー�
 									<label class="col-sm-3 control-label">業務内容</label>
 									<div class="col-sm-9 form-control-static">
 										<div class="markdown-view">
-											<textarea class="hidden">## CockPadにおけるレシピタイトルを用いた曖昧文章検索システムの開発
-### 基盤部分
-GKEにAPI化したコンテナを載せてCloud Runを用いてデプロイする予定
-(コンテナ作成に一生苦しんでおります、、)
-パッケージ管理にはpoetryを用いています。
-
-### DB
-PineconeというMLしかつかわんやろ!!みたいなベクトルデータベースを用いています。
-ただ、無料枠だとベクトルデータの種類(index)を一種類しか入れれないことに加えて、DB容量が2MBかつデータ数が1000までという制限があるので一通り作り終えたらBigTableに乗り換えようか検討中
-ただ、文章の類似度検索がめちゃめちゃ高速でできるのでできれば使いたいところ
-
-### API化
-FastAPIを用いてAPI化した
-学習コストの低さにびっくり、簡単にAPIが作成できた上にUIまで用意してくれている優れもの
-ゆくゆくはちゃんとUI部分までこだわってやるのもありかな
-
-### モデル部分
-正直ここが一番楽しかった。
-ベースは類似文章検索タスクのデファクトスタンダードであるSentenceBERTを用いた。正直LLMを用いても良かったのだがコストの高さの割にオリジナリティを出すのが難しかったのでやめた。
-今回僕が用いたモデルとしては[AugSBERT](https://arxiv.org/pdf/2010.08240.pdf)というSentenceBERTの拡張版で反教師あり学習を用いたSBERTモデルです。
-このモデルの特徴は話すと長くなるので一言で言うと、機械学習においてだるい作業の一つであるAnnotationのコストが下げれるよ!っていうモデルです
-まあ、あと学習データのドメインに依存しないとかいろいろありますが、、
-論文実装は終わって類似度のscore算出部分もうちょい工夫したいなってところまで行ったので一旦止めてAPI化しました
-
-テキストの概要ですみません(~~アーキテクチャ図をつくのがめんどくさかった、、~~)
-
-## GCPを用いたリアルタイム分析
-シンプルなリアルタイム分析なのですが
-モデル作成に用いたAutoMLの時系列予測モデルがデプロイ非対応だったので、データ取得だけリアルタイムですね
-これについてはSeleniumをGCP上で動かすのが一番苦労しました。
-とくに面白みはないですね、、、
-これに関してはアーキテクチャ図書いているのですが、ローカルの画像が載せれないのでやめました、、。</textarea>
+											<textarea class="hidden">{{ $report->business_content }}</textarea>
 											<div class="markdown-body"></div>
 										</div>
 									</div>
@@ -349,10 +314,7 @@ FastAPIを用いてAPI化した
 									<label class="col-sm-3 control-label">今月の振り返り</label>
 									<div class="col-sm-9 form-control-static">
 										<div class="markdown-view">
-											<textarea class="hidden">比較的順調な月であったかなと
-Stanfordの講義も毎週進めれていたし、GCPの学習も比較的早く終わったので
-アサインされている組(土曜組は除く)と会っていないのでみんな元気かなと思っております
-</textarea>
+											<textarea class="hidden">{{ $report->looking_back }}</textarea>
 											<div class="markdown-body"></div>
 										</div>
 									</div>
@@ -361,9 +323,7 @@ Stanfordの講義も毎週進めれていたし、GCPの学習も比較的早く
 									<label class="col-sm-3 control-label">来月の目標</label>
 									<div class="col-sm-9 form-control-static">
 									<div class="markdown-view">
-											<textarea class="hidden">#### 1. とりあえず検索システム完成させる
-#### 2.次の学習課題の設定を行う
-#### 3.そろそろアサイン決めたいですね</textarea>
+											<textarea class="hidden">{{ $report->next_month_goals }}</textarea>
 											<div class="markdown-body"></div>
 										</div>
 									</div>
@@ -374,7 +334,7 @@ Stanfordの講義も毎週進めれていたし、GCPの学習も比較的早く
 				</div>
 				<div id="monthly-report-like-btn">
 					<div class="like-btn">
-						<span class="hidden" id="login-user-name">野口佳純</span>
+						<span class="hidden" id="login-user-name">ログインユーザー</span>
 						<span role="button" id="like-button">いいね！</span>
 					</div>
 					<div class="like-count">

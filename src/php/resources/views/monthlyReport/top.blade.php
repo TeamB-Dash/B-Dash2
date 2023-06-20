@@ -172,7 +172,7 @@
                     <a aria-expanded="false" class="lead bg-primary dropdown-toggle" data-toggle="dropdown">
                         <span aria-hidden="true" class="glyphicon glyphicon-user"></span>
                         
-                        <span>野口佳純</span>
+                        <span>ユーザー名</span>
                     </a>
                     <ul class="dropdown-menu">
                         <li></li>
@@ -602,7 +602,7 @@
                             <div class="list-group monthly-report-index">
 
                                     @foreach ($reports as $report)
-                                    {{-- <a class="list-group-item" href="{{ route('monthlyReport.show', $report->mr_id)}}"> --}}
+                                    <a class="list-group-item" href="{{ route('monthlyReport.show', $report)}}">
                                         <span>【</span>
                                         <span class="tag label label-success">{{ $report->user->department->name }}</span>
                                         <span>{{ $report->user->entry_date->format('Y')}}年{{ $report->user->entry_date->format('m')}}月入社</span>
@@ -662,7 +662,7 @@
                     </div>
                 </div>
                 <!-- side content -->
-                <div id="sideContent" class="col-sm-3">
+                {{-- <div id="sideContent" class="col-sm-3">
                     <div class="m-search sticky">
                         <h4>いいね！獲得ランキング</h4>
                         <h5>対象月：2022年12月～2023年5月</h5>
@@ -732,7 +732,7 @@
                             <br>
                     </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
 </body>
