@@ -634,7 +634,7 @@
                                             <!-- それ以外は普通に表示 -->
                                             @endforeach            
                             </div>
-                            {{-- {{ $reports->links() }} --}}
+                            {{ $reports->links() }}
 
                             <nav class="pagenation">
                                 <span class="hidden" id="current-page">1</span>

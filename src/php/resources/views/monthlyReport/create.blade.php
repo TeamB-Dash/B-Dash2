@@ -268,7 +268,9 @@
 						<div id="prev_month_report_copy">
 							
 						</div>
-						<form class="form-horizontal" id="new_monthly_report" action="/monthly_reports/edit" accept-charset="UTF-8" method="post"><input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/>
+						<form class="form-horizontal" id="new_monthly_report" action="/monthly_reports/edit" accept-charset="UTF-8" method="post">
+                            @csrf
+                            <input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/>
 							<div class="form-group">
 								<label class="control-label col-sm-3" for="monthly_report_target_month">対象月</label>
 								<div class="col-sm-9">
