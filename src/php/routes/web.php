@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\QuestionController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,5 +35,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::resource('/articles', ArticleController::class)
+    ->middleware('auth');
+Route::resource('/articles', ArticleController::class)
+    ->only(['show']);
+
+    Route::get('/articles/users/{id}',[ArticleController::class,'showArticles'])->name('articles.myblog');
 
 require __DIR__.'/auth.php';
