@@ -1,6 +1,6 @@
 {{-- @extends('app') --}}
 
-@section('title', '記事投稿')
+{{-- @section('title', 'ブログ投稿') --}}
 
 {{-- @include('nav') --}}
 

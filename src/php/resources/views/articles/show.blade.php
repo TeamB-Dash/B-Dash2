@@ -34,72 +34,16 @@
 		<div class="header-menu-title">
 			<a href="/"><h1 class="bg-primary">Dash</h1></a>
 			<br>
-			<ul class="nav nav-pills nav-stacked">
-				<li class="dropdown">
-				<a class="lead bg-primary" href="/monthly_reports">
-					<span class="glyphicon glyphicon-th-list"></span>
-					<span> 月報</span>
-				</a>
-				<ul class="nav nav-pills nav-stacked" style="padding-inline-start:10px;margin-bottom:10px;">
-					<li>
-						
-						<a class="bg-primary" href="/monthly_reports/edit">月報登録</a>
-					</li>
-					<li style="margin-bottom:1px">
-						<a class="bg-primary" href="/monthly_reports/users/1422">マイ月報</a>
-					</li>
-				</ul>
-			</li>
-				<li class="dropdown">
+			<li class="dropdown">
 				<a class="lead bg-primary" href="/articles">
 					<span class="glyphicon glyphicon-th-list"></span>
 					<span> ブログ</span>
 				</a>
 				<ul class="nav nav-pills nav-stacked" style="padding-inline-start:10px;margin-bottom:10px;">
-					<li style="margin-bottom:3px"><a class="bg-primary" href="/articles/new">新規投稿</a></li>
-					<li><a class="bg-primary" href="/articles/users/1422">マイブログ</a></li>
+					<li style="margin-bottom:3px"><a class="bg-primary" href="/articles/create">新規投稿</a></li>
+					<li><a class="bg-primary" href="{{ route('articles.myblog',Auth::user()->id) }}">マイブログ</a></li>
 					<li><a class="bg-primary" href="/articles/users-favorite/1422">お気に入りブログ</a></li>
 				</ul>
-			</li>
-				<li class="dropdown">
-				<a class="lead bg-primary" href="/questions">
-					<span class="glyphicon glyphicon-th-list"></span>
-					<span> Q&amp;A</span>
-				</a>
-				<ul class="nav nav-pills nav-stacked" style="padding-inline-start:10px;margin-bottom:10px;">
-					<li style="margin-bottom:3px"><a class="bg-primary" href="/questions/new">質問投稿</a></li>
-					<li><a class="bg-primary" href="/questions/users/1422">マイ質問
-					
-					</a>
-					</li>
-				</ul>
-			</li>
-				<li class="dropdown">
-				<a class="lead bg-primary" href="/userSearch">
-					<span aria-hidden="true" class="glyphicon glyphicon-search"></span>
-					<span> ユーザー検索</span>
-				</a>
-			</li>
-			</ul>
-			<ul class="nav nav-pills nav-stacked dropup" style="margin-top: 40px;">
-				<li class="dropdown">
-					<a aria-expanded="false" class="lead bg-primary dropdown-toggle" data-toggle="dropdown">
-						<span aria-hidden="true" class="glyphicon glyphicon-user"></span>
-						
-						<span>喜多村太綱</span>
-					</a>
-					<ul class="dropdown-menu">
-						<li><a href="/user_profiles/1422">プロフィール</a></li>
-						<li><a data-confirm="パスワードを変更しますか？一旦、ログアウトします。" href="/logout_password_resets">パスワード変更</a></li>
-						<li><a data-toggle="modal" data-target="#new_inquiry" href="#">お問い合わせ</a></li>
-						<li>
-							<form class="logout_link" action="/logout" name="logout1" method="post"><input type="hidden" name="_csrf" value="fec033dd-189a-45e7-b179-0585526122aa">
-								<a class="logout_link" rel="nofollow" data-method="delete" href="javascript:logout1.submit()">ログアウト</a>
-                   			</form>
-						</li>	
-					</ul>
-				</li>
-			</ul>
 		</div>
 	</div>
 			</header> 
@@ -166,28 +110,21 @@
 				</div>
 			</div>
 		</div>
-              <div class="pull-right article-user-link">
-                <a href="/articles/users/1527"><span>内田七虹</span>さんのブログ一覧へ</a>
-                {{-- <a href="{{route(/articles/users/)}}"><span>内田七虹</span>さんのブログ一覧へ</a> --}}
+		{{-- @if( Auth::id() !== $user->id ) --}}
+		{{-- @if(Auth::user()->id !== $article->user_id)
+		<favorite-button
+		  class="ml-auto"
+		>
+		</favorite-button>
+	  @endif --}}
+            <div class="pull-right article-user-link">
+@if($article->user_id === Auth::user()->id)
+    <li><a class="bg-primary" href="{{ route('articles.myblog', Auth::user()->id) }}">マイブログへ</a></li>
+@else
+    <a href="{{ route('articles.myblog', ['id' => $article->user_id]) }}"><span>{{ $article->user->name }}</span>さんのブログ一覧へ</a>
+@endif
               </div>
             </div>
-	            {{-- <div class="modal fade" id="article-confirm">
-	              <div class="modal-dialog">
-	                <div class="modal-content">
-	                  <div class="modal-header">
-	                    <div class="modal-title">ブログを削除</div>
-	                  </div>
-	                  <div class="modal-body">本当にこのブログを削除しますか?</div>
-	                  <div class="modal-footer">
-	                  	<form id="delete-article-form" method="post" name="form1" action="/articles/delete/504"><input type="hidden" name="_csrf" value="fec033dd-189a-45e7-b179-0585526122aa">
-						    <input type="hidden" name="shippedAt" value="2023-06-15" 13:38:40.0="">
-						    <input class="btn btn-danger" type="submit" value="はい">
-						</form>
-	                    <button class="btn btn-default" data-dismiss="modal" type="button">閉じる</button>
-	                  </div>
-	                </div>
-	              </div>
-	            </div> --}}
 	            
 	            <!-- /*下書きでなければコメント欄表示する*/ -->
 	           	
@@ -207,117 +144,11 @@
 							<span role="button" class="btn change-favoriteBtn pushBtn" id="favorite-button-mobile">★お気に入り</span>
 						</div>
 				    </div>
-					<div class="modal fade" id="like-user-modal" tabindex="-1">
-							<div class="modal-dialog modal-sm">
-								<div class="modal-content">
-									<div class="modal-header-like">
-										<h4 class="modal-title text-center">
-											<span id="article-like2">8</span>人がいいね！と言っています
-										</h4>
-									</div>
-									<div class="modal-body">
-										<div class="list-group" id="like-users-list">
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/1532">三好菜月</a>
-											</div>
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/839">東黒島新建</a>
-											</div>
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/387">梶田美妃</a>
-											</div>
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/854">伏木国隆</a>
-											</div>
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/1511">谷口智紀</a>
-											</div>
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/1525">垣越隆伸</a>
-											</div>
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/1530">玉井悠輔</a>
-											</div>
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/1535">奧麟平</a>
-											</div>
-										<a class="list-group-item hidden" href="/user_profiles/">喜多村太綱</a></div>
-									</div>
-									<div class="modal-footer">
-										<button class="btn btn-success" data-dismiss="modal">閉じる</button>
-									</div>
-								</div>
-							</div>
 						</div> --}}
 						<br>
+						<!-- /* コメント編集フォーム */ -->
 					<div id="comment"></div>
 		            <h2>コメント</h2>
-		            <!-- 直前の処理の完了通知-->
-						
-						
-					<!-- 直前の処理の完了通知ここまで-->
-		            
-			            {{-- <div>
-				            <div class="panel panel-default" id="comment-table-80">
-								<div class="panel-heading article-panel-header" id="comment-header-80">
-									
-										<a class="text-info" href="/user_profiles/1532"><span>三好菜月</span></a>さんが
-									
-									
-					                
-					                <span>2023/06/15 15:41</span>にコメント
-									<div class="pull-right">
-										
-									</div>
-									<div class="pull-right">
-										
-									</div>				          
-								</div>
-								<div class="panel-body" id="comment-80">
-					                <div class="markdown-view">
-					                  <textarea class="hidden">## ありがとう！
-私もちょうどチーム演習を終えて**非同期**とは…となっていたのですごく参考になります</textarea>
-					                  <div class="markdown-body"><h2>ありがとう！</h2>
-<p>私もちょうどチーム演習を終えて<strong>非同期</strong>とは…となっていたのですごく参考になります</p>
-</div>
-				            	    </div>
-				              	</div>
-								  
-				            </div>
-						</div> --}}
-						<!-- /* コメント編集フォーム */ -->
-			            {{-- <div>
-				            <div class="panel panel-default" id="comment-table-83">
-								<div class="panel-heading article-panel-header" id="comment-header-83">
-									
-										<a class="text-info" href="/user_profiles/1511"><span>谷口智紀</span></a>さんが
-									
-									
-					                
-					                <span>2023/06/16 09:11</span>にコメント
-									<div class="pull-right">
-										
-									</div>
-									<div class="pull-right">
-										
-									</div>				          
-								</div>
-								<div class="panel-body" id="comment-83">
-					                <div class="markdown-view">
-					                  <textarea class="hidden">## わかりやすい！</textarea>
-					                  <div class="markdown-body"><h2>わかりやすい！</h2>
-</div>
-				            	    </div>
-				              	</div> --}}
-								<!-- /* コメント編集フォーム */ -->
 								
 				            </div>
 						</div>
@@ -353,78 +184,5 @@
 	          	<div class="page-footer"></div>
 	          
 	          </div>
-          
-	           {{-- <!-- サイドバー（右） -->
-	        	<div id="right-side-menu" class="col-sm-2" style="height: 2852.55px;">
-	        		 <div id="side-menu-adjust"></div>
-		         	 <div id="article-like" class="sticky text-center">
-		         	 	<div id="side-article-like-count" class="text-center">
-							<strong><a class="text-info h4 article-like1" data-toggle="modal" data-target="#like-user-modal" href="">8</a></strong>
-						</div>
-						<div id="article-like-btn" class="like-btn text-center">
-							<span class="hidden" id="login-user-name">喜多村太綱</span>
-							<span role="button" class="btn like-button btn-success">いいね！</span>
-						</div>
-						<br><br><br>
-						<div id="article-favorite-btn" class="like-btn text-center"> 
-							<span class="hidden" id="login-user-name">喜多村太綱</span>
-							<span role="button" class="btn change-favoriteBtn pushBtn" id="favorite-button">★お気に入り</span>
-						</div>
-						<!-- 目次 -->
-						<div id="table-of-contents" class="text-left"><div class="table-of-content" style="margin-left: 10px;"><a href="#概要">概要</a></div><div class="table-of-content" style="margin-left: 10px;"><a href="#非同期処理について">非同期処理について</a></div><div class="table-of-content" style="margin-left: 10px;"><a href="#Ajaxとは">Ajaxとは</a></div><div class="table-of-content" style="margin-left: 10px;"><a href="#コードサンプル">コードサンプル</a></div><div class="table-of-content" style="margin-left: 10px;"><a href="#まとめ">まとめ</a></div></div>
-					</div>
-						<div class="modal fade" id="like-user-modal" tabindex="-1">
-							<div class="modal-dialog modal-sm">
-								<div class="modal-content">
-									<div class="modal-header-like">
-										<h4 class="modal-title text-center">
-											<span id="article-like2">8</span>人がいいね！と言っています
-										</h4>
-									</div>
-									<div class="modal-body">
-										<div class="list-group" id="like-users-list">
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/1532">三好菜月</a>
-											</div>
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/839">東黒島新建</a>
-											</div>
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/387">梶田美妃</a>
-											</div>
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/854">伏木国隆</a>
-											</div>
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/1511">谷口智紀</a>
-											</div>
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/1525">垣越隆伸</a>
-											</div>
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/1530">玉井悠輔</a>
-											</div>
-											<div>
-												
-												<a class="list-group-item text-left" href="/user_profiles/1535">奧麟平</a>
-											</div>
-										</div>
-									</div>
-									<div class="modal-footer">
-										<button class="btn btn-success" data-dismiss="modal">閉じる</button>
-									</div>
-								</div>
-							</div>
-						</div>
-		       	</div> 
-			<!-- </div> -->
-		</div>
-	
-</div></body> --}}
+
+</div></body> 

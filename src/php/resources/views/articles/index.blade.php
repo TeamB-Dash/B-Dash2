@@ -33,79 +33,25 @@
 		<div class="header-menu-title">
 			<a href="/"><h1 class="bg-primary">Dash</h1></a>
 			<br>
-			<ul class="nav nav-pills nav-stacked">
-				<li class="dropdown">
-				<a class="lead bg-primary" href="/monthly_reports">
-					<span class="glyphicon glyphicon-th-list"></span>
-					<span> 月報</span>
-				</a>
-				<ul class="nav nav-pills nav-stacked" style="padding-inline-start:10px;margin-bottom:10px;">
-					<li>
-						
-						<a class="bg-primary" href="/monthly_reports/edit">月報登録</a>
-					</li>
-					<li style="margin-bottom:1px">
-						<a class="bg-primary" href="/monthly_reports/users/1422">マイ月報</a>
-					</li>
-				</ul>
-			</li>
 				<li class="dropdown">
 				<a class="lead bg-primary" href="/articles">
 					<span class="glyphicon glyphicon-th-list"></span>
 					<span> ブログ</span>
 				</a>
 				<ul class="nav nav-pills nav-stacked" style="padding-inline-start:10px;margin-bottom:10px;">
-					<li style="margin-bottom:3px"><a class="bg-primary" href="/articles/new">新規投稿</a></li>
-					<li><a class="bg-primary" href="/articles/users/1422">マイブログ</a></li>
+					<li style="margin-bottom:3px"><a class="bg-primary" href="/articles/create">新規投稿</a></li>
+					<li><a class="bg-primary" href="{{ route('articles.myblog',Auth::user()->id) }}">マイブログ</a></li>
 					<li><a class="bg-primary" href="/articles/users-favorite/1422">お気に入りブログ</a></li>
 				</ul>
 			</li>
-				<li class="dropdown">
-				<a class="lead bg-primary" href="/questions">
-					<span class="glyphicon glyphicon-th-list"></span>
-					<span> Q&amp;A</span>
-				</a>
-				<ul class="nav nav-pills nav-stacked" style="padding-inline-start:10px;margin-bottom:10px;">
-					<li style="margin-bottom:3px"><a class="bg-primary" href="/questions/new">質問投稿</a></li>
-					<li><a class="bg-primary" href="/questions/users/1422">マイ質問
-					
-					</a>
-					</li>
-				</ul>
-			</li>
-				<li class="dropdown">
-				<a class="lead bg-primary" href="/userSearch">
-					<span aria-hidden="true" class="glyphicon glyphicon-search"></span>
-					<span> ユーザー検索</span>
-				</a>
-			</li>
-			</ul>
-			<ul class="nav nav-pills nav-stacked dropup" style="margin-top: 40px;">
-				<li class="dropdown">
-					<a aria-expanded="false" class="lead bg-primary dropdown-toggle" data-toggle="dropdown">
-						<span aria-hidden="true" class="glyphicon glyphicon-user"></span>
-						
-						<span>喜多村太綱</span>
-					</a>
-					<ul class="dropdown-menu">
-						<li><a href="/user_profiles/1422">プロフィール</a></li>
-						<li><a data-confirm="パスワードを変更しますか？一旦、ログアウトします。" href="/logout_password_resets">パスワード変更</a></li>
-						<li><a data-toggle="modal" data-target="#new_inquiry" href="#">お問い合わせ</a></li>
-						<li>
-							<form class="logout_link" action="/logout" name="logout1" method="post"><input type="hidden" name="_csrf" value="f89133f8-74aa-4fd4-8d51-94dd5681ebd9">
-								<a class="logout_link" rel="nofollow" data-method="delete" href="javascript:logout1.submit()">ログアウト</a>
-                   			</form>
-						</li>	
-					</ul>
-				</li>
-			</ul>
+				
 		</div>
 	</div>
 			</header>
 			<!-- 		menuここまで  -->
 			<div class="ml-par20 col-sm-6">
 				<div class="page-header">
-					<h1>最新ブログ一覧</h1>
+					<h1>ブログ一覧</h1>
 				</div>
 				<div class="article-user">
 					

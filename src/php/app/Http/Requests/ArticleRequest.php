@@ -34,6 +34,8 @@ class ArticleRequest extends FormRequest
         return [
             'title' => 'タイトル',
             'body' => '本文',
+            'article_category_id' => 'カテゴリー',
+
         ];
     }
 }

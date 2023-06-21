@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
 use App\Models\User;
+use App\Models\Tag;
+use Ramsey\Uuid\Type\Integer;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
@@ -59,7 +64,8 @@ class ArticleController extends Controller
     public function store(ArticleRequest $request, Article $article)
     {
         $article->fill($request->all());
-        // $article->user_id = $request->user()->id;
+        $article->user_id = $request->user()->id;
+        $article->shipped_at = Carbon::now()->format('Y/m/d H:i:s');
         $article->save();
         return redirect()->route('articles.index');
     }
@@ -70,9 +76,12 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Article $article)
+    public function show(Article $article, User $user)
     {
-        return view('articles.show', ['article' => $article]);
+        return view('articles.show', [
+            'article' => $article,
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -81,9 +90,10 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Article $article)
     {
-        //
+        return view('articles.edit', ['article' => $article]);    
+
     }
 
     /**
@@ -93,9 +103,10 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ArticleRequest $request, Article $article)
     {
-        //
+        $article->fill($request->all())->save();
+        return redirect()->route('articles.index');
     }
 
     /**
@@ -104,20 +115,24 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Article $article)
     {
-        //
+        $article->delete();
+
+        return redirect()->route('articles.index');
     }
-    // public function myblog(int $id)
-    public function myblog(int $id)
-    {
-        $user = User::where('id', $id)->first();
-        $articles = $user->articles;
-        // ->orderByDesc('created_at')->paginate(20);
-        
-        return view('articles.myblog', [
-            'user' => $user,
-            'articles' => $articles,
-        ]);
+
+    public function showArticles($id){
+        $user = User::find($id);
+        // $articles =  Article::with(['user','articleCategory'])
+        $articles =  Article::with(['user'])
+        ->whereNotNull('shipped_at')
+        ->where('is_deleted','=',false)->where('user_id','=',$user->id)
+        ->orderBy('created_at','desc')
+        ->paginate(10);
+
+        $answers = 'test';
+        return view('articles.myblog',compact('user','articles'));
     }
+
 }
