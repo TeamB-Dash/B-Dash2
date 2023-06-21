@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MonthlyReportController;
+use App\Models\MonthlyReport;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,4 +34,6 @@ require __DIR__.'/auth.php';
 
 // 月報関連のルート
 Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name('monthlyReport.index');
+Route::get('/monthly_reports/create', [MonthlyReportController::class, 'create'])->name('monthlyReport.create');
 Route::get('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'show'])->name('monthlyReport.show');
+
