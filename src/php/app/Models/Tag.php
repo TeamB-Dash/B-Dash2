@@ -10,17 +10,12 @@ class Tag extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'name',
+        'name'
     ];
 
     // Questionへの関連を定義
     public function questions(){
-        return $this->belongsToMany(Question::class,'question_tags');
+        return $this->belongsToMany(Question::class,'question_tags')->where('is_deleted','=',false)->withTimestamps();
     }
 }

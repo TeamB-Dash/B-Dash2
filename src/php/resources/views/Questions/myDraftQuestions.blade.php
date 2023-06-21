@@ -1,9 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        質問一覧
+        下書き中の質問一覧
         </h2>
     </x-slot>
+
     <section class="text-gray-600 body-font overflow-hidden">
         @if (session('status'))
         <div class="w-2/3 mx-auto container mt-6 text-center bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
@@ -12,6 +13,22 @@
         @endif
         <div class="container px-5 py-24 mx-auto">
           <div class="flex flex-wrap -m-12">
+            <div class="w-full">
+                <button
+                type="button"
+                onclick="location.href='{{ route('questions.showMyQuestions', Auth::user()->id) }}' "
+                class="inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                style="background-color:rgb(139, 194, 56)"
+                data-te-ripple-init
+                data-te-ripple-color="light">
+                公開済みの質問一覧へ
+                </button>
+            </div>
+
+            @if ($questions->count() === 0)
+            <div class="w-full">表示する質問はありません</div>
+            @else
+
 
             @foreach ( $questions as $question )
             <div class="p-12 md:w-1/2 flex flex-col items-start">
@@ -19,13 +36,13 @@
                 <img alt="blog" src="https://dummyimage.com/104x104" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
                 <span class="flex-grow flex flex-col pl-4">
                     <span class="title-font font-medium text-gray-900">{{ $question->user->name }}</span>
-                    <span class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $question->created_at->format('Y-m-d')  }}</span><span>【{{$question->user->department->name}}】</span>
+                    <span class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $question->updated_at->format('Y-m-d')  }}に保存</span><span>【{{$question->user->department->name}}】</span>
                 </span>
                 </a>
                 @foreach ($question->tags as $tag )
                 <span class="inline-block py-1 px-2 rounded bg-indigo-50 text-indigo-500 text-xs font-medium tracking-widest">{{ $tag->name }}</span>
                 @endforeach
-              <div class="flex items-center flex-wrap pb-4 mb-4 border-b-2 border-gray-100 w-full">
+              <div class="flex items-center flex-wrap pb-4 mb-4 border-b-2 border-gray-100 mt-auto w-full">
                 <a class="text-indigo-500 inline-flex items-center">Learn More
                   <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M5 12h14"></path>
@@ -51,6 +68,7 @@
 
             {{ $questions->links() }}
           </div>
+          @endif
         </div>
       </section>
 </x-app-layout>
