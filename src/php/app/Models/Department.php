@@ -10,7 +10,7 @@ class Department extends Model
 {
     use HasFactory;
 
-    // userテーブルと紐付け
+    // userへの関連を定義
     public function user() {
         return $this->belongsTo(User::class);
     }

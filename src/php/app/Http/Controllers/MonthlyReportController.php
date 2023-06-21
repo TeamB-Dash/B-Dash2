@@ -32,6 +32,7 @@ class MonthlyReportController extends Controller
     public function show(MonthlyReport $monthlyReport) {
 
         $report = MonthlyReport::find($monthlyReport->id);
+        // dd($report->monthlyWorkingProcesses);
 
         return view('monthlyReport.show2', compact('report'));
     }

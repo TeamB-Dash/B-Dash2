@@ -27,7 +27,7 @@
 	<script>
 	$(function(){
   		var target = $('#report-tag-list');
-  		var tagNames = ['タグの一覧表示'];
+  		var tagNames = {{ $report->tags }};
 
 		  target.tags({
     		readOnly: true,
@@ -287,8 +287,33 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label">担当した工程</label>
 									<div class="col-sm-9 form-control-static btn-group">
-										<a class="btn btn-default none-pointer">担当した工程</a>
-                                        <a class="btn btn-default none-pointer">担当した工程</a>
+                                        @if ($report->monthlyWorkingProcesses->process_definition == true)
+										<a class="btn btn-default none-pointer">要件定義</a>
+                                        @endif
+                                        @if ($report->monthlyWorkingProcesses->process_design == true)
+                                        <a class="btn btn-default none-pointer">設計</a>
+                                        @endif
+                                        @if ($report->monthlyWorkingProcesses->process_implementation == true)
+                                        <a class="btn btn-default none-pointer">実装</a>
+                                        @endif
+                                        @if ($report->monthlyWorkingProcesses->process_test == true)
+                                        <a class="btn btn-default none-pointer">テスト</a>
+                                        @endif
+                                        @if ($report->monthlyWorkingProcesses->process_operation == true)
+                                        <a class="btn btn-default none-pointer">運用保守</a>
+                                        @endif
+                                        @if ($report->monthlyWorkingProcesses->process_analysis == true)
+                                        <a class="btn btn-default none-pointer">分析</a>
+                                        @endif
+                                        @if ($report->monthlyWorkingProcesses->process_training == true)
+                                        <a class="btn btn-default none-pointer">研修</a>
+                                        @endif
+                                        @if ($report->monthlyWorkingProcesses->process_structure == true)
+                                        <a class="btn btn-default none-pointer">構築</a>
+                                        @endif
+                                        @if ($report->monthlyWorkingProcesses->process_trouble == true)
+                                        <a class="btn btn-default none-pointer">障害対応</a>
+                                        @endif
 										
 									</div>
 								</div>

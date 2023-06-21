@@ -21,6 +21,11 @@ class MonthlyReport extends Model
         return $this->belongsToMany(Tag::class, 'monthly_report_tags');
     }
 
+    // monthly_working_processへの関連を定義
+    public function monthlyWorkingProcesses() {
+        return $this->hasOne(MonthlyWorkingProcess::class);
+    }
+
     // 日付フォーマットエラー回避のための定義
     protected $dates = [
         'shipped_at',
