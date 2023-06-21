@@ -2,17 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\MonthlyReport;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Question;
 
 class Tag extends Model
 {
     use HasFactory;
-
+    
     protected $fillable = [
         'name'
     ];
+    // Tagへの関連を定義
+    public function tags(){
+        return $this->belongsToMany(MonthlyReport::class,'monthly_report_tags');
+    }
 
     // Questionへの関連を定義
     public function questions(){
