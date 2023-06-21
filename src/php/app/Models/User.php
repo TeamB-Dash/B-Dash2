@@ -8,18 +8,21 @@ use App\Models\MonthlyReport;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Question;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
+
     protected $fillable = [
+        'id',
         'name',
         'email',
         'password',
@@ -55,6 +58,16 @@ class User extends Authenticatable
     }
 
     // departmentsテーブルと紐付け
+    public function articles(): HasMany
+    {
+    return $this->hasMany('App\Models\Article');
+}
+    // Questionへの関連を定義
+    public function questions(){
+        return $this->hasMany(Question::class);
+    }
+
+    // Departmentへの関連を定義
     public function department(){
         return $this->belongsTo(Department::class);
     }
