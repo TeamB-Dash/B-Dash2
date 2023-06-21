@@ -8,16 +8,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Question;
+use App\Models\Department;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
+
     protected $fillable = [
         'id',
         'name',
@@ -46,6 +48,15 @@ class User extends Authenticatable
 
     public function articles(): HasMany
     {
-        return $this->hasMany('App\Models\Article');
+    return $this->hasMany('App\Models\Article');
+}
+    // Questionへの関連を定義
+    public function questions(){
+        return $this->hasMany(Question::class);
+    }
+
+    // Departmentへの関連を定義
+    public function department(){
+        return $this->belongsTo(Department::class);
     }
 }
