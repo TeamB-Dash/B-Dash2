@@ -6,13 +6,12 @@ use App\Models\MonthlyReport;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Question;
-use App\Models\MonthlyReport;
 use App\Models\Article;
 
 class Tag extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'name'
     ];
