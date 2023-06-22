@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -41,4 +41,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function followings()
+    {
+        return $this->belongsToMany(User::class, 'user_follows', 'followed_user_id', 'user_id');
+    }
+
+    public function followeds()
+    {
+        return $this->belongsToMany(User::class, 'user_follows', 'user_id', 'followed_user_id');
+    }
 }
