@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 use App\Models\Tag;
 use App\Models\User;
+use App\Models\Article;
+use App\Models\MonthlyReport;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\RankingService;
+use Cron\MonthField;
 
 class QuestionController extends Controller
 {
@@ -19,6 +23,38 @@ class QuestionController extends Controller
      */
     public function index()
     {
+        // // 月報ランキング取得のテストクエリ
+        // $fromDate = Carbon::now()->subMonthsWithNoOverflow(6)->startOfMonth();
+        // $toDate = Carbon::now()->subMonthWithNoOverflow(1)->startOfMonth();
+        // $fromDate = Carbon::parse($fromDate)->toDateString();
+        // $toDate = Carbon::parse($toDate)->toDateString();
+        // $monthlyReportRanking = MonthlyReport::with(['user'])->where('is_deleted',false)->selectRaw('sum(likes_count) as number_of_likes_count, user_id')->whereDate('target_month', '>=', $fromDate)->whereDate('target_month', '<=', $toDate)->groupBy('user_id')->orderBy('number_of_likes_count','DESC')->take(10)->get();
+
+        // // ブログランキング取得のテストクエリ
+        // $fromDate = Carbon::now()->subMonthsWithNoOverflow(5)->startOfMonth();
+        // $toDate = Carbon::now()->endOfMonth();
+        // $subQuery = Article::with(['user'])
+        // ->whereBetween('shipped_at',[$fromDate,$toDate])
+        // ->where('is_deleted',false)
+        // ->withCount('ArticleLikes')
+        // ->toSql();
+
+        // $ArticleRanking = DB::table(DB::raw('('.$subQuery.') as likes_count_by_article'))
+        // ->selectRaw('sum(article_likes_count) as number_of_article_likes, user_id')
+        // ->groupBy('user_id')
+        // ->setBindings([':fromDate'=>$fromDate,':toDate'=>$toDate,':is_deleted'=>false])
+        // ->orderBy('number_of_article_likes','desc')
+        // ->take(10)
+        // ->get();
+        // dd($monthlyReportRanking,$ArticleRanking);
+
+        // タグ別投稿数ランキング取得のテストクエリ
+        $subQuery = Article::with(['user','tags'])
+        ->withCount('tags')
+        ->toSql();
+        dd($subQuery);
+
+
         $questions = Question::with(['user','tags','questionAnswers'])
         ->whereNotNull('shipped_at')
         ->where('is_deleted',false)

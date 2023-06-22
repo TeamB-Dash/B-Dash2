@@ -53,9 +53,12 @@
         </div>
 
         <div class="container px-5 py-24 mx-auto flex justify-around">
-            {{-- いいね獲得ランキング --}}
-            <x-ranking-of-likes>
-            </x-ranking-of-likes>
+            {{-- いいね別投稿数ランキング（月報） --}}
+            <x-ranking-of-monthly-report>
+            </x-ranking-of-monthly-report>
+            {{-- いいね獲得ランキング（ブログ） --}}
+            <x-ranking-of-article-likes>
+            </x-ranking-of-article-likes>
             {{-- タグ別投稿数ランキング --}}
             <x-ranking-of-count-by-tags>
             </x-ranking-of-count-by-tags>

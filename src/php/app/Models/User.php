@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Question;
 use App\Models\Department;
+use App\Models\Article;
+use App\Models\MonthlyReport;
 
 class User extends Authenticatable
 {
@@ -52,5 +54,25 @@ class User extends Authenticatable
     // Departmentへの関連を定義
     public function department(){
         return $this->belongsTo(Department::class);
+    }
+
+    // Articlesへの関連を定義
+    public function articles(){
+        return $this->hasMany(Article::class);
+    }
+
+    // MonthlyReportsへの関連を定義
+    public function monthlyReports(){
+        return $this->hasMany(MonthlyReport::class);
+    }
+
+    // MonthlyReportLikesへの関連を定義
+    public function monthlyReportLikes(){
+        return $this->belongsToMany(MonthlyReport::class,'monthly_report_likes')->withTimestamps();
+    }
+
+    // ArticleLikesへの関連を定義
+    public function articleLikes(){
+        return $this->belongsToMany(Article::class,'article_likes')->withTimestamps();
     }
 }
