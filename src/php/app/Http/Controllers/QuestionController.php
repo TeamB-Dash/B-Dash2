@@ -23,45 +23,18 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        // 月報ランキング取得のテストクエリ
-        $fromDate = Carbon::now()->subMonthsWithNoOverflow(6)->startOfMonth();
-        $toDate = Carbon::now()->subMonthWithNoOverflow(1)->startOfMonth();
-        $fromDate = Carbon::parse($fromDate)->toDateString();
-        $toDate = Carbon::parse($toDate)->toDateString();
-        $monthlyReportRanking = MonthlyReport::with(['user'])->where('is_deleted',false)->selectRaw('sum(likes_count) as number_of_likes_count, user_id')->whereDate('target_month', '>=', $fromDate)->whereDate('target_month', '<=', $toDate)->groupBy('user_id')->orderBy('number_of_likes_count','DESC')->take(10)->get();
+        $monthlyReportRanking = RankingService::MonthlyReportRanking();
+        $articleRanking = RankingService::ArticleRanking();
+        $rankingByNumberOfArticlesPerTag = RankingService::TagRanking();
 
-        // ブログランキング取得のテストクエリ
-        $fromDate = Carbon::now()->subMonthsWithNoOverflow(5)->startOfMonth();
-        $toDate = Carbon::now()->endOfMonth();
-        $subQuery = Article::with(['user'])
-        ->whereBetween('shipped_at',[$fromDate,$toDate])
-        ->where('is_deleted',false)
-        ->withCount('ArticleLikes')
-        ->toSql();
-
-        $ArticleRanking = DB::table(DB::raw('('.$subQuery.') as likes_count_by_article'))
-        ->selectRaw('sum(article_likes_count) as number_of_article_likes, user_id')
-        ->groupBy('user_id')
-        ->setBindings([':fromDate'=>$fromDate,':toDate'=>$toDate,':is_deleted'=>false])
-        ->orderBy('number_of_article_likes','desc')
-        ->take(10)
-        ->get();
-
-
-        // タグ別投稿数ランキング取得のテストクエリ
-        $rankingByNumberOfArticlesPerTag = Tag::with(['articles'])
-        ->withCount('ArticleTags')
-        ->orderBy('article_tags_count','desc')
-        ->take(10)
-        ->get();
-        dd($monthlyReportRanking,$ArticleRanking,$rankingByNumberOfArticlesPerTag);
-
+        // dd($monthlyReportRanking,$articleRanking,$rankingByNumberOfArticlesPerTag);
+        // dd($articleRanking[0]);
 
         $questions = Question::with(['user','tags','questionAnswers'])
         ->whereNotNull('shipped_at')
         ->where('is_deleted',false)
         ->orderBy('created_at','desc')->paginate(2);
-        return view('Questions/index',compact('questions'));
+        return view('Questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag'));
     }
 
     /**

@@ -7,20 +7,12 @@
       <div class="lg:w-2/3 w-full mx-auto overflow-auto">
         <table class="table-auto w-full text-left whitespace-no-wrap">
           <tbody>
+            @foreach ($rankingByNumberOfArticlesPerTag as $item )
             <tr>
-              <td class="px-4 py-3">15 GB</td>
-              <td class="px-4 py-3 text-lg text-gray-900">Free</td>
-              <td class="w-10 text-center">
-                <input name="plan" type="radio">
-              </td>
+              <td class="px-4 py-3">{{$item->name}}</td>
+              <td class="px-4 py-3 text-lg text-gray-900">{{$item->article_tags_count}}</td>
             </tr>
-            <tr>
-              <td class="border-t-2 border-gray-200 px-4 py-3">25 GB</td>
-              <td class="border-t-2 border-gray-200 px-4 py-3 text-lg text-gray-900">$24</td>
-              <td class="border-t-2 border-gray-200 w-10 text-center">
-                <input name="plan" type="radio">
-              </td>
-            </tr>
+            @endforeach
           </tbody>
         </table>
       </div>
