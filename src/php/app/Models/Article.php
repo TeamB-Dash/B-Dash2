@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
-use App\Models\Article;
 
 class Article extends Model
 {
@@ -18,11 +17,17 @@ class Article extends Model
 
     // ArticleLikesへの関連を定義
     public function articleLikes(){
-        return $this->belongsToMany(Article::class,'article_likes')->withTimestamps();
+        return $this->belongsToMany(User::class,'article_likes')->withTimestamps();
     }
 
     // ArticleTagsへの関連を定義
     public function articleTags(){
-        return $this->belongsToMany(Article::class,'article_likes')->withTimestamps();
+        return $this->belongsToMany(Tag::class,'article_tags')->withTimestamps();
     }
+
+    // Tagへの関連を定義
+    public function tags(){
+        return $this->belongsToMany(Tag::class,'article_tags')->where('is_deleted','=',false)->withTimestamps();
+    }
+
 }
