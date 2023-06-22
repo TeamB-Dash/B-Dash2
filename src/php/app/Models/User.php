@@ -3,14 +3,14 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use App\Models\Question;
 use App\Models\Department;
 use App\Models\Article;
 use App\Models\MonthlyReport;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Question;
 
 class User extends Authenticatable
 {
@@ -22,6 +22,7 @@ class User extends Authenticatable
      */
 
     protected $fillable = [
+        'id',
         'name',
         'email',
         'password',
@@ -46,6 +47,22 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // 日付フォーマットエラー回避のための定義
+    protected $dates = [
+        'entry_date',
+    ];
+
+    // monthly_reportsテーブルと紐付け
+    public function monthlyReports() {
+        return $this->hasMany(MonthlyReport::class);
+    }
+
+    // departmentsテーブルと紐付け
+    public function articles(): HasMany
+    {
+        return $this->hasMany('App\Models\Article');
+    }
+
     // Questionへの関連を定義
     public function questions(){
         return $this->hasMany(Question::class);
@@ -54,16 +71,6 @@ class User extends Authenticatable
     // Departmentへの関連を定義
     public function department(){
         return $this->belongsTo(Department::class);
-    }
-
-    // Articlesへの関連を定義
-    public function articles(){
-        return $this->hasMany(Article::class);
-    }
-
-    // MonthlyReportsへの関連を定義
-    public function monthlyReports(){
-        return $this->hasMany(MonthlyReport::class);
     }
 
     // MonthlyReportLikesへの関連を定義
