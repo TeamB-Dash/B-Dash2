@@ -5,56 +5,82 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\UserProfile;
+use App\Models\Department;
+use App\Models\UserFollow;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+        $user_profile = UserProfile::where('user_id', $user->id)->first();
+        $departments = Department::all();
+        $followings = $user->followings()->get();
+        $followeds = $user->followeds()->get();
+
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
+            'user_profile' => $user_profile,
+            'departments' => $departments,
+            'followings' => $followings,
+            'followeds' => $followeds,
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $user_profile = UserProfile::where('user_id', $user->id)->first();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+        $user->name = $request->name;
+        $user->department_id = $request->department_id;
+        $user->beginner_flg = $request->beginner_flg;
+        // $request->user()->id = $request->email;
+        $user->email = $request->email;
+        $user->entry_date = $request->entry_date;
+        $user->gender = $request->gender;
+        $user_profile->blood_type = $request->blood_type;
+        $user_profile->birthday = $request->birthday;
+        $user_profile->github_url = $request->github_url;
+        $user_profile->qiita_url = $request->qiita_url;
+        $user_profile->self_introduction = $request->self_introduction;
 
         $request->user()->save();
+        $user_profile->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('profile.edit')->with('status', 'プロフィールを更新しました。');
     }
 
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
+    // public function destroy(Request $request): RedirectResponse
+    // {
+    //     $request->validateWithBag('userDeletion', [
+    //         'password' => ['required', 'current-password'],
+    //     ]);
+
+    //     $user = $request->user();
+
+    //     Auth::logout();
+
+    //     $user->delete();
+
+    //     $request->session()->invalidate();
+    //     $request->session()->regenerateToken();
+
+    //     return Redirect::to('/');
+    // }
+
+    public function followingUserDestroy($id)
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current-password'],
-        ]);
+        UserFollow::where('user_id', $id)->delete();
+        return redirect()->route('profile.edit');
+    }
 
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+    public function followedUserDestroy($id)
+    {
+        UserFollow::where('followed_user_id', $id)->delete();
+        return redirect()->route('profile.edit');
     }
 }
