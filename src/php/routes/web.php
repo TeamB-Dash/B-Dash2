@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\QuestionController;
@@ -27,9 +28,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('/questions', QuestionController::class);
-Route::get('/questions/users/{id}',[QuestionController::class,'showMyQuestions'])->name('questions.showMyQuestions');
-Route::get('/questions/users/{id}/drafts',[QuestionController::class,'showMyDraftQuestions'])->name('questions.showMyDraftQuestions');
+Route::middleware('auth')->group(function(){
+    Route::resource('/questions', QuestionController::class);
+    Route::get('/questions/users/{id}',[QuestionController::class,'showMyQuestions'])->name('questions.showMyQuestions');
+    Route::get('/questions/users/{id}/drafts',[QuestionController::class,'showMyDraftQuestions'])->name('questions.showMyDraftQuestions');
+});
 
 
 Route::middleware('auth')->group(function () {
@@ -52,3 +55,6 @@ Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name(
 Route::get('/monthly_reports/create', [MonthlyReportController::class, 'create'])->name('monthlyReport.create');
 Route::get('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'show'])->name('monthlyReport.show');
 
+Route::prefix('/admin')->middleware('judgeAdmin')->group(function(){
+    Route::get('/top',[AdminController::class,'index'])->name('admin.top');
+});

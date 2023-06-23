@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <p class="block h-9 w-auto fill-current text-gray-800" >Admin</p>
                     </a>
                 </div>
 
@@ -18,7 +18,7 @@
                             <x-slot name="trigger">
                                 <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                                         <x-nav-link :active="request()->routeIs('dashboard')">
-                                            <div>月報</div>
+                                            <div>ユーザー</div>
                                         </x-nav-link>
 
                                         <div class="ml-1">
@@ -32,16 +32,21 @@
                                 <x-slot name="content">
 
                                     <x-dropdown-link :href="route('dashboard')">
-                                        月報トップ
+                                        ユーザー検索・一覧
                                     </x-dropdown-link>
 
                                     <x-dropdown-link :href="route('dashboard')">
-                                        月報編集
+                                        ユーザー登録
                                     </x-dropdown-link>
 
                                     <x-dropdown-link :href="route('dashboard')">
-                                        マイ月報
+                                        管理者一覧
                                     </x-dropdown-link>
+
+                                    <x-dropdown-link :href="route('dashboard')">
+                                        管理者登録
+                                    </x-dropdown-link>
+
                                 </x-slot>
                         </x-dropdown>
                     </div>
@@ -53,7 +58,7 @@
                             <x-slot name="trigger">
                                 <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                                         <x-nav-link :active="request()->routeIs('dashboard')">
-                                            <div>ブログ</div>
+                                            <div>問い合わせ</div>
                                         </x-nav-link>
 
                                         <div class="ml-1">
@@ -65,17 +70,11 @@
                                 </x-slot>
 
                                 <x-slot name="content">
-
                                     <x-dropdown-link :href="route('dashboard')">
-                                        ブログ新規投稿
+                                        問い合わせ一覧
                                     </x-dropdown-link>
-
                                     <x-dropdown-link :href="route('dashboard')">
-                                        お気に入りブログ
-                                    </x-dropdown-link>
-
-                                    <x-dropdown-link :href="route('dashboard')">
-                                        マイブログ
+                                        問い合わせメーリングリスト
                                     </x-dropdown-link>
                                 </x-slot>
                         </x-dropdown>
@@ -88,7 +87,7 @@
                             <x-slot name="trigger">
                                 <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                                         <x-nav-link :active="request()->routeIs('questions.*')">
-                                            <div>Q&A</div>
+                                            <div>お知らせ</div>
                                         </x-nav-link>
 
                                         <div class="ml-1">
@@ -102,30 +101,17 @@
                             <x-slot name="content">
 
                                 <x-dropdown-link :href="route('questions.index')">
-                                    Q&A一覧
+                                    お知らせ一覧
                                 </x-dropdown-link>
 
                                 <x-dropdown-link :href="route('questions.create')">
-                                    質問投稿
+                                    お知らせ登録
                                 </x-dropdown-link>
 
-                                <x-dropdown-link :href="route('questions.showMyQuestions',Auth::user()->id)">
-                                    マイ質問
-                                </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
                     </div>
                 </div>
-                {{-- <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        ブログ
-                    </x-nav-link>
-                </div> --}}
-                {{-- <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        Q&A
-                    </x-nav-link>
-                </div> --}}
             </div>
 
             <!-- Settings Dropdown -->
