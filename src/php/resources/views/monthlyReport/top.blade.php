@@ -1,3 +1,4 @@
+<x-app-layout>
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -736,3 +737,4 @@
             </div>
         </div>
 </body>
+</x-app-layout>

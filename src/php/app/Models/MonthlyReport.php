@@ -33,4 +33,15 @@ class MonthlyReport extends Model
         'entry_date',
     ];
 
+    protected $fillable = [
+        'target_month',
+        'assign',
+        'project_summary',
+        'business_content',
+        'looking_back',
+        'next_month_goals',
+        'user_id',
+        'is_deleted',
+    ];
+
 }

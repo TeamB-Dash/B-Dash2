@@ -1,4 +1,4 @@
-
+<x-app-layout>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -53,6 +53,19 @@
 
 		 	$('#monthly_report_tags').focusout(function() { this.value = ''; });
 		});
+
+
+        $(function() {
+
+            $('input:checkbox:checked').parent().removeClass("btn btn-default");
+            $('input:checkbox:checked').parent().addClass("btn btn-default active");
+
+            $('input[name="assign"]:checked').parent().removeClass("btn btn-default");
+            $('input[name="assign"]:checked').parent().addClass("btn btn-default active");
+
+            $("#target_month").val($("#hidden-target-month").val())
+
+        });
 </script>
 </head>
 <body>
@@ -61,7 +74,7 @@
 		<div class="site-container row">
 		
  			<!-- 		menuここから  -->
-			<header class="site-header bg-primary col-sm-2 hidden-xs side_scroll">
+			{{-- <header class="site-header bg-primary col-sm-2 hidden-xs side_scroll">
 				<div class="header-menu center-block">
 		<div class="header-menu-title" >
 			<a href="/"><h1 class="bg-primary">Dash</h1></a>
@@ -118,7 +131,7 @@
 					<a aria-expanded="false" class="lead bg-primary dropdown-toggle" data-toggle="dropdown">
 						<span aria-hidden="true" class="glyphicon glyphicon-user"></span>
 						
-						<span>野口佳純</span>
+						<span>ログインユーザー名</span>
 					</a>
 					<ul class="dropdown-menu">
 						<li></li>
@@ -197,7 +210,7 @@
 						<a aria-expanded="false" class="lead bg-primary dropdown-toggle" data-toggle="dropdown">
 							<span aria-hidden="true" class="glyphicon glyphicon-user"></span>
 							
-							<span>野口佳純</span>
+							<span>ログインユーザー名</span>
 						</a>
 						<ul class="dropdown-menu">
 							<li></li>
@@ -260,7 +273,7 @@
 				</div>
 				
 				
-				<!-- 		エラー文 ここまで-->
+				<!-- 		エラー文 ここまで--> --}}
 				
 				<div class="page-body">
 					<div class="text-right">※セッションの有効期限は60分です。</div>
@@ -268,13 +281,13 @@
 						<div id="prev_month_report_copy">
 							
 						</div>
-						<form class="form-horizontal" id="new_monthly_report" action="/monthly_reports/edit" accept-charset="UTF-8" method="post">
+						<form class="form-horizontal" id="new_monthly_report" action="{{ route('monthlyReport.store') }}" accept-charset="UTF-8" method="post">
                             @csrf
                             <input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/>
 							<div class="form-group">
-								<label class="control-label col-sm-3" for="monthly_report_target_month">対象月</label>
+								<label class="control-label col-sm-3" for="target_month">対象月</label>
 								<div class="col-sm-9">
-									<select name="targetMonth" class="form-control" id="monthly_report_target_month" onchange="submit(this.form)">
+									<select name="targetMonth" class="form-control" id="target_month">
 										<option value="2023-05-01">2023年05月</option>
 										<option value="2023-04-01">2023年04月</option>
 										<option value="2023-03-01">2023年03月</option>
@@ -290,7 +303,8 @@
 								</div>
 							</div>
 						</form>
-						<form class="form-horizontal" id="new_monthly_report" action="/monthly_reports/edit/input" accept-charset="UTF-8" method="post"><input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/>
+						<form class="form-horizontal" id="new_monthly_report" action="{{ route('monthlyReport.store') }}" accept-charset="UTF-8" method="post"><input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/>
+                            @csrf
 								<div class="form-group">
 									<label class="control-label col-sm-3" for="assign">今月のアサイン状況</label>
 									<div class="col-sm-9 btn-group" data-toggle="buttons">
@@ -304,21 +318,21 @@
 								</div>
 								<div class="form-group">
 								<div class="control-label col-sm-3" >
-									<label for="monthly_report_project_summary">プロジェクト概要</label>
-									<a data-toggle="modal" data-target="#article-template-modal" data-type="monthly_report_project_summary">
+									<label for="project_summary">プロジェクト概要</label>
+									{{-- <a data-toggle="modal" data-target="#article-template-modal" data-type="monthly_report_project_summary">
 										<button class="template-btn">テンプレート</button>
-									</a>
+									</a> --}}
 								</div>
 									<div class="col-sm-9">
 										<div class="markdown-editor">
-											<ul class="nav nav-tabs nav-justified">
+											{{-- <ul class="nav nav-tabs nav-justified">
 												<li class="tab-md-write active"><a data-toggle="tab" class="text-info" href="#project_summary-write">Write</a></li>
 												<li class="tab-md-preview"><a data-toggle="tab" class="text-info" href="#project_summary-preview">Preview</a></li>
-											</ul>
+											</ul> --}}
 											<div class="tab-content markdown-content">
 												<div class="tab-pane active" id="project_summary-write">
-													<textarea rows="15" class="form-control" placeholder="例）# 英語学習アプリ開発" name="projectSummary" id="monthly_report_project_summary"></textarea>
-													<p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p>
+													<textarea rows="15" class="form-control" placeholder="例）# 英語学習アプリ開発" name="projectSummary" id="project_summary"></textarea>
+													{{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
 												</div>
 												<div class="tab-pane content-md-preview markdown-body" id="project_summary-preview"></div>
 											</div>
@@ -326,11 +340,18 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="control-label col-sm-3">使用した技術</label>
+									{{-- <label class="control-label col-sm-3">使用した技術</label>
 									<div class="col-sm-9">
 										<input id="monthly_report_tags_input" type="hidden" name="tags" />
 										<div id="monthly_report_tags" class="tag-list"></div>
-									</div>
+									</div> --}}
+
+                                    <button type="button" id="addTagBtn" class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg text-white" style="background-color:rgba(107, 159, 29, 0.89)">タグを増やす</button><br>
+                                    <div class="tag-item">
+                                        <label>タグ：
+                                        <input type="text" name="tags[]" id="tag" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                        </label>
+                                    </div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-sm-3">担当した工程</label>
@@ -376,16 +397,16 @@
 								<div class="form-group">
 									<div class="control-label col-sm-3" >
 										<label for="monthly_report_business_content">業務内容</label>
-										<a data-toggle="modal" data-target="#article-template-modal" data-type="monthly_report_business_content">
+										{{-- <a data-toggle="modal" data-target="#article-template-modal" data-type="monthly_report_business_content">
 											<button class="template-btn">テンプレート</button>
-										</a>
+										</a> --}}
 									</div>
 									<div class="col-sm-9">
 										<div class="markdown-editor">
-											<ul class="nav nav-tabs nav-justified">
+											{{-- <ul class="nav nav-tabs nav-justified">
 												<li class="tab-md-write active"><a data-toggle="tab" class="text-info" href="#business_content-write">Write</a></li>
 												<li class="tab-md-preview"><a data-toggle="tab" class="text-info" href="#business_content-preview">Preview</a></li>
-											</ul>
+											</ul> --}}
 											<div class="tab-content markdown-content">
 												<div class="tab-pane active" id="business_content-write">
 													<textarea rows="15" class="form-control" placeholder=
@@ -393,8 +414,8 @@
 #### API仕様を整理する
 既に利用しているAPIに関するドキュメントが散らばっている＆欠けている状態だったので、GithubのIssuesに整理したドキュメントを書いた。
 進捗 100%" 
-														name="businessContent" id="monthly_report_business_content"></textarea>
-													<p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p>
+														name="businessContent" id="business_content"></textarea>
+													{{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
 												</div>
 												<div class="tab-pane content-md-preview markdown-body" id="business_content-preview"></div>
 											</div>
@@ -415,17 +436,17 @@
 								</div>
 								<div class="form-group">
 									<div class="control-label col-sm-3" >
-										<label for="monthly_report_looking_back">今月の振り返り</label>
-										<a data-toggle="modal" data-target="#article-template-modal" data-type="monthly_report_looking_back">
+										<label for="looking_back">今月の振り返り</label>
+										{{-- <a data-toggle="modal" data-target="#article-template-modal" data-type="monthly_report_looking_back">
 											<button class="template-btn">テンプレート</button>
-										</a>
+										</a> --}}
 									</div>
 									<div class="col-sm-9">
 										<div class="markdown-editor">
-											<ul class="nav nav-tabs nav-justified">
+											{{-- <ul class="nav nav-tabs nav-justified">
 												<li class="tab-md-write active"><a data-toggle="tab" class="text-info" href="#looking_back-write">Write</a></li>
 												<li class="tab-md-preview"><a data-toggle="tab" class="text-info" href="#looking_back-preview">Preview</a></li>
-											</ul>
+											</ul> --}}
 											<div class="tab-content markdown-content">
 												<div class="tab-pane active" id="looking_back-write">
 													<textarea rows="15" class="form-control" placeholder=
@@ -433,8 +454,8 @@
 1. ・・・・のでできた。
 2. ・・・・なのであまりできなかった。
 3. ・・・・のでできなかった。"
-													 	name="lookingBack" id="monthly_report_looking_back"></textarea>
-													<p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p>
+													 	name="lookingBack" id="looking_back"></textarea>
+													{{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
 												</div>
 												<div class="tab-pane content-md-preview markdown-body" id="looking_back-preview"></div>
 											</div>
@@ -443,17 +464,17 @@
 								</div>
 								<div class="form-group">
 									<div class="control-label col-sm-3">
-										<label for="monthly_report_next_month_goals">来月の目標</label>
-										<a data-toggle="modal" data-target="#article-template-modal" data-type="monthly_report_next_month_goals">
+										<label for="next_month_goals">来月の目標</label>
+										{{-- <a data-toggle="modal" data-target="#article-template-modal" data-type="monthly_report_next_month_goals">
 											<button class="template-btn">テンプレート</button>
-										</a>
+										</a> --}}
 									</div>
 									<div class="col-sm-9">
 										<div class="markdown-editor">
-											<ul class="nav nav-tabs nav-justified">
+											{{-- <ul class="nav nav-tabs nav-justified">
 												<li class="tab-md-write active"><a data-toggle="tab" class="text-info" href="#next_month_goals-write">Write</a></li>
 												<li class="tab-md-preview"><a data-toggle="tab" class="text-info" href="#next_month_goals-preview">Preview</a></li>
-											</ul>
+											</ul> --}}
 										<div class="tab-content markdown-content">
 											<div class="tab-pane active" id="next_month_goals-write">
 												<textarea rows="15" class="form-control" placeholder=
@@ -461,8 +482,8 @@
 1. 
 2. 
 3."
-													 name="nextMonthGoal" id="monthly_report_next_month_goals"></textarea>
-												<p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p>
+													 name="nextMonthGoal" id="next_month_goals"></textarea>
+												{{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
 											</div>
 											<div class="tab-pane content-md-preview markdown-body" id="next_month_goals-preview"></div>
 										</div>
@@ -478,7 +499,7 @@
 					
 					<!-- ここにモーダルをいれる -->
 					<!-- テンプレート一覧モーダル -->
-					<div class="modal fade" id="article-template-modal" action="/inquiries" data-remote="true">
+					{{-- <div class="modal fade" id="article-template-modal" action="/inquiries" data-remote="true">
 						<div class="modal-dialog">
 						<div class="modal-content">
 							<div class="modal-header text-center">
@@ -496,12 +517,12 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> --}}
 				
 				<!-- テンプレート登録モーダル -->
-			<div id="article-template-form" class="modal fade" data-remote="true">
+			{{-- <div id="article-template-form" class="modal fade" data-remote="true"> --}}
 			<!-- <form id="article-template-form" class="modal fade" th:action="@{/templates}" data-remote="true" method="post"> -->
-				<div class="modal-dialog">
+				{{-- <div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header text-center">
 							<h4>テンプレート登録</h4>
@@ -522,11 +543,11 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</div> --}}
 			<!-- </form> -->
 			
 			<!-- テンプレート削除モーダル -->
-			<div class="modal fade" id="article-confirm">
+			{{-- <div class="modal fade" id="article-confirm">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -539,7 +560,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> --}}
 					
 				</div>
 			</div>
@@ -547,3 +568,4 @@
 	</div>
 </body>
 </html>
+</x-app-layout>

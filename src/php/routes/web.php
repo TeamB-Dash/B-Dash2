@@ -50,5 +50,6 @@ require __DIR__.'/auth.php';
 // 月報関連のルート
 Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name('monthlyReport.index');
 Route::get('/monthly_reports/create', [MonthlyReportController::class, 'create'])->name('monthlyReport.create');
+Route::post('/monthly_reports', [MonthlyReportController::class, 'store'])->name('monthlyReport.store');
 Route::get('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'show'])->name('monthlyReport.show');
 

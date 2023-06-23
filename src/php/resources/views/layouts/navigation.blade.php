@@ -36,7 +36,7 @@
 
                                 <x-slot name="content">
 
-                                    <x-dropdown-link :href="route('dashboard')">
+                                    <x-dropdown-link :href="route('monthlyReport.index')">
                                         月報トップ
                                     </x-dropdown-link>
 
