@@ -15,12 +15,12 @@
 
             <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                 <div class="overflow-hidden">
-                    <table class="min-w-full text-left text-sm font-light">
+                    <table class="min-w-full text-left text-sm">
                     <tbody>
                         @foreach ($users as $user )
                         <tr
-                        class="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
-                        <td class="whitespace-nowrap px-6 py-4 font-medium"><span>{{$user->name}}</span><span class="text-gray-400 text-xsmt-0.5">入社日：{{ $user->entry_date  }}</span><span>【{{$user->department->name}}】</span></td>
+                        class="border-b">
+                        <td class="whitespace-nowrap px-2 py-2 font-medium"><span class="px-2">{{$user->name}}</span><span class="text-gray-400 px-2 text-xs mt-0.5">入社日：{{ $user->entry_date  }}</span><span class="px-2">【{{$user->department->name}}】</span></td>
                         @endforeach
                         </tr>
                     </tbody>

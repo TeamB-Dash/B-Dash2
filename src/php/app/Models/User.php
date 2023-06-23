@@ -51,7 +51,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // グローバルスコープ
+    // グローバルスコープ(退社記録のないUserのみ取得する)
     protected static function booted(){
         static::addGlobalScope('deleted_at',function(Builder $builder){
             $builder->where('deleted_at',null);
