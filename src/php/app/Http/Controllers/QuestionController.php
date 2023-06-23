@@ -34,7 +34,7 @@ class QuestionController extends Controller
         ->whereNotNull('shipped_at')
         ->where('is_deleted',false)
         ->orderBy('created_at','desc')->paginate(2);
-        return view('Questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag'));
+        return view('questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag'));
     }
 
     /**
@@ -44,7 +44,7 @@ class QuestionController extends Controller
      */
     public function create()
     {
-        return view('Questions/create');
+        return view('questions/create');
     }
 
     /**
@@ -104,7 +104,7 @@ class QuestionController extends Controller
     public function show(Question $question)
     {
         $question = Question::find($question->id);
-        return view('Questions/show',compact('question'));
+        return view('questions/show',compact('question'));
     }
 
     /**
@@ -117,7 +117,7 @@ class QuestionController extends Controller
     {
         $question = Question::with(['tags'])->find($question->id);
         $tags = $question->tags;
-        return view('Questions.edit',compact('question','tags'));
+        return view('questions.edit',compact('question','tags'));
     }
 
     /**
@@ -181,7 +181,7 @@ class QuestionController extends Controller
         ->paginate(2);
 
         $answers = 'test';
-        return view('Questions/myQuestions',compact('questions','answers'));
+        return view('questions/myQuestions',compact('questions','answers'));
     }
 
     public function showMyDraftQuestions($id){
@@ -191,6 +191,6 @@ class QuestionController extends Controller
         ->orderBy('created_at','desc')
         ->paginate(2);
 
-        return view('Questions/myDraftQuestions',compact('questions'));
+        return view('questions/myDraftQuestions',compact('questions'));
     }
 }

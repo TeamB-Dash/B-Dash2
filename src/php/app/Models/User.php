@@ -7,12 +7,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\Department;
 use App\Models\Article;
+use App\Models\Department;
 use App\Models\MonthlyReport;
+use App\Models\Question;
+use App\Models\UserRole;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+<<<<<<< HEAD
+use Illuminate\Foundation\Auth\User as Authenticatable;
+=======
 use App\Models\Question;
+>>>>>>> origin/develop
 
 class User extends Authenticatable
 {
@@ -86,6 +92,11 @@ class User extends Authenticatable
     public function department()
     {
         return $this->belongsTo(Department::class);
+    }
+
+    // UserRoleへの関連を定義
+    public function role(){
+        return $this->hasOne(UserRole::class);
     }
 
     // MonthlyReportLikesへの関連を定義
