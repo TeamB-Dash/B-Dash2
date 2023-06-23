@@ -24,7 +24,7 @@ class AdminController extends Controller
     {
         $users = User::paginate(20);
         $departments = Department::all();
-        dd($request);
+        // dd($request);
         return view('admin/users/index',compact('users','departments'));
     }
 
