@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\QuestionController;
@@ -66,6 +67,11 @@ Route::prefix('/admin')->middleware('judgeAdmin')->group(function(){
         Route::get('/edit/{id}',[AdminController::class,'edit'])->name('admin.users.edit');
         Route::get('/showDeletePage/{id}',[AdminController::class,'showDeletePage'])->name('admin.users.showDeletePage');
         Route::patch('/update/{id}',[AdminController::class,'update'])->name('admin.users.update');
-        Route::update('destroy/{id}',[AdminController::class,'destroy'])->name('admin.users.destroy');
+        Route::delete('/destroy/{id}',[AdminController::class,'destroy'])->name('admin.users.destroy');
+    });
+    Route::prefix('/announcement')->group(function(){
+        Route::get('/showAll',[AnnouncementController::class,'showAll'])->name('admin.announcement.showAll');
+        Route::get('/create',[AnnouncementController::class,'create'])->name('admin.announcement.create');
+        Route::post('/store',[AnnouncementController::class,'store'])->name('admin.announcement.store');
     });
 });
