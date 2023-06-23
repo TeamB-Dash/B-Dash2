@@ -15,8 +15,12 @@ class AdminController extends Controller
      */
     public function index()
     {
+        return view('admin/top');
+    }
 
-        return view('admin/index');
+    public function users()
+    {
+        return view('admin/users/index');
     }
 
     /**
@@ -26,7 +30,7 @@ class AdminController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin/users/create');
     }
 
     /**
@@ -37,7 +41,7 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return to_route('admin.top')->with('status', 'user created!');
     }
 
     /**
@@ -48,7 +52,8 @@ class AdminController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::find($id);
+        return view('admin/users/show',compact('user'));
     }
 
     /**
@@ -59,7 +64,8 @@ class AdminController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::find($id);
+        return view('admin/users/edit',compact('user'));
     }
 
     /**
@@ -71,9 +77,13 @@ class AdminController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return to_route('admin.top')->with('status', 'update completed!');
     }
 
+    public function showDeletePage($id){
+        $user = User::find($id);
+        return view('admin/users/deletePage',compact('user'));
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -82,6 +92,7 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        return to_route('admin.top')->with('status', 'delete completed!');
     }
 }

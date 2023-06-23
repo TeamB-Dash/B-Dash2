@@ -55,6 +55,17 @@ Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name(
 Route::get('/monthly_reports/create', [MonthlyReportController::class, 'create'])->name('monthlyReport.create');
 Route::get('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'show'])->name('monthlyReport.show');
 
+// 管理者関連のルート
 Route::prefix('/admin')->middleware('judgeAdmin')->group(function(){
     Route::get('/top',[AdminController::class,'index'])->name('admin.top');
+    Route::prefix('/users')->group(function(){
+        Route::get('/',[AdminController::class,'users'])->name('admin.users');
+        Route::get('/create',[AdminController::class,'create'])->name('admin.users.create');
+        Route::post('/store',[AdminController::class,'store'])->name('admin.users.store');
+        Route::get('/show/{id}',[AdminController::class,'show'])->name('admin.users.show');
+        Route::get('/edit/{id}',[AdminController::class,'edit'])->name('admin.users.edit');
+        Route::get('/showDeletePage/{id}',[AdminController::class,'showDeletePage'])->name('admin.users.showDeletePage');
+        Route::patch('/update/{id}',[AdminController::class,'update'])->name('admin.users.update');
+        Route::update('destroy/{id}',[AdminController::class,'destroy'])->name('admin.users.destroy');
+    });
 });
