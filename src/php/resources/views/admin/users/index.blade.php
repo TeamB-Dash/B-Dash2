@@ -13,6 +13,21 @@
         <div class="container px-5 py-24 mx-auto">
           <div class="flex flex-wrap -m-12">
 
+            <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                <div class="overflow-hidden">
+                    <table class="min-w-full text-left text-sm font-light">
+                    <tbody>
+                        @foreach ($users as $user )
+                        <tr
+                        class="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
+                        <td class="whitespace-nowrap px-6 py-4 font-medium"><span>{{$user->name}}</span><span class="text-gray-400 text-xsmt-0.5">入社日：{{ $user->entry_date  }}</span><span>【{{$user->department->name}}】</span></td>
+                        @endforeach
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+                {{$users->links()}}
+            </div>
 
           </div>
         </div>

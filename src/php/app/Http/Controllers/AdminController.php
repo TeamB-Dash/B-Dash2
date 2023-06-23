@@ -15,12 +15,15 @@ class AdminController extends Controller
      */
     public function index()
     {
+
         return view('admin/top');
     }
 
     public function users()
     {
-        return view('admin/users/index');
+        $users = User::paginate(30);
+        // dd($users);
+        return view('admin/users/index',compact('users'));
     }
 
     /**
