@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
@@ -19,11 +20,12 @@ class AdminController extends Controller
         return view('admin/top');
     }
 
-    public function users()
+    public function users(Request $request)
     {
         $users = User::paginate(20);
-        // dd($users);
-        return view('admin/users/index',compact('users'));
+        $departments = Department::all();
+        dd($request);
+        return view('admin/users/index',compact('users','departments'));
     }
 
     /**

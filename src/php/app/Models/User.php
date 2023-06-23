@@ -53,7 +53,7 @@ class User extends Authenticatable
 
     // グローバルスコープ(退社記録のないUserのみ取得する)
     protected static function booted(){
-        static::addGlobalScope('deleted_at',function(Builder $builder){
+        static::addGlobalScope('hired',function(Builder $builder){
             $builder->where('deleted_at',null);
         });
     }
