@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 use App\Models\Tag;
 use App\Models\User;
+use App\Models\Article;
+use App\Models\MonthlyReport;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\RankingService;
+use Cron\MonthField;
 
 class QuestionController extends Controller
 {
@@ -19,11 +23,18 @@ class QuestionController extends Controller
      */
     public function index()
     {
+        $monthlyReportRanking = RankingService::MonthlyReportRanking();
+        $articleRanking = RankingService::ArticleRanking();
+        $rankingByNumberOfArticlesPerTag = RankingService::TagRanking();
+
+        // dd($monthlyReportRanking,$articleRanking,$rankingByNumberOfArticlesPerTag);
+        // dd($articleRanking[0]);
+
         $questions = Question::with(['user','tags','questionAnswers'])
         ->whereNotNull('shipped_at')
         ->where('is_deleted',false)
         ->orderBy('created_at','desc')->paginate(2);
-        return view('Questions/index',compact('questions'));
+        return view('Questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag'));
     }
 
     /**
