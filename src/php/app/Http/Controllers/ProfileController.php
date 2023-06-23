@@ -51,7 +51,7 @@ class ProfileController extends Controller
         $request->user()->save();
         $user_profile->save();
 
-        return Redirect::route('profile.edit')->with('status', 'プロフィールを更新しました。');
+        return redirect()->route('profile.edit');
     }
 
     // public function destroy(Request $request): RedirectResponse
