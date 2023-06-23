@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('admin.top') }}">
                         <p class="block w-auto fill-current text-white" >Admin</p>
                     </a>
                 </div>
@@ -17,7 +17,7 @@
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-400 hover:text-gray-600 hover:bg-white focus:outline-none transition ease-in-out duration-150">
-                                        <x-adminNav-link :active="request()->routeIs('dashboard')">
+                                        <x-adminNav-link :active="request()->routeIs('admin.users*')">
                                             <div>ユーザー</div>
                                         </x-adminNav-link>
 
@@ -31,19 +31,19 @@
 
                                 <x-slot name="content">
 
-                                    <x-dropdown-link :href="route('dashboard')">
+                                    <x-dropdown-link :href="route('admin.users')">
                                         ユーザー検索・一覧
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('dashboard')">
+                                    <x-dropdown-link :href="route('admin.users.create')">
                                         ユーザー登録
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('dashboard')">
+                                    <x-dropdown-link :href="route('admin.users.role')">
                                         管理者一覧
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('dashboard')">
+                                    <x-dropdown-link :href="route('admin.users.registerNewRole')">
                                         管理者登録
                                     </x-dropdown-link>
 
@@ -57,7 +57,7 @@
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-400 hover:text-gray-600 hover:bg-white focus:outline-none transition ease-in-out duration-150">
-                                        <x-adminNav-link :active="request()->routeIs('dashboard')">
+                                        <x-adminNav-link :active="request()->routeIs('admin.inquiry.*')">
                                             <div>問い合わせ</div>
                                         </x-adminNav-link>
 
@@ -70,10 +70,10 @@
                                 </x-slot>
 
                                 <x-slot name="content">
-                                    <x-dropdown-link :href="route('dashboard')">
+                                    <x-dropdown-link :href="route('admin.inquiry.showAll')">
                                         問い合わせ一覧
                                     </x-dropdown-link>
-                                    <x-dropdown-link :href="route('dashboard')">
+                                    <x-dropdown-link :href="route('admin.inquiry.mailList')">
                                         問い合わせメーリングリスト
                                     </x-dropdown-link>
                                 </x-slot>
@@ -86,7 +86,7 @@
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-400 hover:text-gray-600 hover:bg-white focus:outline-none transition ease-in-out duration-150">
-                                        <x-adminNav-link :active="request()->routeIs('questions.*')">
+                                        <x-adminNav-link :active="request()->routeIs('admin.announcement.*')">
                                             <div>お知らせ</div>
                                         </x-adminNav-link>
 
@@ -100,11 +100,11 @@
 
                             <x-slot name="content">
 
-                                <x-dropdown-link :href="route('questions.index')">
+                                <x-dropdown-link :href="route('admin.announcement.showAll')">
                                     お知らせ一覧
                                 </x-dropdown-link>
 
-                                <x-dropdown-link :href="route('questions.create')">
+                                <x-dropdown-link :href="route('admin.announcement.create')">
                                     お知らせ登録
                                 </x-dropdown-link>
 

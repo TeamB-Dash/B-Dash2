@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\AdminInquiryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\QuestionController;
@@ -68,10 +69,19 @@ Route::prefix('/admin')->middleware('judgeAdmin')->group(function(){
         Route::get('/showDeletePage/{id}',[AdminController::class,'showDeletePage'])->name('admin.users.showDeletePage');
         Route::patch('/update/{id}',[AdminController::class,'update'])->name('admin.users.update');
         Route::delete('/destroy/{id}',[AdminController::class,'destroy'])->name('admin.users.destroy');
+
+        Route::get('/roles',[AdminController::class,'roles'])->name('admin.users.role');
+        Route::get('/roles/new',[AdminController::class,'registerNewRole'])->name('admin.users.registerNewRole');
+        Route::post('/roles/new/{id}',[AdminController::class,'storeNewRole'])->name('admin.users.storeNewRole');
     });
     Route::prefix('/announcement')->group(function(){
         Route::get('/showAll',[AnnouncementController::class,'showAll'])->name('admin.announcement.showAll');
         Route::get('/create',[AnnouncementController::class,'create'])->name('admin.announcement.create');
         Route::post('/store',[AnnouncementController::class,'store'])->name('admin.announcement.store');
+    });
+    Route::prefix('/inquiry')->group(function(){
+        Route::get('/showAll',[AdminInquiryController::class,'showAll'])->name('admin.inquiry.showAll');
+        Route::get('/mainList',[AdminInquiryController::class,'mailList'])->name('admin.inquiry.mailList');
+        Route::post('/store',[AdminInquiryController::class,'store'])->name('admin.inquiry.store');
     });
 });

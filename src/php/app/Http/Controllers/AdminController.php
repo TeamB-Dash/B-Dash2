@@ -95,4 +95,14 @@ class AdminController extends Controller
         $user = User::find($id);
         return to_route('admin.top')->with('status', 'delete completed!');
     }
+
+    public function roles(){
+        return view('admin/users/showRoles');
+    }
+    public function registerNewRole(Request $request){
+        return view('admin/users/registerRolePage');
+    }
+    public function storeNewRole(){
+        return to_route('admin.users.role');
+    }
 }
