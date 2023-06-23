@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MonthlyReportController;
 use App\Models\MonthlyReport;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -40,17 +39,17 @@ Route::middleware('auth')->group(function(){
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/following/destroy{id}', [ProfileController::class, 'followingUserDestroy'])->name('following.destroy');
+    Route::post('/profile/followed/destroy{id}', [ProfileController::class, 'followedUserDestroy'])->name('followed.destroy');
 });
 
 Route::resource('/articles', ArticleController::class)
-    ->middleware('auth');
+->middleware('auth');
 Route::resource('/articles', ArticleController::class)
-    ->only(['show']);
+->only(['show']);
 
-    Route::get('/articles/users/{id}',[ArticleController::class,'showArticles'])->name('articles.myblog');
-
-require __DIR__.'/auth.php';
+Route::get('/articles/users/{id}', [ArticleController::class, 'showArticles'])->name('articles.myblog');
 
 // 月報関連のルート
 Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name('monthlyReport.index');
@@ -85,3 +84,4 @@ Route::prefix('/admin')->middleware('judgeAdmin')->group(function(){
         Route::post('/store',[AdminInquiryController::class,'store'])->name('admin.inquiry.store');
     });
 });
+require __DIR__ . '/auth.php';
