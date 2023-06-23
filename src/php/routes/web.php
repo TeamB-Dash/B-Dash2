@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MonthlyReportController;
 use App\Models\MonthlyReport;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,27 +27,27 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::resource('/questions', QuestionController::class);
-Route::get('/questions/users/{id}',[QuestionController::class,'showMyQuestions'])->name('questions.showMyQuestions');
-Route::get('/questions/users/{id}/drafts',[QuestionController::class,'showMyDraftQuestions'])->name('questions.showMyDraftQuestions');
-
+Route::get('/questions/users/{id}', [QuestionController::class, 'showMyQuestions'])->name('questions.showMyQuestions');
+Route::get('/questions/users/{id}/drafts', [QuestionController::class, 'showMyDraftQuestions'])->name('questions.showMyDraftQuestions');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/following/destroy{id}', [ProfileController::class, 'followingUserDestroy'])->name('following.destroy');
+    Route::post('/profile/followed/destroy{id}', [ProfileController::class, 'followedUserDestroy'])->name('followed.destroy');
 });
 
 Route::resource('/articles', ArticleController::class)
-    ->middleware('auth');
+->middleware('auth');
 Route::resource('/articles', ArticleController::class)
-    ->only(['show']);
+->only(['show']);
 
-    Route::get('/articles/users/{id}',[ArticleController::class,'showArticles'])->name('articles.myblog');
-
-require __DIR__.'/auth.php';
+Route::get('/articles/users/{id}', [ArticleController::class, 'showArticles'])->name('articles.myblog');
 
 // 月報関連のルート
 Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name('monthlyReport.index');
 Route::get('/monthly_reports/create', [MonthlyReportController::class, 'create'])->name('monthlyReport.create');
 Route::get('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'show'])->name('monthlyReport.show');
 
+require __DIR__ . '/auth.php';
