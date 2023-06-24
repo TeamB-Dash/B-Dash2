@@ -8,7 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="mx-auto block max-w-lg rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+                <div class="mt-8 mx-auto block max-w-lg rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
                     <form method="POST" action="{{ route('questions.store') }}">
                         @csrf
                         <div class="grid grid-cols-1 gap-4">
@@ -54,7 +54,7 @@
 
                         <!--Body-->
                         <div
-                            class="mb-6 min-h-[1.5rem] items-center justify-center pl-[1.5rem]">
+                            class="mb-6 min-h-[1.5rem] items-center justify-center">
                             <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">質問内容</label>
                             <textarea id="message" name="content" rows="30" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
                         </div>
