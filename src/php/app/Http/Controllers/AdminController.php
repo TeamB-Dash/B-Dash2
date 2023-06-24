@@ -105,7 +105,11 @@ class AdminController extends Controller
     }
 
     public function roles(){
-        return view('admin/users/showRoles');
+        $users = User::whereHas('role',function($query){
+            $query->where('role','=','0');
+        })
+        ->get();
+        return view('admin/users/showRoles',compact('users'));
     }
     public function registerNewRole(Request $request){
         return view('admin/users/registerRolePage');
