@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Services\SearchUserService;
 use App\Models\User;
 use App\Models\Department;
-use Illuminate\Support\Facades\Auth;
+
+use function PHPUnit\Framework\isEmpty;
 
 class AdminController extends Controller
 {
@@ -22,9 +25,9 @@ class AdminController extends Controller
 
     public function users(Request $request)
     {
-        $users = User::paginate(20);
+        $users = SearchUserService::searchUser($request);
         $departments = Department::all();
-        // dd($request);
+
         return view('admin/users/index',compact('users','departments'));
     }
 
