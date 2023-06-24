@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Announcement;
 
 class AnnouncementController extends Controller
 {
     public function showAll(){
-        return view('admin/announcement/showAllPage');
+        $announcements = Announcement::orderBy('created_at','DESC')->paginate(10);
+        return view('admin/announcement/showAllPage',compact('announcements'));
     }
     public function create(){
         return view('admin/announcement/create');
