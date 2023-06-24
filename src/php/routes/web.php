@@ -72,6 +72,7 @@ Route::prefix('/admin')->middleware('judgeAdmin')->group(function(){
         Route::get('/roles',[AdminController::class,'roles'])->name('admin.users.role');
         Route::get('/roles/new',[AdminController::class,'registerNewRole'])->name('admin.users.registerNewRole');
         Route::post('/roles/new/{id}',[AdminController::class,'storeNewRole'])->name('admin.users.storeNewRole');
+        Route::delete('/roles/delete/{id}',[AdminController::class,'destroy'])->name('admin.users.delete');
     });
     Route::prefix('/announcement')->group(function(){
         Route::get('/showAll',[AnnouncementController::class,'showAll'])->name('admin.announcement.showAll');

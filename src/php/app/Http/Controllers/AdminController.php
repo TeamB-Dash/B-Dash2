@@ -102,8 +102,8 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::find($id);
-        return to_route('admin.top')->with('status', 'delete completed!');
+        UserRole::where('user_id',$id)->delete();
+        return to_route('admin.top')->with('status', '削除しました');
     }
 
     public function roles(){
@@ -130,7 +130,6 @@ class AdminController extends Controller
                 'user_id' => $id,
                 'role' => 0,
             ]);
-
             return to_route('admin.users.role')->with('status','登録しました');
         } else if($user->role->role === 0) {
             return to_route('admin.users.role')->with('status','既に登録済みです');
