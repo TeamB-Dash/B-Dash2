@@ -112,8 +112,14 @@ class AdminController extends Controller
         return view('admin/users/showRoles',compact('users'));
     }
     public function registerNewRole(Request $request){
-        return view('admin/users/registerRolePage');
+        $users = collect([]);
+        if(isset($request->name)){
+            $users = SearchUserService::searchUser($request);
+        }
+
+        return view('admin/users/registerRolePage',compact('users'));
     }
+
     public function storeNewRole(){
         return to_route('admin.users.role');
     }

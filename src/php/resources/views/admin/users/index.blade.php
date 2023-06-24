@@ -35,7 +35,7 @@
                     </tbody>
                     </table>
                 </div>
-                {{$users->links()}}
+                {{$users->appends(request()->query())->links()}}
             </div>
 
           </div>
