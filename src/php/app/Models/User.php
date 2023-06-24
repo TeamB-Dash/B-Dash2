@@ -98,7 +98,8 @@ class User extends Authenticatable
     }
 
     // UserRoleへの関連を定義
-    public function role(){
+    public function role()
+    {
         return $this->hasOne(UserRole::class);
     }
 

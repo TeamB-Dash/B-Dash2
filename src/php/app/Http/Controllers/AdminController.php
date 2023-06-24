@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Services\SearchUserService;
 use App\Models\User;
+use App\Models\UserRole;
 use App\Models\Department;
 
 use function PHPUnit\Framework\isEmpty;
+use function PHPUnit\Framework\isNull;
 
 class AdminController extends Controller
 {
@@ -111,6 +113,7 @@ class AdminController extends Controller
         ->get();
         return view('admin/users/showRoles',compact('users'));
     }
+
     public function registerNewRole(Request $request){
         $users = collect([]);
         if(isset($request->name)){
@@ -120,7 +123,19 @@ class AdminController extends Controller
         return view('admin/users/registerRolePage',compact('users'));
     }
 
-    public function storeNewRole(){
-        return to_route('admin.users.role');
+    public function storeNewRole($id){
+        $user = User::with(['role'])->find($id);
+        if(is_null($user->role)){
+            $userRole = UserRole::create([
+                'user_id' => $id,
+                'role' => 0,
+            ]);
+
+            return to_route('admin.users.role')->with('status','登録しました');
+        } else if($user->role->role === 0) {
+            return to_route('admin.users.role')->with('status','既に登録済みです');
+        } else {
+            return to_route('admin.users.role')->with('status','登録できないユーザーです');
+        }
     }
 }

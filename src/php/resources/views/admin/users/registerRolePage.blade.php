@@ -35,24 +35,27 @@
 
             {{-- 社員一覧 --}}
             <div class="w-2/3 py-2 sm:px-2 lg:px-2 mx-auto">
-                <div class="overflow-hidden">
                 @if ($users->isEmpty())
                 <p class="text-center">該当のユーザーは存在しません。</p>
                 @elseif ($users->isNotEmpty())
+                <div class="overflow-hidden">
                     <table class="min-w-full text-left text-sm">
                         <tbody>
                             @foreach ($users as $user )
                             <tr
                             class="border-b">
-                            <td class="whitespace-nowrap px-2 py-2 font-medium flex">
+                            <td class="whitespace-nowrap px-2 py-2 font-medium">
+                                <form method="post" class="flex" action="{{route('admin.users.storeNewRole',$user->id)}}">
+                                    @csrf
                                 <span class="px-2">{{$user->name}}</span>
                                 <span class="text-gray-400 px-2 text-xs mt-0.5">入社日：{{ $user->entry_date  }}</span>
                                 <span class="px-2">【{{$user->department->name}}】</span>
-                                <button type="button" name="addRole" href="#" class="ml-auto bg-green-500 text-white px-2 py-1 rounded">追加
+                                <button type="submit" name="addRole" value="{{$user->id}}" class="ml-auto bg-green-500 text-white px-2 py-1 rounded justify-end">追加
                                 </button>
+                                </form>
                             </td>
-                            @endforeach
                             </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
