@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/profile/following/destroy{id}', [ProfileController::class, 'followingUserDestroy'])->name('following.destroy');
     Route::post('/profile/followed/destroy{id}', [ProfileController::class, 'followedUserDestroy'])->name('followed.destroy');
+    Route::post('/profile/submitInquiry',[ProfileController::class,'submitInquiry'])->name('profile.submitInquiry');
 });
 
 Route::resource('/articles', ArticleController::class)

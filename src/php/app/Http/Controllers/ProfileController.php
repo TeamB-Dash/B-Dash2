@@ -6,10 +6,12 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use App\Models\UserProfile;
 use App\Models\Department;
 use App\Models\UserFollow;
+use App\Models\Inquiry;
 
 class ProfileController extends Controller
 {
@@ -82,5 +84,22 @@ class ProfileController extends Controller
     {
         UserFollow::where('followed_user_id', $id)->delete();
         return redirect()->route('profile.edit');
+    }
+
+    public function submitInquiry(Request $request){
+
+        DB::beginTransaction();
+        try{
+            Inquiry::create([
+                'user_id' => $request->user_id,
+                'body' => $request->inquiry,
+                'referer' => $request->referer,
+            ]);
+            DB::commit();
+            return to_route('questions.index')->with('status','お問い合わせを送信しました');
+        }catch(\Exception $e){
+            DB::rollBack();
+            return to_route('questions.index')->with('status','お問い合わせの送信に失敗しました');
+        }
     }
 }

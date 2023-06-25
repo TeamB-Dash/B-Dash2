@@ -264,4 +264,4 @@
     </div>
 </nav>
 
-<x-modal-component></x-modal-component>
+<x-modal-component :user="Auth::id()"></x-modal-component>
