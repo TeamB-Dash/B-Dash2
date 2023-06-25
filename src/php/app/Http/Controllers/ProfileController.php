@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Mail\SendInquiryMail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use App\Models\UserProfile;
 use App\Models\Department;
@@ -86,7 +88,8 @@ class ProfileController extends Controller
         return redirect()->route('profile.edit');
     }
 
-    public function submitInquiry(Request $request){
+    public function submitInquiry(Request $request)
+    {
 
         DB::beginTransaction();
         try{
@@ -96,10 +99,17 @@ class ProfileController extends Controller
                 'referer' => $request->referer,
             ]);
             DB::commit();
+            $this->sendEmail();
             return to_route('questions.index')->with('status','お問い合わせを送信しました');
         }catch(\Exception $e){
             DB::rollBack();
+            dd($e->getMessage());
             return to_route('questions.index')->with('status','お問い合わせの送信に失敗しました');
         }
     }
+
+    public function sendEmail(){
+        Mail::send(new SendInquiryMail());
+    }
+
 }
