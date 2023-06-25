@@ -12,6 +12,7 @@
         @endif
         <div class="container px-5 py-24 mx-auto">
           <div class="flex flex-wrap -m-12">
+
             <div class="w-2/3 py-2 sm:px-2 lg:px-2 mx-auto">
                 <div class="overflow-hidden">
                     @if ($announcements->isEmpty())
@@ -30,7 +31,6 @@
                 </div>
                 {{$announcements->appends(request()->query())->links()}}
             </div>
-
 
           </div>
         </div>

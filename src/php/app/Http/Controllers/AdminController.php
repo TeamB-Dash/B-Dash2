@@ -125,7 +125,7 @@ class AdminController extends Controller
 
     public function storeNewRole($id){
         $user = User::with(['role'])->find($id);
-        if(is_null($user->role)){
+        if(!is_null($user->deleted_at) && is_null($user->role)){
             $userRole = UserRole::create([
                 'user_id' => $id,
                 'role' => 0,

@@ -90,6 +90,12 @@ class ProfileController extends Controller
         return redirect()->route('profile.edit');
     }
 
+    /**
+     * 問い合わせを新規作成し、担当の管理者へメール通知を行う
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function submitInquiry(Request $request)
     {
         $user_name = User::find($request->user_id)->name;
@@ -99,6 +105,7 @@ class ProfileController extends Controller
         $ccUser = User::whereHas('role',function($query){
             $query->where('inquiry_send',0);
         })->select('email')->get()->toArray();
+
         DB::beginTransaction();
         try{
             $inquiry = Inquiry::create([
@@ -116,6 +123,16 @@ class ProfileController extends Controller
         }
     }
 
+    /**
+     * メールを送信する処理
+     *
+     * @param $body 問い合わせ内容
+     * @param $name 問い合わせしたユーザー名
+     * @param $toUser toに設定した管理者（=user_roleテーブルのinquiry_sendカラムが1のユーザー）
+     * @param $toUser ccに設定した管理者（=user_roleテーブルのinquiry_sendカラムが2のユーザー）
+     *
+     * @return void
+     */
     public function sendEmail($body,$name,$toUser,$ccUser){
         Mail::to($toUser)->cc($ccUser)->send(new SendInquiryMail($body,$name));
     }

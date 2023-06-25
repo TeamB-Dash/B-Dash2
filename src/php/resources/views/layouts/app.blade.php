@@ -16,11 +16,11 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
-            {{-- @if (Auth::user()->role->role === 0) --}}
-                {{-- @include('layouts.adminNavigation') --}}
-            {{-- @else --}}
+            @if (Auth::user()->role->role === 0)
+                @include('layouts.adminNavigation')
+            @else
                 @include('layouts.navigation')
-            {{-- @endif --}}
+            @endif
 
             <!-- Page Heading -->
             @if (isset($header))

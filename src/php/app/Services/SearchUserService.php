@@ -18,7 +18,9 @@ class SearchUserService
 
         if(isset($request->status)){
             if($request->status === "retired"){
-                $subQuery = $subQuery->withoutGlobalScope('hired')->whereNotNull('deleted_at');
+                $subQuery = $subQuery->whereNotNull('deleted_at');
+            }else if($request->status === "working"){
+                $subQuery = $subQuery->whereNull('deleted_at');
             }
         }
 

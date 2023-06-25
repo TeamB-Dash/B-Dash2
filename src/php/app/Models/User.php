@@ -51,13 +51,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // グローバルスコープ(退社記録のないUserのみ取得する)
-    protected static function booted(){
-        static::addGlobalScope('hired',function(Builder $builder){
-            $builder->where('deleted_at',null);
-        });
-    }
-
     public function followings()
     {
         return $this->belongsToMany(User::class, 'user_follows', 'followed_user_id', 'user_id');
