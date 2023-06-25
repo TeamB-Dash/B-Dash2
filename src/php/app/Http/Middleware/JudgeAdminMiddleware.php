@@ -18,7 +18,10 @@ class JudgeAdminMiddleware
     public function handle(Request $request, Closure $next)
     {
         // Auth::userのuser_roleが0(管理者)であれば、次の処理へ移行。
-        if(Auth::check() && Auth::user()->role->role === 0 ){
+        $judge = Auth::user()->role;
+        if(is_null($judge)){
+            return redirect()->route('login');
+        }else if($judge->role === 0){
             return $next($request);
         }
         return redirect()->route('login');
