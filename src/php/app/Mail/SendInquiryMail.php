@@ -13,14 +13,18 @@ class SendInquiryMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    protected $body;
+    protected $name;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($name,$body)
     {
-        //
+        $this->name = $name;
+        $this->body = $body;
     }
 
     /**
@@ -33,8 +37,6 @@ class SendInquiryMail extends Mailable
         return new Envelope(
             subject: 'Send Inquiry Mail',
             from: 'hello@example.com',
-            to: 'hello@example.com',
-            cc: 'hello@example.com',
         );
     }
 
@@ -47,6 +49,10 @@ class SendInquiryMail extends Mailable
     {
         return new Content(
             view: 'mails.inquiry',
+            with: [
+                'body' => $this->body,
+                'user' => $this->name,
+            ]
         );
     }
 

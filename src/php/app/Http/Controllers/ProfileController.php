@@ -14,6 +14,8 @@ use App\Models\UserProfile;
 use App\Models\Department;
 use App\Models\UserFollow;
 use App\Models\Inquiry;
+use App\Models\User;
+use App\Models\UserRole;
 
 class ProfileController extends Controller
 {
@@ -90,16 +92,22 @@ class ProfileController extends Controller
 
     public function submitInquiry(Request $request)
     {
-
+        $user_name = User::find($request->user_id)->name;
+        $toUser = User::whereHas('role',function($query){
+            $query->where('inquiry_send',1);
+        })->select('email')->first();
+        $ccUser = User::whereHas('role',function($query){
+            $query->where('inquiry_send',0);
+        })->select('email')->get()->toArray();
         DB::beginTransaction();
         try{
-            Inquiry::create([
+            $inquiry = Inquiry::create([
                 'user_id' => $request->user_id,
                 'body' => $request->inquiry,
                 'referer' => $request->referer,
             ]);
             DB::commit();
-            $this->sendEmail();
+            $this->sendEmail($user_name,$inquiry->body,$toUser,$ccUser);
             return to_route('questions.index')->with('status','お問い合わせを送信しました');
         }catch(\Exception $e){
             DB::rollBack();
@@ -108,8 +116,8 @@ class ProfileController extends Controller
         }
     }
 
-    public function sendEmail(){
-        Mail::send(new SendInquiryMail());
+    public function sendEmail($body,$name,$toUser,$ccUser){
+        Mail::to($toUser)->cc($ccUser)->send(new SendInquiryMail($body,$name));
     }
 
 }
