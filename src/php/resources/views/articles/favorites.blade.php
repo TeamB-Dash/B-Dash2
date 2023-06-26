@@ -36,6 +36,7 @@
 		  			<div class="page-content mt-15px">
 						<!-- ブログ一覧 -->
           @foreach($articleFavorites as $favorite)
+		  @if ($favorite->is_deleted === false)
               <div class="card mt-3">
                   <div class="card-body">
                       <a class="text-dark" href="{{ route('articles.show', ['article' => $favorite->articles->id]) }}">
@@ -43,8 +44,9 @@
                       </a>  
                   </div>
               </div>
+			  @endif
           @endforeach
-          
+
                           <!-- ページング -->
                           {{$articleFavorites->links('pagination::bootstrap-4')}}
             <hr>

@@ -80,7 +80,7 @@
                                     </x-dropdown-link>
                                     {{-- ToDOログインした場合のみ表示させた方がいい？ --}}
 
-                                    <x-dropdown-link :href="route('dashboard')">
+                                    <x-dropdown-link :href="route('articles.favorites',['id' => Auth::user()->id])">
                                         お気に入りブログ
                                     </x-dropdown-link>
 

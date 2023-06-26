@@ -25,20 +25,30 @@ class ArticleController extends Controller
         $articlesQuery = Article::query()
             ->orderByDesc('created_at');
     
-        $keyword = $request->input('keyword');
-        $article_category_id = $request->input('article_category_id');
-        $department_id = $request->input('department_id');
-    
-        if (!empty($keyword)) {
-            $articlesQuery->where(function ($query) use ($keyword) {
-                $query->where('title', 'LIKE', "%{$keyword}%")
-                    ->orWhere('body', 'LIKE', "%{$keyword}%")
-                    ->orWhereHas('user', function ($q) use ($keyword) {
-                        $q->where('name', 'LIKE', "%{$keyword}%");
-                    });
-            });
-        }
-    
+            $keyword = $request->input('keyword');
+            $article_category_id = $request->input('article_category_id');
+            $department_id = $request->input('department_id');
+            
+            if (!empty($keyword)) {
+                // 全角スペースを半角スペースに変換
+                $keyword = mb_convert_kana($keyword, 's');
+            
+                // キーワードを空白で区切る
+                $keywords = explode(' ', $keyword);
+            
+                $articlesQuery->where(function ($query) use ($keywords) {
+                    foreach ($keywords as $keyword) {
+                        $query->where(function ($query) use ($keyword) {
+                            $query->where('title', 'LIKE', "%{$keyword}%")
+                                ->orWhere('body', 'LIKE', "%{$keyword}%")
+                                ->orWhereHas('user', function ($q) use ($keyword) {
+                                    $q->where('name', 'LIKE', "%{$keyword}%");
+                                });
+                        });
+                    }
+                });
+            }
+            
         if (!empty($article_category_id)) {
             $articlesQuery->where('article_category_id', $article_category_id);
         }

@@ -43,7 +43,7 @@
 					<li style="margin-bottom:3px"><a class="bg-primary" href="/articles/create">新規投稿</a></li>
 					{{-- ToDOログインした場合のみ表示させる --}}
 					<li><a class="bg-primary" href="{{ route('articles.myblog',Auth::user()->id) }}">マイブログ</a></li>
-					<li><a class="bg-primary" href="/articles/users-favorite/1422">お気に入りブログ</a></li>
+					<li><a class="bg-primary" href="{{ route('articles.favorites',['id' => Auth::user()->id]) }}">お気に入りブログ</a></li>
 				</ul>
 		</div>
 	</div>
