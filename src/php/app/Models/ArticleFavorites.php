@@ -25,8 +25,7 @@ class ArticleFavorites extends Model
     
     public function articles(): BelongsTo
     {
-        // return $this->hasMany(Article::class, 'id');
-        // return $this->belongsTo(Article::class);
+
         return $this->belongsTo(Article::class, 'article_id');
     }
     

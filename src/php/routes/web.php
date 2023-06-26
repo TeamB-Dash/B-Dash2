@@ -45,7 +45,6 @@ Route::resource('/articles', ArticleController::class)
     Route::get('/articles/users-favorite/{id}',[ArticleController::class,'showFavoriteArticles'])->name('articles.favorites');
 
 Route::post('/articles/{article}/favorite',[ArticleController::class,'favorite'])->name('articles.favorite');
-// Route::get('/articles/{article}/unfavorite',[ArticleController::class,'unfavorite'])->name('articles.unfavorite');
 Route::delete('/articles/{article}/unfavorite',[ArticleController::class,'unfavorite'])->name('articles.unfavorite');
 
 require __DIR__.'/auth.php';

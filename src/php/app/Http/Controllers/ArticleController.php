@@ -22,40 +22,38 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $articles = Article::query()
-        ->orderByDesc('created_at')
-        ->paginate(20);
-        
-        // キーワード検索
-    $keyword = $request->input('keyword');
-    $article_category_id = $request->input('article_category_id');
-
-        $query = Article::query();
-
-        if(!empty($keyword)) {
-            $query->where('title', 'LIKE', "%{$keyword}%")
-                ->orWhere('body', 'LIKE', "%{$keyword}%");
-            $query->orWhereHas('user', function ($q) use ($keyword) {
-                    $q->where('name', 'LIKE', "%{$keyword}%");
-                });
-                
-                
-                $articles = $query
-                ->orderByDesc('created_at')
-                ->paginate(20);
+        $articlesQuery = Article::query()
+            ->orderByDesc('created_at');
+    
+        $keyword = $request->input('keyword');
+        $article_category_id = $request->input('article_category_id');
+        $department_id = $request->input('department_id');
+    
+        if (!empty($keyword)) {
+            $articlesQuery->where(function ($query) use ($keyword) {
+                $query->where('title', 'LIKE', "%{$keyword}%")
+                    ->orWhere('body', 'LIKE', "%{$keyword}%")
+                    ->orWhereHas('user', function ($q) use ($keyword) {
+                        $q->where('name', 'LIKE', "%{$keyword}%");
+                    });
+            });
         }
-
+    
         if (!empty($article_category_id)) {
-            $query->where('article_category_id', $article_category_id);
-            $articles = $query
-            ->orderByDesc('created_at')
-            ->paginate(20);
+            $articlesQuery->where('article_category_id', $article_category_id);
         }
-        
-
-
-        return view('articles.index', compact('articles', 'keyword','article_category_id'));
+    
+        if (!empty($department_id)) {
+            $articlesQuery->whereHas('user', function ($q) use ($department_id) {
+                $q->where('department_id', $department_id);
+            });
+        }
+    
+        $articles = $articlesQuery->paginate(20);
+    
+        return view('articles.index', compact('articles', 'keyword', 'article_category_id', 'department_id'));
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -81,14 +79,6 @@ class ArticleController extends Controller
         $article->save();
         return redirect()->route('articles.index');
 
-
-        // $articleFavorites = new ArticleFavorites;
-        // $articleFavorites->article_id = $request->article_id;
-        // $articleFavorites->user_id = Auth::user()->id;
-        // $articleFavorites->save();
-
-    
-        // return redirect()->route('articles.index',[$request->article_id]);
     }
 
     /**
@@ -146,14 +136,6 @@ class ArticleController extends Controller
         $article->delete();
         
         return redirect()->route('articles.index');
-
-
-        // $article=Article::findOrFail($id);
-
-        // $article->articleFavorites()->delete();
-
-
-        // return redirect()->route('articles.index',[$request->article_id]);
     }
 
     public function showArticles($id){
@@ -179,68 +161,6 @@ class ArticleController extends Controller
     return view('articles.favorites', compact('user','articleFavorites'));
 }
 
-//     public function favorite(ArticleFavorites $articleFavorites,Article $article, Request $request){
-
-//     //     $articleFavorites=New ArticleFavorites();
-//     //     $articleFavorites->article_id=$article->id;
-//     //     $articleFavorites->user_id=Auth::user()->id;
-//     //     $articleFavorites->save();
-//     //     return back();
-
-//     $articleFavorites = new ArticleFavorites;
-//     $articleFavorites->article_id = $request->article_id;
-//     $articleFavorites->user_id = Auth::user()->id;
-//     $articleFavorites->save();
-
-
-//     return redirect()->route('articles.show',[$request->article_id]);
-
-//     }
-
-//     // public function unfavorite(Article $article, Request $request, $id){
-//     // //     $user=Auth::user()->id;
-//     // //     $articleFavorites=ArticleFavorites::where('article_id', $article->id)->where('user_id', $user)->first();
-//     // //     $articleFavorites->delete();
-//     // //     return back();
-
-//     // $article=Article::findOrFail($id);
-
-//     // $article->articleFavorites()->delete();
-
-//     // return redirect()->route('articles.show',[$request->article_id]);
-//     // }
-
-//     public function unfavorite(Article $article, Request $request)
-// {
-//     $user = Auth::user();
-//     $article->articleFavorites()->where('user_id', $user->id)->delete();
-//     return redirect()->route('articles.show', ['article' => $article->id]);
-// }
-
-// public function favorite(Article $article, Request $request)
-// {
-//     $user = Auth::user();
-//     $article->articleFavorites()->create([
-//         'article_id' => $article->id,
-//         'is_deleted' => false,
-//     ]);
-    
-//     return redirect()->route('articles.show', ['article' => $article->id]);
-// }
-
-// public function favorite(Article $article, Request $request)
-// {
-//     if (Auth::check()) {
-//         $user = Auth::user();
-//         $article->articleFavorites()->create([
-//             'user_id' => $user->id,
-//             'article_id' => $article->id,
-//             'is_deleted' => false,
-//         ]);
-//     }
-
-//     return redirect()->route('articles.show', ['article' => $article->id]);
-// }
 
 public function favorite(Article $article, Request $request)
 {

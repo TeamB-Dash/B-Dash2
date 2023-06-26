@@ -112,17 +112,23 @@
                           <input type="text" name="keyword" value="{{ $keyword }}">
                           <input type="submit" value="検索">
 						  <br>
-						  <div class="text-center" style="padding-bottom:1.5rem">
-                            <span>
-                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=1">備忘録</a>
-                            </span><span>
-                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=2">技術共有</a>
-                            </span><span>
-                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=3">体験共有</a>
-                            </span><span>
-                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=4">その他</a>
-                            </span>
-                        </div>
+						  <div class="text-center" style="margin-bottom:1.5rem">
+							<span>
+								<a class="text-info side-dep" href="/articles?department_id=1">【 WEB 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=2">【 CL 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=3">【 ML 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=4">【 内勤 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=6">【 FR 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=7">【 QA 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=8">【 PHP 】</a>
+							</span>
+						</div>
                           <div class="text-center" style="padding-bottom:1.5rem">
                             <span>
                                 <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=1">備忘録</a>
@@ -138,35 +144,7 @@
                       </div>
                 </div>
             </div>
-					{{-- <div class="text-center" style="margin-bottom:1.5rem">
-						<span>
-							<a class="text-info side-dep" href="/articles?articleDepartmentId=1">【 WEB 】</a>
-						</span><span>
-							<a class="text-info side-dep" href="/articles?articleDepartmentId=2">【 CL 】</a>
-						</span><span>
-							<a class="text-info side-dep" href="/articles?articleDepartmentId=3">【 ML 】</a>
-						</span><span>
-							<a class="text-info side-dep" href="/articles?articleDepartmentId=4">【 内勤 】</a>
-						</span><span>
-							<a class="text-info side-dep" href="/articles?articleDepartmentId=6">【 FR 】</a>
-						</span><span>
-							<a class="text-info side-dep" href="/articles?articleDepartmentId=7">【 QA 】</a>
-						</span><span>
-							<a class="text-info side-dep" href="/articles?articleDepartmentId=8">【 PHP 】</a>
-						</span>
-					</div>
-					<div class="text-center" style="padding-bottom:1.5rem">
-						<span>
-							<a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?articleCategoryId=1">備忘録</a>
-						</span><span>
-							<a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?articleCategoryId=2">技術共有</a>
-						</span><span>
-							<a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?articleCategoryId=3">体験共有</a>
-						</span><span>
-							<a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?articleCategoryId=4">その他</a>
-						</span>
-					</div>
-					
+					{{-- 
 				<div class="rank-div">
 						<h4>いいね！獲得ランキング</h4>
 						<h5>対象月：2023年1月～2023年6月</h5>
