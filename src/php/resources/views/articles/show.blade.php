@@ -111,19 +111,133 @@
 				</div>
 			</div>
 		</div>
-		{{-- <favorite-button>
-			@if($favorites)
-			<!-- 「いいね」取消用ボタンを表示 -->
-				<a href="{{ route('articles.destroy',$article) }}" class="btn btn-success btn-sm">
-					お気に入り解除
-				</a>
+		<favorite-button>
+
+			{{-- @if (Auth::check())
+			@if ($articleFavorites)
+			<form action="{{action(ArticleController::class,'unfavorite',$article->id)}}" method="POST" class="mb-4" >
+			<input type="hidden" name="article_id" value="{{$article->id}}">
+			@csrf
+			@method('DELETE')
+				<button type="submit">
+				  ブックマーク解除
+				</button>
+			</form>
 			@else
-			<!-- まだユーザーが「いいね」をしていなければ、「いいね」ボタンを表示 -->
-			<a href="{{ route('articles.store',$article) }}" class="btn btn-secondary btn-sm">
-					お気に入り
-				</a>
+			<form action="{{action(ArticleController::class,'favorite')}}" method="POST" class="mb-4" >
+			@csrf
+			<input type="hidden" name="article_id" value="{{$article->id}}">
+				<button type="submit">
+				 ブックマーク
+				</button>
+			</form>
 			@endif
-		</favorite-button> --}}
+		  @endif --}}
+		  {{-- @if (Auth::check())
+    @if ($articleFavorites)
+        <form action="{{ route('articles.unfavorite', ['article' => $article->id]) }}" method="POST" class="mb-4">
+            @csrf
+            @method('DELETE')
+            <input type="hidden" name="article_id" value="{{ $article->id }}">
+            <button type="submit">
+                お気に入り解除
+            </button>
+        </form>
+    @else
+        <form action="{{ route('articles.favorite') }}" method="POST" class="mb-4">
+            @csrf
+            <input type="hidden" name="article_id" value="{{ $article->id }}">
+            <button type="submit">
+                お気に入り
+            </button>
+        </form>
+    @endif
+@endif --}}
+{{-- @if (Auth::check())
+    @if ($article->isFavoritedByUser(Auth::user()))
+        <form action="{{ route('articles.unfavorite', ['article' => $article->id]) }}" method="POST" class="mb-4">
+            @csrf
+            @method('DELETE')
+            <button type="submit">
+                お気に入り解除
+            </button>
+        </form>
+    @else
+        <form action="{{ route('articles.favorite', ['article' => $article->id]) }}" method="POST" class="mb-4">
+            @csrf
+            <button type="submit">
+                お気に入り
+            </button>
+        </form>
+    @endif
+@endif --}}
+
+{{-- @if (Auth::check())
+    @if ($article->isFavoritedByUser(Auth::user()))
+        <form action="{{ route('articles.unfavorite', ['article' => $article->id]) }}" method="POST" class="mb-4">
+            @csrf
+            @method('DELETE')
+            <button type="submit">
+                お気に入り解除
+            </button>
+        </form>
+    @else
+        <form action="{{ route('articles.favorite', ['article' => $article->id]) }}" method="POST" class="mb-4">
+            @csrf
+            <button type="submit">
+                お気に入り
+            </button>
+        </form>
+    @endif
+@else
+    <p>お気に入り機能を利用するにはログインしてください。</p>
+@endif --}}
+
+@if (Auth::check())
+    @if ($article->isFavoritedByUser(Auth::user()))
+        <form action="{{ route('articles.unfavorite', ['article' => $article->id]) }}" method="POST" class="mb-4">
+            @csrf
+            @method('DELETE')
+            <input type="hidden" name="article_id" value="{{ $article->id }}">
+            <button type="submit">
+                お気に入り解除
+            </button>
+        </form>
+    @else
+        <form action="{{ route('articles.favorite', ['article' => $article->id]) }}" method="POST" class="mb-4">
+            @csrf
+            <input type="hidden" name="article_id" value="{{ $article->id }}">
+            <button type="submit">
+                お気に入り
+            </button>
+        </form>
+    @endif
+	@else
+	<p>お気に入り機能を利用するにはログインしてください。</p>
+@endif
+
+
+{{-- @if (Auth::check())
+    @if ($article->isFavoritedByUser(Auth::user()))
+        <form action="{{ route('articles.unfavorite', ['article' => $article->id]) }}" method="POST" class="mb-4">
+            @csrf
+            @method('DELETE')
+            <input type="hidden" name="article_id" value="{{ $article->id }}">
+            <button type="submit">
+                お気に入り解除
+            </button>
+        </form>
+    @else
+        <form action="{{ route('articles.favorite', ['article' => $article->id]) }}" method="POST" class="mb-4">
+            @csrf
+            <input type="hidden" name="article_id" value="{{ $article->id }}">
+            <button type="submit">
+                お気に入り
+            </button>
+        </form>
+    @endif
+@endif --}}
+		</favorite-button>
 
             <div class="pull-right article-user-link">
 @if($article->user_id === Auth::user()->id)

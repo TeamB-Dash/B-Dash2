@@ -67,10 +67,10 @@ class User extends Authenticatable
 
     public function articleFavorites()
     {
-        // return $this->belongsToMany('App\Models\User', 'articleFavorites')->withTimestamps();  
-        // return $this->hasMany(ArticleFavorites::class); 
-        // return $this->belongsToMany(Article::class, 'article_favorites', 'user_id', 'article_id');
+    
         return $this->hasMany(ArticleFavorites::class, 'user_id', 'id');
 
     }
+
+    
 }

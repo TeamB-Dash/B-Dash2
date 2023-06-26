@@ -97,7 +97,7 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Article $article, User $user)
+    public function show(Article $article, User $user, ArticleFavorites $articleFavorites)
     {
 
         //お気に入り処理
@@ -106,7 +106,7 @@ class ArticleController extends Controller
         return view('articles.show', [
             'article' => $article,
             'user' => $user,
-            // 'articleFavorites' => $articleFavorites,
+            'articleFavorites' => $articleFavorites,
         ]);
     }
 
@@ -179,20 +179,96 @@ class ArticleController extends Controller
     return view('articles.favorites', compact('user','articleFavorites'));
 }
 
-    // public function favorite(Article $article, Request $request){
+//     public function favorite(ArticleFavorites $articleFavorites,Article $article, Request $request){
 
-    //     $articleFavorites=New ArticleFavorites();
-    //     $articleFavorites->article_id=$article->id;
-    //     $articleFavorites->user_id=Auth::user()->id;
-    //     $articleFavorites->save();
-    //     return back();
-    // }
+//     //     $articleFavorites=New ArticleFavorites();
+//     //     $articleFavorites->article_id=$article->id;
+//     //     $articleFavorites->user_id=Auth::user()->id;
+//     //     $articleFavorites->save();
+//     //     return back();
 
-    // public function unfavorite(Article $article, Request $request){
-    //     $user=Auth::user()->id;
-    //     $articleFavorites=ArticleFavorites::where('article_id', $article->id)->where('user_id', $user)->first();
-    //     $articleFavorites->delete();
-    //     return back();
-    // }
+//     $articleFavorites = new ArticleFavorites;
+//     $articleFavorites->article_id = $request->article_id;
+//     $articleFavorites->user_id = Auth::user()->id;
+//     $articleFavorites->save();
+
+
+//     return redirect()->route('articles.show',[$request->article_id]);
+
+//     }
+
+//     // public function unfavorite(Article $article, Request $request, $id){
+//     // //     $user=Auth::user()->id;
+//     // //     $articleFavorites=ArticleFavorites::where('article_id', $article->id)->where('user_id', $user)->first();
+//     // //     $articleFavorites->delete();
+//     // //     return back();
+
+//     // $article=Article::findOrFail($id);
+
+//     // $article->articleFavorites()->delete();
+
+//     // return redirect()->route('articles.show',[$request->article_id]);
+//     // }
+
+//     public function unfavorite(Article $article, Request $request)
+// {
+//     $user = Auth::user();
+//     $article->articleFavorites()->where('user_id', $user->id)->delete();
+//     return redirect()->route('articles.show', ['article' => $article->id]);
+// }
+
+// public function favorite(Article $article, Request $request)
+// {
+//     $user = Auth::user();
+//     $article->articleFavorites()->create([
+//         'article_id' => $article->id,
+//         'is_deleted' => false,
+//     ]);
+    
+//     return redirect()->route('articles.show', ['article' => $article->id]);
+// }
+
+// public function favorite(Article $article, Request $request)
+// {
+//     if (Auth::check()) {
+//         $user = Auth::user();
+//         $article->articleFavorites()->create([
+//             'user_id' => $user->id,
+//             'article_id' => $article->id,
+//             'is_deleted' => false,
+//         ]);
+//     }
+
+//     return redirect()->route('articles.show', ['article' => $article->id]);
+// }
+
+public function favorite(Article $article, Request $request)
+{
+    if (Auth::check()) {
+        $user = Auth::user();
+        $articleFavorites = new ArticleFavorites;
+        $articleFavorites->user_id = $user->id;
+        $articleFavorites->article_id = $article->id;
+        $articleFavorites->is_deleted = false;
+        $articleFavorites->save();
+    }
+
+    return redirect()->route('articles.show', ['article' => $article->id]);
+}
+
+
+
+public function unfavorite(Article $article, Request $request)
+{
+if (Auth::check()) {
+    $user = Auth::user();
+
+    $article->articleFavorites()
+    ->where('article_id', $article->id)
+    ->update(['is_deleted' => true]);
+}
+    return redirect()->route('articles.show', ['article' => $article->id]);
+}
+
 
 }

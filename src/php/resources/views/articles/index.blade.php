@@ -111,6 +111,18 @@
                         <form action="{{ route('articles.index') }}" method="GET">
                           <input type="text" name="keyword" value="{{ $keyword }}">
                           <input type="submit" value="検索">
+						  <br>
+						  <div class="text-center" style="padding-bottom:1.5rem">
+                            <span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=1">備忘録</a>
+                            </span><span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=2">技術共有</a>
+                            </span><span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=3">体験共有</a>
+                            </span><span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=4">その他</a>
+                            </span>
+                        </div>
                           <div class="text-center" style="padding-bottom:1.5rem">
                             <span>
                                 <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=1">備忘録</a>

@@ -52,4 +52,13 @@ class Article extends Model
     // {
     //     return $this->belongsToMany('App\Models\ArticleFavorites');
     // }
+
+public function isFavoritedByUser($user)
+{
+    return $this->articleFavorites()
+                ->where('user_id', $user->id)
+                ->where('is_deleted', false)
+                ->exists();
+}
+
 }
