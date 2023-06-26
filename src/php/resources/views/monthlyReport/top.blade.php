@@ -1,3 +1,4 @@
+<x-app-layout>
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -115,7 +116,7 @@
         <div class="site-container row">
 
             <!--        menuここから  -->
-            <header class="site-header bg-primary col-sm-2 hidden-xs side_scroll">
+            {{-- <header class="site-header bg-primary col-sm-2 hidden-xs side_scroll">
                 <div class="header-menu center-block">
         <div class="header-menu-title" >
             <a href="/"><h1 class="bg-primary">Dash</h1></a>
@@ -291,7 +292,7 @@
             </div>
         </div>
     </form>
-            <!--        問い合わせフォームmodalここまで -->
+            <!--        問い合わせフォームmodalここまで --> --}}
 
             <div class="flex-body">
                 <div class="ml-par20 col-sm-6">
@@ -605,7 +606,7 @@
                                     <a class="list-group-item" href="{{ route('monthlyReport.show', $report)}}">
                                         <span>【</span>
                                         <span class="tag label label-success">{{ $report->user->department->name }}</span>
-                                        <span>{{ $report->user->entry_date->format('Y')}}年{{ $report->user->entry_date->format('m')}}月入社</span>
+                                        <span>{{ $report->user->entry_date}}入社</span>
                                         <span>】</span>
                                         <span class="glyphicon glyphicon-user"></span>
                                         
@@ -736,3 +737,4 @@
             </div>
         </div>
 </body>
+</x-app-layout>

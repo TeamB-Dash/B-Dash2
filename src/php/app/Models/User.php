@@ -62,9 +62,9 @@ class User extends Authenticatable
     }
 
     // 日付フォーマットエラー回避のための定義
-    protected $dates = [
-        'entry_date',
-    ];
+    // protected $dates = [
+    //     'entry_date',
+    // ];
 
     // monthly_reportsテーブルと紐付け
     public function monthlyReports()

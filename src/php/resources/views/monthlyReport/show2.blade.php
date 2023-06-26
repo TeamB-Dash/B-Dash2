@@ -1,4 +1,4 @@
-
+<x-app-layout>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -257,9 +257,9 @@
 										
 										<a class="btn btn-default none-pointer">
                                             @if ($report->assign == 1)
-                                                アサイン中
-                                            @elseif ($report->assign == 2)
                                                 待機中
+                                            @elseif ($report->assign == 2)
+                                                アサイン中
                                             @endif
                                         </a>
 										
@@ -330,7 +330,13 @@
 									<label class="col-sm-3 control-label">今月の目標</label>
 									<div class="col-sm-9 form-control-static">
 										<div class="markdown-view">
-											<textarea class="hidden"></textarea>
+											<textarea class="hidden">
+												@if(is_null($previousMonthlyReport))
+												前月の月報が入力されていません。前月の月報の「来月の目標」が表示されます。
+												@else
+												{{ $previousMonthlyReport->next_month_goals }}
+												@endif
+											</textarea>
 											<div class="markdown-body"></div>
 										</div>
 									</div>
@@ -458,3 +464,4 @@
 	</div>
 </body>
 </html>
+</x-app-layout>
