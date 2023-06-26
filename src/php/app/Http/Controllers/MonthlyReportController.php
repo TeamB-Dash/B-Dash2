@@ -7,6 +7,7 @@ use App\Models\Tag;
 use App\Models\User;
 use App\Models\Department;
 use App\Models\MonthlyReport;
+use App\Models\MonthlyWorkingProcess;
 use Illuminate\Http\Request;	
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
@@ -31,26 +32,110 @@ class MonthlyReportController extends Controller
 
     public function store(Request $request) {
 
-        $report = new MonthlyReport();
+        $workingProcess = new MonthlyWorkingProcess();
 
-        $report->target_month = $request->target_month;
-        $report->assign = $request->assign;
-        $report->project_summary = $request->project_summary;
-        $report->business_content = $request->business_content;
-        $report->looking_back = $request->looking_back;
-        $report->next_month_goals = $request->next_month_goals;
-        $report->user_id = auth()->user()->id;
+        if(isset($request->saveAsDraft)) {
+            $report = MonthlyReport::create([
+                'user_id' => auth()->user()->id,
+                'target_month' => $request->target_month,
+                'shipped_at' => null,
+                'project_summary' => $request->project_summary,
+                'business_content' => $request->business_content,
+                'looking_back' => $request->looking_back,
+                'next_month_goals' => $request->next_month_goals,
+                'comments_count' => 0,
+                'likes_count' => 0,
+                'assign' => $request->assign,
+                'is_deleted' => false
+            ]);
+            $workingProcess->monthly_report_id = $report->id;
 
-        $tags = [];
-
-            foreach($request->tags as $tag){
-                $tagInstance = Tag::firstOrCreate(['name' => $tag]);
-                $tags[] = $tagInstance->id;
+            foreach($request->workingProcess as $process) {
+                if($process == 'definition') {
+                    $workingProcess->process_definition = true;
+                }
+                if($process == 'design') {
+                    $workingProcess->process_design = true;
+                }
+                if($process == 'implementation') {
+                    $workingProcess->process_implementation = true;
+                }
+                if($process == 'test') {
+                    $workingProcess->process_test = true;
+                }
+                if($process == 'operation') {
+                    $workingProcess->process_operation = true;
+                }
+                if($process == 'analysis') {
+                    $workingProcess->process_analysis = true;
+                }
+                if($process == 'training') {
+                    $workingProcess->process_training = true;
+                }
+                if($process == 'structure') {
+                    $workingProcess->process_structure = true;
+                }
+                if($process == 'trouble') {
+                    $workingProcess->process_trouble = true;
+                }
             }
+        } else if(isset($request->create)) {
+            $report = MonthlyReport::create([
+                'user_id' => auth()->user()->id,
+                'target_month' => $request->target_month,
+                'shipped_at' => Carbon::now()->format('Y/m/d H:i:s'),
+                'project_summary' => $request->project_summary,
+                'business_content' => $request->business_content,
+                'looking_back' => $request->looking_back,
+                'next_month_goals' => $request->next_month_goals,
+                'comments_count' => 0,
+                'likes_count' => 0,
+                'assign' => $request->assign,
+                'is_deleted' => false
+            ]);
+            $workingProcess->monthly_report_id = $report->id;
 
-            $report->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
+            foreach($request->workingProcess as $process) {
+                if($process == 'definition') {
+                    $workingProcess->process_definition = true;
+                }
+                if($process == 'design') {
+                    $workingProcess->process_design = true;
+                }
+                if($process == 'implementation') {
+                    $workingProcess->process_implementation = true;
+                }
+                if($process == 'test') {
+                    $workingProcess->process_test = true;
+                }
+                if($process == 'operation') {
+                    $workingProcess->process_operation = true;
+                }
+                if($process == 'analysis') {
+                    $workingProcess->process_analysis = true;
+                }
+                if($process == 'training') {
+                    $workingProcess->process_training = true;
+                }
+                if($process == 'structure') {
+                    $workingProcess->process_structure = true;
+                }
+                if($process == 'trouble') {
+                    $workingProcess->process_trouble = true;
+                }
+            }
+        }
+
+        // $tags = [];
+
+        //     foreach($request->tags as $tag){
+        //         $tagInstance = Tag::firstOrCreate(['name' => $tag]);
+        //         $tags[] = $tagInstance->id;
+        //     }
+
+        //     $report->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
         
-        $report->save();
+        $workingProcess->save();
 
         return redirect()->route('monthlyReport.create');
     }

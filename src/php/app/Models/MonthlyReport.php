@@ -42,6 +42,7 @@ class MonthlyReport extends Model
         'next_month_goals',
         'user_id',
         'is_deleted',
+        'shipped_at',
     ];
 
 }

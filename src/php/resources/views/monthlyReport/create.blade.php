@@ -287,7 +287,7 @@
 							<div class="form-group">
 								<label class="control-label col-sm-3" for="target_month">対象月</label>
 								<div class="col-sm-9">
-									<select name="targetMonth" class="form-control" id="target_month">
+									<select name="target_month" class="form-control" id="target_month">
 										<option value="2023-05-01">2023年05月</option>
 										<option value="2023-04-01">2023年04月</option>
 										<option value="2023-03-01">2023年03月</option>
@@ -302,8 +302,8 @@
 									</select>
 								</div>
 							</div>
-						</form>
-						<form class="form-horizontal" id="new_monthly_report" action="{{ route('monthlyReport.store') }}" accept-charset="UTF-8" method="post"><input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/>
+						{{-- </form> --}}
+						{{-- <form class="form-horizontal" id="new_monthly_report" action="{{ route('monthlyReport.store') }}" accept-charset="UTF-8" method="post"><input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/> --}}
                             @csrf
 								<div class="form-group">
 									<label class="control-label col-sm-3" for="assign">今月のアサイン状況</label>
@@ -331,7 +331,7 @@
 											</ul> --}}
 											<div class="tab-content markdown-content">
 												<div class="tab-pane active" id="project_summary-write">
-													<textarea rows="15" class="form-control" placeholder="例）# 英語学習アプリ開発" name="projectSummary" id="project_summary"></textarea>
+													<textarea rows="15" class="form-control" placeholder="例）# 英語学習アプリ開発" name="project_summary" id="project_summary"></textarea>
 													{{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
 												</div>
 												<div class="tab-pane content-md-preview markdown-body" id="project_summary-preview"></div>
@@ -340,11 +340,11 @@
 									</div>
 								</div>
 								<div class="form-group">
-									{{-- <label class="control-label col-sm-3">使用した技術</label>
+									<label class="control-label col-sm-3">使用した技術</label>
 									<div class="col-sm-9">
 										<input id="monthly_report_tags_input" type="hidden" name="tags" />
 										<div id="monthly_report_tags" class="tag-list"></div>
-									</div> --}}
+									</div>
 
                                     <button type="button" id="addTagBtn" class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg text-white" style="background-color:rgba(107, 159, 29, 0.89)">タグを増やす</button><br>
                                     <div class="tag-item">
@@ -357,46 +357,46 @@
 									<label class="control-label col-sm-3">担当した工程</label>
 									<div class="col-sm-9 btn-group" data-toggle="buttons">
 										<label class="btn btn-default">
-											<input type="checkbox" name="workingProcess" id="working_process_" value="definition" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
+											<input type="checkbox" name="workingProcess[]" id="working_process_" value="definition" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
 											<span>要件定義</span>
 										</label>
 										<label class="btn btn-default">
-											<input type="checkbox" name="workingProcess" id="working_process_" value="design" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
+											<input type="checkbox" name="workingProcess[]" id="working_process_" value="design" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
 											<span>設計</span>
 										</label>
 										<label class="btn btn-default">
-											<input type="checkbox" name="workingProcess" id="working_process_" value="implementation" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
+											<input type="checkbox" name="workingProcess[]" id="working_process_" value="implementation" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
 											<span>実装</span>
 										</label>
 										<label class="btn btn-default">
-											<input type="checkbox" name="workingProcess" id="working_process_" value="test" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
+											<input type="checkbox" name="workingProcess[]" id="working_process_" value="test" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
 											<span>テスト</span>
 										</label>
 										<label class="btn btn-default">
-											<input type="checkbox" name="workingProcess" id="working_process_" value="operation" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
+											<input type="checkbox" name="workingProcess[]" id="working_process_" value="operation" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
 											<span>運用保守</span>
 										</label>
 										<label class="btn btn-default">
-											<input type="checkbox" name="workingProcess" id="working_process_" value="analysis" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
+											<input type="checkbox" name="workingProcess[]" id="working_process_" value="analysis" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
 											<span>分析</span>
 										</label>
 										<label class="btn btn-default">
-											<input type="checkbox" name="workingProcess" id="working_process_" value="training" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
+											<input type="checkbox" name="workingProcess[]" id="working_process_" value="training" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
 											<span>研修</span>
 										</label>
 										<label class="btn btn-default">
-											<input type="checkbox" name="workingProcess" id="working_process_" value="structure" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
+											<input type="checkbox" name="workingProcess[]" id="working_process_" value="structure" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
 											<span>構築</span>
 										</label>
 										<label class="btn btn-default">
-											<input type="checkbox" name="workingProcess" id="working_process_" value="trouble" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
+											<input type="checkbox" name="workingProcess[]" id="working_process_" value="trouble" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
 											<span>障害対応</span>
 										</label>
 									</div>
 								</div>
 								<div class="form-group">
 									<div class="control-label col-sm-3" >
-										<label for="monthly_report_business_content">業務内容</label>
+										<label for="business_content">業務内容</label>
 										{{-- <a data-toggle="modal" data-target="#article-template-modal" data-type="monthly_report_business_content">
 											<button class="template-btn">テンプレート</button>
 										</a> --}}
@@ -414,7 +414,7 @@
 #### API仕様を整理する
 既に利用しているAPIに関するドキュメントが散らばっている＆欠けている状態だったので、GithubのIssuesに整理したドキュメントを書いた。
 進捗 100%" 
-														name="businessContent" id="business_content"></textarea>
+														name="business_content" id="business_content"></textarea>
 													{{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
 												</div>
 												<div class="tab-pane content-md-preview markdown-body" id="business_content-preview"></div>
@@ -454,7 +454,7 @@
 1. ・・・・のでできた。
 2. ・・・・なのであまりできなかった。
 3. ・・・・のでできなかった。"
-													 	name="lookingBack" id="looking_back"></textarea>
+													 	name="looking_back" id="looking_back"></textarea>
 													{{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
 												</div>
 												<div class="tab-pane content-md-preview markdown-body" id="looking_back-preview"></div>
@@ -482,7 +482,7 @@
 1. 
 2. 
 3."
-													 name="nextMonthGoal" id="next_month_goals"></textarea>
+													 name="next_month_goals" id="next_month_goals"></textarea>
 												{{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
 											</div>
 											<div class="tab-pane content-md-preview markdown-body" id="next_month_goals-preview"></div>
@@ -491,8 +491,8 @@
 								</div>
 							</div>
 							<input type="hidden" name="targetMonth" value="2023-05-01" id="hidden-target-month"/>
-							<button name="wip" value="true" type="submit" class="btn btn-lg btn-info btn-block">Save as WIP（下書き保存）</button>
-							<button name="wip" value="false" type="submit" class="btn btn-lg btn-success btn-block">Ship（保存して公開）</button>
+							<button name="saveAsDraft" value="saveAsDraft" type="submit" class="btn btn-lg btn-info btn-block">Save as WIP（下書き保存）</button>
+							<button name="create" value="create" type="submit" class="btn btn-lg btn-success btn-block">Ship（保存して公開）</button>
 							
 						</form>
 					</div>
