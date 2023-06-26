@@ -332,7 +332,7 @@
 										<div class="markdown-view">
 											<textarea class="hidden">
 												@if(is_null($previousMonthlyReport))
-												先月の月報が入力されていません。先月の月報の「来月の目標」が表示されます。
+												前月の月報が入力されていません。前月の月報の「来月の目標」が表示されます。
 												@else
 												{{ $previousMonthlyReport->next_month_goals }}
 												@endif

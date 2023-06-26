@@ -138,7 +138,7 @@ class MonthlyReportController extends Controller
         
         $workingProcess->save();
 
-        return redirect()->route('monthlyReport.create');
+        return redirect()->route('monthlyReport.index');
     }
 
     public function show(MonthlyReport $monthlyReport) {
