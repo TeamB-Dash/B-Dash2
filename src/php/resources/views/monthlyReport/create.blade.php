@@ -319,16 +319,9 @@
 								<div class="form-group">
 								<div class="control-label col-sm-3" >
 									<label for="project_summary">プロジェクト概要</label>
-									{{-- <a data-toggle="modal" data-target="#article-template-modal" data-type="monthly_report_project_summary">
-										<button class="template-btn">テンプレート</button>
-									</a> --}}
 								</div>
 									<div class="col-sm-9">
 										<div class="markdown-editor">
-											{{-- <ul class="nav nav-tabs nav-justified">
-												<li class="tab-md-write active"><a data-toggle="tab" class="text-info" href="#project_summary-write">Write</a></li>
-												<li class="tab-md-preview"><a data-toggle="tab" class="text-info" href="#project_summary-preview">Preview</a></li>
-											</ul> --}}
 											<div class="tab-content markdown-content">
 												<div class="tab-pane active" id="project_summary-write">
 													<textarea rows="15" class="form-control" placeholder="例）# 英語学習アプリ開発" name="project_summary" id="project_summary"></textarea>
@@ -340,18 +333,40 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="control-label col-sm-3">使用した技術</label>
-									<div class="col-sm-9">
-										<input id="monthly_report_tags_input" type="hidden" name="tags" />
-										<div id="monthly_report_tags" class="tag-list"></div>
+
+									<!--Tag input-->
+									<div id="tagForm" class="mb-6">
+										<label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">使用した技術</label>
+										<div class="flex flex-wrap relative mb-6 flex justify-center" data-te-input-wrapper-init>
+											<!--$tagsがあればcheckboxを表示-->
+											@if (isset( $tags ))
+												@foreach ($tags as $tag )
+												<div class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]">
+													<input
+													class="relative float-left -ml-[1.5rem] mr-[6px] mt-[0.15rem] h-[1.125rem] w-[1.125rem] appearance-none rounded-[0.25rem] border-[0.125rem] border-solid border-neutral-300 outline-none before:pointer-events-none before:absolute before:h-[0.875rem] before:w-[0.875rem] before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] checked:border-primary checked:bg-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:-mt-px checked:after:ml-[0.25rem] checked:after:block checked:after:h-[0.8125rem] checked:after:w-[0.375rem] checked:after:rotate-45 checked:after:border-[0.125rem] checked:after:border-l-0 checked:after:border-t-0 checked:after:border-solid checked:after:border-white checked:after:bg-transparent checked:after:content-[''] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:transition-[border-color_0.2s] focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-[0.875rem] focus:after:w-[0.875rem] focus:after:rounded-[0.125rem] focus:after:content-[''] checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:after:-mt-px checked:focus:after:ml-[0.25rem] checked:focus:after:h-[0.8125rem] checked:focus:after:w-[0.375rem] checked:focus:after:rotate-45 checked:focus:after:rounded-none checked:focus:after:border-[0.125rem] checked:focus:after:border-l-0 checked:focus:after:border-t-0 checked:focus:after:border-solid checked:focus:after:border-white checked:focus:after:bg-transparent dark:border-neutral-600 dark:checked:border-primary dark:checked:bg-primary dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
+													name="tags[]"
+													type="checkbox"
+													id="inlineCheckbox1"
+													value="{{$tag->name}}"
+													checked/>
+													<label
+													class="inline-block pl-[0.15rem] hover:cursor-pointer"
+													for=""
+													>{{$tag->name}}</label
+													>
+												</div>
+												@endforeach
+											@endif
+										</div>
+			
+										<button type="button" id="addTagBtn" class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg text-white" style="background-color:rgba(107, 159, 29, 0.89)">タグを増やす</button><br>
+										<div class="tag-item">
+											<label>使用した技術：
+											<input type="text" name="tags[]" id="tag" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+											</label>
+										</div>
 									</div>
 
-                                    <button type="button" id="addTagBtn" class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg text-white" style="background-color:rgba(107, 159, 29, 0.89)">タグを増やす</button><br>
-                                    <div class="tag-item">
-                                        <label>タグ：
-                                        <input type="text" name="tags[]" id="tag" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
-                                        </label>
-                                    </div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-sm-3">担当した工程</label>
@@ -397,16 +412,9 @@
 								<div class="form-group">
 									<div class="control-label col-sm-3" >
 										<label for="business_content">業務内容</label>
-										{{-- <a data-toggle="modal" data-target="#article-template-modal" data-type="monthly_report_business_content">
-											<button class="template-btn">テンプレート</button>
-										</a> --}}
 									</div>
 									<div class="col-sm-9">
 										<div class="markdown-editor">
-											{{-- <ul class="nav nav-tabs nav-justified">
-												<li class="tab-md-write active"><a data-toggle="tab" class="text-info" href="#business_content-write">Write</a></li>
-												<li class="tab-md-preview"><a data-toggle="tab" class="text-info" href="#business_content-preview">Preview</a></li>
-											</ul> --}}
 											<div class="tab-content markdown-content">
 												<div class="tab-pane active" id="business_content-write">
 													<textarea rows="15" class="form-control" placeholder=
@@ -437,16 +445,10 @@
 								<div class="form-group">
 									<div class="control-label col-sm-3" >
 										<label for="looking_back">今月の振り返り</label>
-										{{-- <a data-toggle="modal" data-target="#article-template-modal" data-type="monthly_report_looking_back">
-											<button class="template-btn">テンプレート</button>
-										</a> --}}
 									</div>
 									<div class="col-sm-9">
 										<div class="markdown-editor">
-											{{-- <ul class="nav nav-tabs nav-justified">
-												<li class="tab-md-write active"><a data-toggle="tab" class="text-info" href="#looking_back-write">Write</a></li>
-												<li class="tab-md-preview"><a data-toggle="tab" class="text-info" href="#looking_back-preview">Preview</a></li>
-											</ul> --}}
+											
 											<div class="tab-content markdown-content">
 												<div class="tab-pane active" id="looking_back-write">
 													<textarea rows="15" class="form-control" placeholder=
@@ -465,16 +467,9 @@
 								<div class="form-group">
 									<div class="control-label col-sm-3">
 										<label for="next_month_goals">来月の目標</label>
-										{{-- <a data-toggle="modal" data-target="#article-template-modal" data-type="monthly_report_next_month_goals">
-											<button class="template-btn">テンプレート</button>
-										</a> --}}
 									</div>
 									<div class="col-sm-9">
 										<div class="markdown-editor">
-											{{-- <ul class="nav nav-tabs nav-justified">
-												<li class="tab-md-write active"><a data-toggle="tab" class="text-info" href="#next_month_goals-write">Write</a></li>
-												<li class="tab-md-preview"><a data-toggle="tab" class="text-info" href="#next_month_goals-preview">Preview</a></li>
-											</ul> --}}
 										<div class="tab-content markdown-content">
 											<div class="tab-pane active" id="next_month_goals-write">
 												<textarea rows="15" class="form-control" placeholder=
@@ -497,75 +492,57 @@
 						</form>
 					</div>
 					
-					<!-- ここにモーダルをいれる -->
-					<!-- テンプレート一覧モーダル -->
-					{{-- <div class="modal fade" id="article-template-modal" action="/inquiries" data-remote="true">
-						<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header text-center">
-								<h4>適用するテンプレートをクリックしてください</h4>
-								<p>※登録ボタンを押すと、テンプレート作成画面を表示します</p>
-							</div>
-							<div class="modal-body">
-								
-							</div>
-							<div class="modal-footer">
-								<a id="article-template-btn-container" data-toggle="modal" data-target="#article-template-form">
-									<button name="button" type="submit" class="btn btn-success pull-left" data-dismiss="modal">登録</button>
-								</a>
-								<button class="btn btn-default" data-dismiss="modal" id="inquiry_form_close">閉じる</button>
-							</div>
-						</div>
-					</div>
-				</div> --}}
-				
-				<!-- テンプレート登録モーダル -->
-			{{-- <div id="article-template-form" class="modal fade" data-remote="true"> --}}
-			<!-- <form id="article-template-form" class="modal fade" th:action="@{/templates}" data-remote="true" method="post"> -->
-				{{-- <div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header text-center">
-							<h4>テンプレート登録</h4>
-							<p>自分のお好みのフォーマットを記入してください</p>
-						</div>
-						<div class="modal-body">
-							<div id="article-template-title">タイトル</div>
-						    <input id="template-title-form" class="form-control" type="text"/>
-							<div id="article-template-title-error" class="text-danger font-bold"></div>
-							<div id="article-template-format">フォーマット文</div>
-							<textarea id="template-format-form" rows="8"></textarea>
-							<span class="article-template" data-type=""></span>
-							<div id="article-template-format-error" class="text-danger font-bold"></div>
-						</div>
-						<div class="modal-footer">
-							<button name="button" type="submit" class="btn btn-success" data-disable-with="投稿中..." id="save-template-btn">登録</button>
-							<button id="article-template_form_close" class="btn btn-default" data-dismiss="modal">閉じる</button>
-						</div>
-					</div>
-				</div>
-			</div> --}}
-			<!-- </form> -->
-			
-			<!-- テンプレート削除モーダル -->
-			{{-- <div class="modal fade" id="article-confirm">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <div class="modal-title">テンプレート削除</div>
-                  </div>
-                  <div class="modal-body">本当にこのテンプレートを削除しますか?</div>
-                  <div class="modal-footer">
-					<button name="button" type="submit" class="btn btn-danger" data-disable-with="削除中..." id="delete-template-btn">削除</button>
-                    <button class="btn btn-default" data-dismiss="modal" type="button">閉じる</button>
-                  </div>
-                </div>
-              </div>
-            </div> --}}
-					
 				</div>
 			</div>
 		</div>
 	</div>
 </body>
 </html>
+{{-- タグ機能のjs --}}
+<script>
+	const addTagBtn = document.getElementById('addTagBtn');
+	const form = document.getElementById('tagForm');
+	const closeIcons = document.querySelectorAll('.close-icon');
+	const tagItems = document.querySelectorAll('.tag-item');
+
+	function createNewForm(){
+		const newDiv = document.createElement('div');
+		newDiv.classList.add('tag-item');
+
+		const newForm = document.createElement('input');
+		newForm.type = 'text';
+		newForm.className = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
+		newForm.setAttribute('name','tags[]');
+
+		const newLabel = document.createElement('label');
+		newLabel.textContent = 'タグ：';
+
+		const newSpan = document.createElement('span');
+		newSpan.classList.add('close-icon', 'text-white', 'rounded-full', 'bg-red-600', 'hover:bg-red-500', 'px-2', 'py-1');
+		newSpan.textContent = '✖';
+
+		newLabel.appendChild(newForm);
+		newDiv.appendChild(newLabel);
+		newDiv.appendChild(newSpan);
+
+		// 「✖」をクリックしたときの処理を追加
+		newSpan.addEventListener('click', () => {
+			newDiv.remove();
+		});
+
+		return newDiv;
+	}
+
+	// 「✖」をクリックしたときの処理
+	for (let j = 0; j < closeIcons.length; j++) {
+	closeIcons[j].addEventListener('click', () => {
+		tagItems[j].remove();
+	});
+	}
+
+	// ボタンをクリックしたときの処理
+	addTagBtn.addEventListener('click', () => {
+	form.appendChild(createNewForm());
+	});
+</script>
 </x-app-layout>

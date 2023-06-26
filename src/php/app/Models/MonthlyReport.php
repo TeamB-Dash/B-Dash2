@@ -18,7 +18,7 @@ class MonthlyReport extends Model
 
     // tagへの関連を定義
     public function tags() {
-        return $this->belongsToMany(Tag::class, 'monthly_report_tags');
+        return $this->belongsToMany(Tag::class, 'monthly_report_tags')->withTimestamps();
     }
 
     // monthly_working_processへの関連を定義

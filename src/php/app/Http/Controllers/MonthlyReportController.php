@@ -126,14 +126,15 @@ class MonthlyReportController extends Controller
             }
         }
 
-        // $tags = [];
+        $tags = [];
 
-        //     foreach($request->tags as $tag){
-        //         $tagInstance = Tag::firstOrCreate(['name' => $tag]);
-        //         $tags[] = $tagInstance->id;
-        //     }
+            foreach($request->tags as $tag){
+                $tagInstance = Tag::firstOrCreate(['name' => $tag]);
+                $tags[] = $tagInstance->id;
+            }
+            // dd($tags);
 
-        //     $report->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
+            $report->tags()->sync($tags);
         
         $workingProcess->save();
 
