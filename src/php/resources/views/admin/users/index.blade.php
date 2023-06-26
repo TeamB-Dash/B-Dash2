@@ -11,8 +11,32 @@
         </div>
         @endif
         <div class="container px-5 py-24 mx-auto">
-          <div class="flex flex-wrap -m-12">
+          <div class="flex flex-wrap flex justify-center items-center p-2 -m-12">
 
+            <!-- SearchComponent -->
+            <x-search-form :departments="$departments">
+                {{route('admin.users')}}
+            </x-search-form>
+
+
+            <div class="w-2/3 py-2 sm:px-2 lg:px-2">
+                <div class="overflow-hidden">
+                    @if ($users->isEmpty())
+                    <p class="text-center">該当のユーザーは存在しません。</p>
+                    @endif
+                    <table class="min-w-full text-left text-sm">
+                    <tbody>
+                        @foreach ($users as $user )
+                        <tr
+                        class="border-b">
+                        <td class="whitespace-nowrap px-2 py-2 font-medium"><span class="px-2">{{$user->name}}</span><span class="text-gray-400 px-2 text-xs mt-0.5">入社日：{{ $user->entry_date  }}</span><span class="px-2">【{{$user->department->name}}】</span></td>
+                        @endforeach
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+                {{$users->appends(request()->query())->links()}}
+            </div>
 
           </div>
         </div>

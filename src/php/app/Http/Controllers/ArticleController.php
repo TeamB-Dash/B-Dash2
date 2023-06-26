@@ -23,13 +23,12 @@ class ArticleController extends Controller
     {
         // $articles = Article::all()->sortByDesc('created_at')->paginate(20);
         $articles = Article::query()
-    ->orderByDesc('created_at')
-    ->paginate(20);
+        ->orderByDesc('created_at')
+        ->paginate(20);
 
-    $keyword = $request->input('keyword');
+        $keyword = $request->input('keyword');
 
         $query = Article::query();
-
 
         if(!empty($keyword)) {
             $query->where('title', 'LIKE', "%{$keyword}%")
@@ -37,7 +36,7 @@ class ArticleController extends Controller
             $query->orWhereHas('user', function ($q) use ($keyword) {
                     $q->where('name', 'LIKE', "%{$keyword}%");
                 });
-                
+
                 $articles = $query->paginate(20);
         }
 
@@ -52,7 +51,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        return view('articles.create');    
+        return view('articles.create');
     }
 
     /**
@@ -92,7 +91,7 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        return view('articles.edit', ['article' => $article]);    
+        return view('articles.edit', ['article' => $article]);
 
     }
 

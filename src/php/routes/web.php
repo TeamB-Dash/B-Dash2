@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/profile/following/destroy{id}', [ProfileController::class, 'followingUserDestroy'])->name('following.destroy');
     Route::post('/profile/followed/destroy{id}', [ProfileController::class, 'followedUserDestroy'])->name('followed.destroy');
+    Route::post('/profile/submitInquiry',[ProfileController::class,'submitInquiry'])->name('profile.submitInquiry');
 });
 
 Route::resource('/articles', ArticleController::class)
@@ -72,6 +73,7 @@ Route::prefix('/admin')->middleware('judgeAdmin')->group(function(){
         Route::get('/roles',[AdminController::class,'roles'])->name('admin.users.role');
         Route::get('/roles/new',[AdminController::class,'registerNewRole'])->name('admin.users.registerNewRole');
         Route::post('/roles/new/{id}',[AdminController::class,'storeNewRole'])->name('admin.users.storeNewRole');
+        Route::delete('/roles/delete/{id}',[AdminController::class,'destroy'])->name('admin.users.delete');
     });
     Route::prefix('/announcement')->group(function(){
         Route::get('/showAll',[AnnouncementController::class,'showAll'])->name('admin.announcement.showAll');
@@ -80,8 +82,8 @@ Route::prefix('/admin')->middleware('judgeAdmin')->group(function(){
     });
     Route::prefix('/inquiry')->group(function(){
         Route::get('/showAll',[AdminInquiryController::class,'showAll'])->name('admin.inquiry.showAll');
-        Route::get('/mainList',[AdminInquiryController::class,'mailList'])->name('admin.inquiry.mailList');
-        Route::post('/store',[AdminInquiryController::class,'store'])->name('admin.inquiry.store');
+        Route::get('/mailList',[AdminInquiryController::class,'mailList'])->name('admin.inquiry.mailList');
+        Route::patch('/store',[AdminInquiryController::class,'update'])->name('admin.inquiry.update');
     });
 });
 require __DIR__ . '/auth.php';

@@ -3,13 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Mail\SendInquiryMail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use App\Models\UserProfile;
 use App\Models\Department;
 use App\Models\UserFollow;
+use App\Models\Inquiry;
+use App\Models\User;
+use App\Models\UserRole;
 
 class ProfileController extends Controller
 {
@@ -83,4 +89,52 @@ class ProfileController extends Controller
         UserFollow::where('followed_user_id', $id)->delete();
         return redirect()->route('profile.edit');
     }
+
+    /**
+     * 問い合わせを新規作成し、担当の管理者へメール通知を行う
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function submitInquiry(Request $request)
+    {
+        $user_name = User::find($request->user_id)->name;
+        $toUser = User::whereHas('role',function($query){
+            $query->where('inquiry_send',1);
+        })->select('email')->get()->toArray();
+        $ccUser = User::whereHas('role',function($query){
+            $query->where('inquiry_send',0);
+        })->select('email')->get()->toArray();
+
+        DB::beginTransaction();
+        try{
+            $inquiry = Inquiry::create([
+                'user_id' => $request->user_id,
+                'body' => $request->inquiry,
+                'referer' => $request->referer,
+            ]);
+            DB::commit();
+            $this->sendEmail($user_name,$inquiry->body,$toUser,$ccUser);
+            return to_route('questions.index')->with('status','お問い合わせを送信しました');
+        }catch(\Exception $e){
+            DB::rollBack();
+            dd($e->getMessage());
+            return to_route('questions.index')->with('status','お問い合わせの送信に失敗しました');
+        }
+    }
+
+    /**
+     * メールを送信する処理
+     *
+     * @param $body 問い合わせ内容
+     * @param $name 問い合わせしたユーザー名
+     * @param $toUser toに設定した管理者（=user_roleテーブルのinquiry_sendカラムが1のユーザー）
+     * @param $toUser ccに設定した管理者（=user_roleテーブルのinquiry_sendカラムが2のユーザー）
+     *
+     * @return void
+     */
+    public function sendEmail($body,$name,$toUser,$ccUser){
+        Mail::to($toUser)->cc($ccUser)->send(new SendInquiryMail($body,$name));
+    }
+
 }

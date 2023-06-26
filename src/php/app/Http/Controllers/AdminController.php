@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Services\SearchUserService;
+use App\Models\User;
+use App\Models\UserRole;
+use App\Models\Department;
+
+use function PHPUnit\Framework\isEmpty;
+use function PHPUnit\Framework\isNull;
 
 class AdminController extends Controller
 {
@@ -15,12 +21,16 @@ class AdminController extends Controller
      */
     public function index()
     {
+
         return view('admin/top');
     }
 
-    public function users()
+    public function users(Request $request)
     {
-        return view('admin/users/index');
+        $users = SearchUserService::searchUser($request);
+        $departments = Department::all();
+
+        return view('admin/users/index',compact('users','departments'));
     }
 
     /**
@@ -92,17 +102,39 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::find($id);
-        return to_route('admin.top')->with('status', 'delete completed!');
+        UserRole::where('user_id',$id)->delete();
+        return to_route('admin.top')->with('status', '削除しました');
     }
 
     public function roles(){
-        return view('admin/users/showRoles');
+        $users = User::whereHas('role',function($query){
+            $query->where('role','=','0');
+        })
+        ->get();
+        return view('admin/users/showRoles',compact('users'));
     }
+
     public function registerNewRole(Request $request){
-        return view('admin/users/registerRolePage');
+        $users = collect([]);
+        if(isset($request->name)){
+            $users = SearchUserService::searchUser($request);
+        }
+
+        return view('admin/users/registerRolePage',compact('users'));
     }
-    public function storeNewRole(){
-        return to_route('admin.users.role');
+
+    public function storeNewRole($id){
+        $user = User::with(['role'])->find($id);
+        if(!is_null($user->deleted_at) && is_null($user->role)){
+            $userRole = UserRole::create([
+                'user_id' => $id,
+                'role' => 0,
+            ]);
+            return to_route('admin.users.role')->with('status','登録しました');
+        } else if($user->role->role === 0) {
+            return to_route('admin.users.role')->with('status','既に登録済みです');
+        } else {
+            return to_route('admin.users.role')->with('status','登録できないユーザーです');
+        }
     }
 }

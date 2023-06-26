@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Article;
 use App\Models\Department;
@@ -14,11 +15,6 @@ use App\Models\Question;
 use App\Models\UserRole;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-<<<<<<< HEAD
-use Illuminate\Foundation\Auth\User as Authenticatable;
-=======
-use App\Models\Question;
->>>>>>> origin/develop
 
 class User extends Authenticatable
 {
@@ -95,7 +91,8 @@ class User extends Authenticatable
     }
 
     // UserRoleへの関連を定義
-    public function role(){
+    public function role()
+    {
         return $this->hasOne(UserRole::class);
     }
 
