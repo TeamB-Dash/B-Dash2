@@ -330,7 +330,13 @@
 									<label class="col-sm-3 control-label">今月の目標</label>
 									<div class="col-sm-9 form-control-static">
 										<div class="markdown-view">
-											<textarea class="hidden">{{ $previousMonthlyReport->next_month_goals }}</textarea>
+											<textarea class="hidden">
+												@if(is_null($previousMonthlyReport))
+												先月の月報が入力されていません。先月の月報の「来月の目標」が表示されます。
+												@else
+												{{ $previousMonthlyReport->next_month_goals }}
+												@endif
+											</textarea>
 											<div class="markdown-body"></div>
 										</div>
 									</div>

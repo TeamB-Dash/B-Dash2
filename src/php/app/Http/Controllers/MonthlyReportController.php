@@ -152,7 +152,7 @@ class MonthlyReportController extends Controller
         $fromDate = Carbon::parse($monthlyReport->target_month)->subMonthWithNoOverflow(1)->startOfMonth()->toDateString();
         $previousMonthlyReport = MonthlyReport::where('user_id',$userId)->whereDate('target_month','=',$fromDate)->first();
 
-        // dd($previousMonthlyReport->next_month_goals);
+        // dd($previousMonthlyReport);
         
 
         return view('monthlyReport.show2', compact('report', 'previousMonthlyReport'));
