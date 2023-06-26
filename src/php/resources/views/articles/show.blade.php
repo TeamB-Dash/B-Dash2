@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        質問詳細画面
+        ブログ詳細画面
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white pt-2 pl-3 overflow-hidden shadow-sm sm:rounded-lg">
-				{{-- 自分の質問だったら編集ができる --}}
+				{{-- 自分のブログだったら編集ができる --}}
 				<div>
 					@if ($article->user->id === Auth::user()->id)
 						@if(isset($article->shipped_at))
@@ -65,7 +65,7 @@
 				{{-- {{ $article->articleComments->count() }} --}}
                 </span>
 
-                {{-- 自分以外の質問だったら表示のみ --}}
+                {{-- 自分以外のブログだったら表示のみ --}}
 		 @else
 		 <div>
 			 <a class="inline-flex items-center">
@@ -126,7 +126,7 @@
 		</div>
 
 
-            {{-- 質問に紐づく回答を表示 --}}
+            {{-- ブログに紐づく回答を表示 --}}
             {{-- <x-answerspanelへ置き換え予定> --}}
             <h3
             class="mt-4 mb-6 ml-3 text-2xl font-bold text-neutral-700 dark:text-neutral-300">

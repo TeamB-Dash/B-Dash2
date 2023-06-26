@@ -26,7 +26,7 @@
             </div>
 
             @if ($articles->count() === 0)
-            <div class="w-full">表示する質問はありません</div>
+            <div class="w-full">表示するブログはありません</div>
             @else
 
 
