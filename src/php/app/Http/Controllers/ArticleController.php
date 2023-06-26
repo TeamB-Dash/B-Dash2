@@ -73,7 +73,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        return view('articles.create');    
+        return view('articles.create');
     }
 
     /**
@@ -156,7 +156,6 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-
         $article = Article::with(['tags'])->find($article->id);
         $tags = $article->tags;
 
@@ -229,7 +228,7 @@ class ArticleController extends Controller
         $answers = 'test';
         return view('articles.myblog',compact('user','articles'));
     }
-
+    
     public function showFavoriteArticles($id)
 {
     // ユーザーのお気に入り記事を取得

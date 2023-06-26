@@ -10,7 +10,6 @@ class QuestionAnswers extends Model
 {
     use HasFactory;
 
-
     // Questionへの関連を定義
     public function question(){
         return $this->belongsTo(Question::class);

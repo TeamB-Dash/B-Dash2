@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 use App\Models\Tag;
 use App\Models\User;
+use App\Models\Article;
+use App\Models\MonthlyReport;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\RankingService;
+use Cron\MonthField;
 
 class QuestionController extends Controller
 {
@@ -19,11 +23,18 @@ class QuestionController extends Controller
      */
     public function index()
     {
+        $monthlyReportRanking = RankingService::MonthlyReportRanking();
+        $articleRanking = RankingService::ArticleRanking();
+        $rankingByNumberOfArticlesPerTag = RankingService::TagRanking();
+
+        // dd($monthlyReportRanking,$articleRanking,$rankingByNumberOfArticlesPerTag);
+        // dd($articleRanking[0]);
+
         $questions = Question::with(['user','tags','questionAnswers'])
         ->whereNotNull('shipped_at')
         ->where('is_deleted',false)
         ->orderBy('created_at','desc')->paginate(2);
-        return view('Questions/index',compact('questions'));
+        return view('questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag'));
     }
 
     /**
@@ -33,7 +44,7 @@ class QuestionController extends Controller
      */
     public function create()
     {
-        return view('Questions/create');
+        return view('questions/create');
     }
 
     /**
@@ -93,7 +104,7 @@ class QuestionController extends Controller
     public function show(Question $question)
     {
         $question = Question::find($question->id);
-        return view('Questions/show',compact('question'));
+        return view('questions/show',compact('question'));
     }
 
     /**
@@ -106,7 +117,7 @@ class QuestionController extends Controller
     {
         $question = Question::with(['tags'])->find($question->id);
         $tags = $question->tags;
-        return view('Questions.edit',compact('question','tags'));
+        return view('questions.edit',compact('question','tags'));
     }
 
     /**
@@ -170,7 +181,7 @@ class QuestionController extends Controller
         ->paginate(2);
 
         $answers = 'test';
-        return view('Questions/myQuestions',compact('questions','answers'));
+        return view('questions/myQuestions',compact('questions','answers'));
     }
 
     public function showMyDraftQuestions($id){
@@ -180,6 +191,6 @@ class QuestionController extends Controller
         ->orderBy('created_at','desc')
         ->paginate(2);
 
-        return view('Questions/myDraftQuestions',compact('questions'));
+        return view('questions/myDraftQuestions',compact('questions'));
     }
 }

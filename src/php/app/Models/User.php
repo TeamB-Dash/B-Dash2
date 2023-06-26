@@ -2,18 +2,22 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use App\Models\Question;
+use Illuminate\Database\Eloquent\Builder;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Article;
 use App\Models\Department;
 use App\Models\ArticleFavorites;
-use App\Models\Article;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\MonthlyReport;
+use App\Models\Question;
+use App\Models\UserRole;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -50,18 +54,41 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function articles(): BelongsTo
+    public function articles(): HasMany
     {
-    // return $this->hasMany('App\Models\Article');
-    return $this->belongsTo('App\Models\Article');
+    return $this->hasMany('App\Models\Article');
+    // return $this->belongsTo('App\Models\Article');
 }
+    public function followings()
+    {
+        return $this->belongsToMany(User::class, 'user_follows', 'followed_user_id', 'user_id');
+    }
+
+    public function followeds()
+    {
+        return $this->belongsToMany(User::class, 'user_follows', 'user_id', 'followed_user_id');
+    }
+
+    // 日付フォーマットエラー回避のための定義
+    // protected $dates = [
+    //     'entry_date',
+    // ];
+
+    // monthly_reportsテーブルと紐付け
+    public function monthlyReports()
+    {
+        return $this->hasMany(MonthlyReport::class);
+    }
+
     // Questionへの関連を定義
-    public function questions(){
+    public function questions()
+    {
         return $this->hasMany(Question::class);
     }
 
     // Departmentへの関連を定義
-    public function department(){
+    public function department()
+    {
         return $this->belongsTo(Department::class);
     }
 
@@ -72,5 +99,22 @@ class User extends Authenticatable
 
     }
 
-    
+    // UserRoleへの関連を定義
+    public function role()
+    {
+        return $this->hasOne(UserRole::class);
+    }
+
+    // MonthlyReportLikesへの関連を定義
+    public function monthlyReportLikes()
+    {
+        return $this->belongsToMany(MonthlyReport::class, 'monthly_report_likes')->withTimestamps();
+    }
+
+    // ArticleLikesへの関連を定義
+    public function articleLikes()
+    {
+        return $this->belongsToMany(Article::class, 'article_likes')->withTimestamps();
+    }
+
 }
