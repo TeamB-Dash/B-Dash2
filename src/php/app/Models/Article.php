@@ -5,8 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\ArticleComments;
+use App\Models\ArticleFavorites;
 
 class Article extends Model
 {
@@ -31,4 +33,23 @@ class Article extends Model
     {
         return $this->hasMany('App\Models\ArticleComments');
     }
+
+    public function articleFavorites(): HasMany
+    {
+        return $this->hasMany('App\Models\ArticleFavorites');
+        // return $this->belongsToMany('App\Models\ArticleFavorites');
+        // return $this->belongsToMany('App\Models\User', 'articleFavorites')->withTimestamps();
+    }
+
+    // public function isFavoritedBy(?User $user): bool
+    // {
+    //     return $user
+    //         ? (bool)$this->likes->where('id', $user->id)->count()
+    //         : false;
+    // }
+
+    // public function articleFavorites(): HasMany
+    // {
+    //     return $this->belongsToMany('App\Models\ArticleFavorites');
+    // }
 }

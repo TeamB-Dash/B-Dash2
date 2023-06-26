@@ -41,7 +41,9 @@
 				<ul class="nav nav-pills nav-stacked" style="padding-inline-start:10px;margin-bottom:10px;">
 					<li style="margin-bottom:3px"><a class="bg-primary" href="/articles/create">新規投稿</a></li>
 					<li><a class="bg-primary" href="{{ route('articles.myblog',Auth::user()->id) }}">マイブログ</a></li>
-					<li><a class="bg-primary" href="/articles/users-favorite/1422">お気に入りブログ</a></li>
+					<li><a class="bg-primary" href="{{ route('articles.favorites',['id' => Auth::user()->id]) }}">お気に入りブログ</a></li>
+                    {{-- <li><a class="bg-primary" href="{{ route('articles.favorites', ['id' => $favorites->id]) }}">お気に入りブログ</a></li> --}}
+
 				</ul>
 			</li>
 				
@@ -109,8 +111,21 @@
                         <form action="{{ route('articles.index') }}" method="GET">
                           <input type="text" name="keyword" value="{{ $keyword }}">
                           <input type="submit" value="検索">
+                          <div class="text-center" style="padding-bottom:1.5rem">
+                            <span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=1">備忘録</a>
+                            </span><span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=2">技術共有</a>
+                            </span><span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=3">体験共有</a>
+                            </span><span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=4">その他</a>
+                            </span>
+                        </div>
                         </form>
                       </div>
+                </div>
+            </div>
 					{{-- <div class="text-center" style="margin-bottom:1.5rem">
 						<span>
 							<a class="text-info side-dep" href="/articles?articleDepartmentId=1">【 WEB 】</a>

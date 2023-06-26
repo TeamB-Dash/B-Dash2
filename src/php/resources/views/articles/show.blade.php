@@ -41,6 +41,7 @@
 				</a>
 				<ul class="nav nav-pills nav-stacked" style="padding-inline-start:10px;margin-bottom:10px;">
 					<li style="margin-bottom:3px"><a class="bg-primary" href="/articles/create">新規投稿</a></li>
+					{{-- ToDOログインした場合のみ表示させる --}}
 					<li><a class="bg-primary" href="{{ route('articles.myblog',Auth::user()->id) }}">マイブログ</a></li>
 					<li><a class="bg-primary" href="/articles/users-favorite/1422">お気に入りブログ</a></li>
 				</ul>
@@ -110,13 +111,20 @@
 				</div>
 			</div>
 		</div>
-		{{-- @if( Auth::id() !== $user->id ) --}}
-		{{-- @if(Auth::user()->id !== $article->user_id)
-		<favorite-button
-		  class="ml-auto"
-		>
-		</favorite-button>
-	  @endif --}}
+		{{-- <favorite-button>
+			@if($favorites)
+			<!-- 「いいね」取消用ボタンを表示 -->
+				<a href="{{ route('articles.destroy',$article) }}" class="btn btn-success btn-sm">
+					お気に入り解除
+				</a>
+			@else
+			<!-- まだユーザーが「いいね」をしていなければ、「いいね」ボタンを表示 -->
+			<a href="{{ route('articles.store',$article) }}" class="btn btn-secondary btn-sm">
+					お気に入り
+				</a>
+			@endif
+		</favorite-button> --}}
+
             <div class="pull-right article-user-link">
 @if($article->user_id === Auth::user()->id)
     <li><a class="bg-primary" href="{{ route('articles.myblog', Auth::user()->id) }}">マイブログへ</a></li>
