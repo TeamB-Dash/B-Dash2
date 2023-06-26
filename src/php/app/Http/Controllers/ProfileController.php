@@ -101,7 +101,7 @@ class ProfileController extends Controller
         $user_name = User::find($request->user_id)->name;
         $toUser = User::whereHas('role',function($query){
             $query->where('inquiry_send',1);
-        })->select('email')->first();
+        })->select('email')->get()->toArray();
         $ccUser = User::whereHas('role',function($query){
             $query->where('inquiry_send',0);
         })->select('email')->get()->toArray();

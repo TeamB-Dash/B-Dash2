@@ -82,8 +82,8 @@ Route::prefix('/admin')->middleware('judgeAdmin')->group(function(){
     });
     Route::prefix('/inquiry')->group(function(){
         Route::get('/showAll',[AdminInquiryController::class,'showAll'])->name('admin.inquiry.showAll');
-        Route::get('/mainList',[AdminInquiryController::class,'mailList'])->name('admin.inquiry.mailList');
-        Route::post('/store',[AdminInquiryController::class,'store'])->name('admin.inquiry.store');
+        Route::get('/mailList',[AdminInquiryController::class,'mailList'])->name('admin.inquiry.mailList');
+        Route::patch('/store',[AdminInquiryController::class,'update'])->name('admin.inquiry.update');
     });
 });
 require __DIR__ . '/auth.php';

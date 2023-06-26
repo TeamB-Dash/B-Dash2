@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Inquiry;
+use App\Models\User;
 
 class AdminInquiryController extends Controller
 {
@@ -13,9 +14,29 @@ class AdminInquiryController extends Controller
         return view('admin/inquiry/showAllPage',compact('inquiries'));
     }
     public function mailList(){
-        return view('admin/inquiry/mailList');
+        $users = User::with(['role'])->whereHas('role',function($query){
+            $query->where('role','=','0');
+        })
+        ->get();
+
+        return view('admin/inquiry/mailList',compact('users'));
     }
-    public function store(Request $request){
-        return to_route('admin.inquiry.showAll');
+
+    public function update(Request $request){
+
+        if(isset($request->deleteRole)){
+            $user = User::with(['role'])->find($request->deleteRole);
+            $user->role->inquiry_send = 0;
+            $user->role->save();
+        } else if(isset($request->addRoleTo)){
+            $user = User::with(['role'])->find($request->addRoleTo);
+            $user->role->inquiry_send = 1;
+            $user->role->save();
+        } else if(isset($request->addRoleCc)){
+            $user = User::with(['role'])->find($request->addRoleCc);
+            $user->role->inquiry_send = 2;
+            $user->role->save();
+        }
+        return to_route('admin.inquiry.mailList');
     }
 }
