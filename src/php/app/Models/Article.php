@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\ArticleComments;
 use App\Models\ArticleFavorites;
+use App\Models\Tag;
+use App\Models\User;
+
 
 class Article extends Model
 {
@@ -37,28 +40,18 @@ class Article extends Model
     public function articleFavorites(): HasMany
     {
         return $this->hasMany('App\Models\ArticleFavorites');
-        // return $this->belongsToMany('App\Models\ArticleFavorites');
-        // return $this->belongsToMany('App\Models\User', 'articleFavorites')->withTimestamps();
     }
 
-    // public function isFavoritedBy(?User $user): bool
-    // {
-    //     return $user
-    //         ? (bool)$this->likes->where('id', $user->id)->count()
-    //         : false;
-    // }
+    public function isFavoritedByUser($user)
+    {
+        return $this->articleFavorites()
+                    ->where('user_id', $user->id)
+                    ->where('is_deleted', false)
+                    ->exists();
+    }
 
-    // public function articleFavorites(): HasMany
-    // {
-    //     return $this->belongsToMany('App\Models\ArticleFavorites');
-    // }
-
-public function isFavoritedByUser($user)
-{
-    return $this->articleFavorites()
-                ->where('user_id', $user->id)
-                ->where('is_deleted', false)
-                ->exists();
-}
+    public function tags(){
+        return $this->belongsToMany(Tag::class,'article_tags')->where('is_deleted','=',false)->withTimestamps();
+    }
 
 }

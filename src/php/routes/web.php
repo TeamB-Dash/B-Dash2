@@ -43,6 +43,8 @@ Route::resource('/articles', ArticleController::class)
 
     Route::get('/articles/users/{id}',[ArticleController::class,'showArticles'])->name('articles.myblog');
     Route::get('/articles/users-favorite/{id}',[ArticleController::class,'showFavoriteArticles'])->name('articles.favorites');
+    Route::get('/articles/users/{id}/drafts',[ArticleController::class,'showMyDraftArticles'])->name('articles.showMyDraftArticles');
+
 
 Route::post('/articles/{article}/favorite',[ArticleController::class,'favorite'])->name('articles.favorite');
 Route::delete('/articles/{article}/unfavorite',[ArticleController::class,'unfavorite'])->name('articles.unfavorite');
