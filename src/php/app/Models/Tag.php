@@ -32,11 +32,11 @@ class Tag extends Model
 
     // Articleへの関連を定義
     public function articles(){
-        return $this->belongsToMany(Article::class,'article_tags')->withTimestamps();
+    return $this->belongsToMany(Article::class, 'article_tags')->where('is_deleted', '=', false)->withTimestamps();
     }
-
     // ArticleTagsへの関連を定義
     public function articleTags(){
         return $this->belongsToMany(Article::class,'article_tags')->withTimestamps();
+
     }
 }

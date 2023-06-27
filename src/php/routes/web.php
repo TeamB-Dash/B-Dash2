@@ -50,7 +50,13 @@ Route::resource('/articles', ArticleController::class)
 Route::resource('/articles', ArticleController::class)
 ->only(['show']);
 
-Route::get('/articles/users/{id}', [ArticleController::class, 'showArticles'])->name('articles.myblog');
+    Route::get('/articles/users/{id}',[ArticleController::class,'showArticles'])->name('articles.myblog');
+    Route::get('/articles/users-favorite/{id}',[ArticleController::class,'showFavoriteArticles'])->name('articles.favorites');
+    Route::get('/articles/users/{id}/drafts',[ArticleController::class,'showMyDraftArticles'])->name('articles.showMyDraftArticles');
+
+
+Route::post('/articles/{article}/favorite',[ArticleController::class,'favorite'])->name('articles.favorite');
+Route::delete('/articles/{article}/unfavorite',[ArticleController::class,'unfavorite'])->name('articles.unfavorite');
 
 // 月報関連のルート
 Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name('monthlyReport.index');

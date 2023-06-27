@@ -66,15 +66,20 @@
 
                                 <x-slot name="content">
 
-                                    <x-dropdown-link :href="route('dashboard')">
-                                        ブログ新規投稿
+                                    <x-dropdown-link :href="route('articles.index')">
+                                        ブログ一覧
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('dashboard')">
+                                    <x-dropdown-link :href="route('articles.create')">
+                                        ブログ新規投稿
+                                    </x-dropdown-link>
+                                    {{-- ToDOログインした場合のみ表示させた方がいい？ --}}
+
+                                    <x-dropdown-link :href="route('articles.favorites',['id' => Auth::user()->id])">
                                         お気に入りブログ
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('dashboard')">
+                                    <x-dropdown-link :href="route('articles.myblog',Auth::user()->id)">
                                         マイブログ
                                     </x-dropdown-link>
                                 </x-slot>
