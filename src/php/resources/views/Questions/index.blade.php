@@ -52,6 +52,8 @@
           </div>
         </div>
 
+
+
         <div class="container px-5 py-24 mx-auto flex justify-around">
             {{-- いいね別投稿数ランキング（月報） --}}
             <x-ranking-of-monthly-report :monthlyReportRanking="$monthlyReportRanking">
@@ -63,5 +65,6 @@
             <x-ranking-of-count-by-tags :rankingByNumberOfArticlesPerTag="$rankingByNumberOfArticlesPerTag">
             </x-ranking-of-count-by-tags>
         </div>
+        <a href="{{ route('questions.noAnswers') }}"  class="ml-8 text-lg text-rose-600 border-b border-rose-600 font-bold">回答募集中の質問一覧</a>
       </section>
 </x-app-layout>

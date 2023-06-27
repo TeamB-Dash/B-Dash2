@@ -30,10 +30,11 @@ class QuestionController extends Controller
         // dd($monthlyReportRanking,$articleRanking,$rankingByNumberOfArticlesPerTag);
         // dd($articleRanking[0]);
 
-        $questions = Question::with(['user','tags','questionAnswers'])
+        $questions = Question::with(['user','tags'])
         ->whereNotNull('shipped_at')
         ->where('is_deleted',false)
         ->orderBy('created_at','desc')->paginate(2);
+
         return view('questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag'));
     }
 
@@ -192,5 +193,11 @@ class QuestionController extends Controller
         ->paginate(2);
 
         return view('questions/myDraftQuestions',compact('questions'));
+    }
+
+    public function noAnswers(){
+
+        $questions = Question::doesntHave('questionAnswers')->orderBy('created_at','desc')->get();
+        return view('questions/noAnswers',compact('questions'));
     }
 }
