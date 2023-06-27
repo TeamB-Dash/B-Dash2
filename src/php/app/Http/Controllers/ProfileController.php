@@ -16,6 +16,7 @@ use App\Models\UserFollow;
 use App\Models\Inquiry;
 use App\Models\User;
 use App\Models\UserRole;
+use App\Services\SearchUserService;
 
 class ProfileController extends Controller
 {
@@ -88,6 +89,21 @@ class ProfileController extends Controller
     {
         UserFollow::where('followed_user_id', $id)->delete();
         return redirect()->route('profile.edit');
+    }
+
+    /**
+     * ユーザー検索
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function searchUser(Request $request)
+    {
+        $request->merge(['status' => 'working']);
+        $users = SearchUserService::searchUser($request);
+        $departments = Department::all();
+
+        return view('profile/searchUser',compact('users','departments'));
     }
 
     /**
