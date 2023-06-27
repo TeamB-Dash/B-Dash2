@@ -14,10 +14,10 @@
     </form>
 
     <div>
-        @foreach ($followeds as $followed)
-            {{ $followed->name }}
+        @foreach ($followers as $follower)
+            {{ $follower->name }}
 
-            <form action="{{ route('followed.destroy', [$followed->id]) }}" method="POST">
+            <form action="{{ route('follower.destroy', [$follower->id]) }}" method="POST">
                 @csrf
                 <button type="submit">削除</button>
             </form>

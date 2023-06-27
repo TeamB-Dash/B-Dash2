@@ -56,17 +56,17 @@ class User extends Authenticatable
 
     public function articles(): HasMany
     {
-    return $this->hasMany('App\Models\Article');
-    // return $this->belongsTo('App\Models\Article');
-}
+        return $this->hasMany('App\Models\Article');
+        // return $this->belongsTo('App\Models\Article');
+    }
     public function followings()
     {
-        return $this->belongsToMany(User::class, 'user_follows', 'followed_user_id', 'user_id');
+        return $this->belongsToMany(User::class, 'user_follows', 'follower_user_id', 'user_id');
     }
 
-    public function followeds()
+    public function followers()
     {
-        return $this->belongsToMany(User::class, 'user_follows', 'user_id', 'followed_user_id');
+        return $this->belongsToMany(User::class, 'user_follows', 'user_id', 'follower_user_id');
     }
 
     // 日付フォーマットエラー回避のための定義
@@ -94,7 +94,7 @@ class User extends Authenticatable
 
     public function articleFavorites()
     {
-    
+
         return $this->hasMany(ArticleFavorites::class, 'user_id', 'id');
 
     }

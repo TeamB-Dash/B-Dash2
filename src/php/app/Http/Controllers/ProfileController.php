@@ -25,14 +25,14 @@ class ProfileController extends Controller
         $user_profile = UserProfile::where('user_id', $user->id)->first();
         $departments = Department::all();
         $followings = $user->followings()->get();
-        $followeds = $user->followeds()->get();
+        $followers = $user->followers()->get();
 
         return view('profile.edit', [
             'user' => $user,
             'user_profile' => $user_profile,
             'departments' => $departments,
             'followings' => $followings,
-            'followeds' => $followeds,
+            'followers' => $followers,
         ]);
     }
 
@@ -78,15 +78,15 @@ class ProfileController extends Controller
     //     return Redirect::to('/');
     // }
 
-    public function followingUserDestroy($id)
+    public function followingDestroy($id)
     {
         UserFollow::where('user_id', $id)->delete();
         return redirect()->route('profile.edit');
     }
 
-    public function followedUserDestroy($id)
+    public function followerDestroy($id)
     {
-        UserFollow::where('followed_user_id', $id)->delete();
+        UserFollow::where('follower_user_id', $id)->delete();
         return redirect()->route('profile.edit');
     }
 
@@ -99,27 +99,27 @@ class ProfileController extends Controller
     public function submitInquiry(Request $request)
     {
         $user_name = User::find($request->user_id)->name;
-        $toUser = User::whereHas('role',function($query){
-            $query->where('inquiry_send',1);
+        $toUser = User::whereHas('role', function ($query) {
+            $query->where('inquiry_send', 1);
         })->select('email')->get()->toArray();
-        $ccUser = User::whereHas('role',function($query){
-            $query->where('inquiry_send',0);
+        $ccUser = User::whereHas('role', function ($query) {
+            $query->where('inquiry_send', 0);
         })->select('email')->get()->toArray();
 
         DB::beginTransaction();
-        try{
+        try {
             $inquiry = Inquiry::create([
                 'user_id' => $request->user_id,
                 'body' => $request->inquiry,
                 'referer' => $request->referer,
             ]);
             DB::commit();
-            $this->sendEmail($user_name,$inquiry->body,$toUser,$ccUser);
-            return to_route('questions.index')->with('status','お問い合わせを送信しました');
-        }catch(\Exception $e){
+            $this->sendEmail($user_name, $inquiry->body, $toUser, $ccUser);
+            return to_route('questions.index')->with('status', 'お問い合わせを送信しました');
+        } catch (\Exception $e) {
             DB::rollBack();
             dd($e->getMessage());
-            return to_route('questions.index')->with('status','お問い合わせの送信に失敗しました');
+            return to_route('questions.index')->with('status', 'お問い合わせの送信に失敗しました');
         }
     }
 
@@ -133,8 +133,9 @@ class ProfileController extends Controller
      *
      * @return void
      */
-    public function sendEmail($body,$name,$toUser,$ccUser){
-        Mail::to($toUser)->cc($ccUser)->send(new SendInquiryMail($body,$name));
+    public function sendEmail($body, $name, $toUser, $ccUser)
+    {
+        Mail::to($toUser)->cc($ccUser)->send(new SendInquiryMail($body, $name));
     }
 
 }
