@@ -161,6 +161,10 @@ class MonthlyReportController extends Controller
 
     public function edit(MonthlyReport $monthlyReport) {
 
+        $report = MonthlyReport::with(['tags'])->find($monthlyReport->id);
+        $tags = $report->tags;
+
+        return view('monthlyReport.edit', compact('report'));
     }
 
     public function update(Request $request, MonthlyReport $monthlyReport) {

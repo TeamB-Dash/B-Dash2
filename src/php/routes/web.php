@@ -57,6 +57,8 @@ Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name(
 Route::get('/monthly_reports/create', [MonthlyReportController::class, 'create'])->name('monthlyReport.create');
 Route::post('/monthly_reports', [MonthlyReportController::class, 'store'])->name('monthlyReport.store');
 Route::get('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'show'])->name('monthlyReport.show');
+Route::get('/monthly_reports/{monthlyReport}/edit', [MonthlyReportController::class, 'edit'])->name('monthlyReport.edit');
+Route::patch('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'update'])->name('monthlyReport.update');
 
 // 管理者関連のルート
 Route::prefix('/admin')->middleware('judgeAdmin')->group(function(){
