@@ -130,7 +130,6 @@ class QuestionController extends Controller
      */
     public function update(Request $request, Question $question)
     {
-        $question = Question::find($question)->first();
         // 下書き保存の更新処理
         if(isset($request->saveAsDraft)){
             $question->title = $request->title;
@@ -168,7 +167,6 @@ class QuestionController extends Controller
      */
     public function destroy(Question $question)
     {
-        $question = Question::find($question)->first();
         $question->is_deleted = true;
         $question->save();
 
