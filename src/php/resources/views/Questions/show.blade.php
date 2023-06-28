@@ -15,7 +15,7 @@
             <div class="bg-white pt-2 pl-3 overflow-hidden shadow-sm sm:rounded-lg">
                 {{-- 自分の質問だったら編集ができる --}}
                 <div>
-                    @if ($question->user->id === Auth::user()->id)
+                    @if ($question->user->id === Auth::id())
                         @if(isset($question->shipped_at))
                         <div class="rounded mb-2 rounded px-6 py-2.5 text-s text-center font-medium uppercase text-white" style="background-color:rgb(11, 146, 51)">公開済み</div>
                         @else

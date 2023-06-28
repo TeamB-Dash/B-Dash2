@@ -75,11 +75,11 @@
                                     </x-dropdown-link>
                                     {{-- ToDOログインした場合のみ表示させた方がいい？ --}}
 
-                                    <x-dropdown-link :href="route('articles.favorites',['id' => Auth::user()->id])">
+                                    <x-dropdown-link :href="route('articles.favorites',['id' => Auth::id()])">
                                         お気に入りブログ
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('articles.myblog',Auth::user()->id)">
+                                    <x-dropdown-link :href="route('articles.myblog',Auth::id())">
                                         マイブログ
                                     </x-dropdown-link>
                                 </x-slot>
@@ -114,7 +114,7 @@
                                     質問投稿
                                 </x-dropdown-link>
 
-                                <x-dropdown-link :href="route('questions.showMyQuestions',Auth::user()->id)">
+                                <x-dropdown-link :href="route('questions.showMyQuestions',Auth::id())">
                                     マイ質問
                                 </x-dropdown-link>
                             </x-slot>
@@ -237,7 +237,7 @@
                 <x-responsive-nav-link :href="route('questions.create')">
                     質問投稿
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('questions.showMyQuestions',Auth::user()->id)">
+                <x-responsive-nav-link :href="route('questions.showMyQuestions',Auth::id())">
                     マイ質問
                 </x-responsive-nav-link>
 
