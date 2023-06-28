@@ -5,6 +5,11 @@
         </h2>
     </x-slot>
 
+    @if (session('status'))
+    <div class="w-2/3 mx-auto container mt-6 text-center bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
+        <p class="font-bold">{{ session('status') }}</p>
+    </div>
+    @endif
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white pt-2 pl-3 overflow-hidden shadow-sm sm:rounded-lg">

@@ -50,7 +50,12 @@
 
             {{ $questions->links() }}
           </div>
+
         </div>
+
+        <h3>
+          <a href="{{ route('questions.noAnswers') }}"  class="ml-8 text-lg text-rose-600 border-b border-rose-600 font-bold">回答募集中の質問一覧</a>
+        </h3>
 
 
 
@@ -65,6 +70,5 @@
             <x-ranking-of-count-by-tags :rankingByNumberOfArticlesPerTag="$rankingByNumberOfArticlesPerTag">
             </x-ranking-of-count-by-tags>
         </div>
-        <a href="{{ route('questions.noAnswers') }}"  class="ml-8 text-lg text-rose-600 border-b border-rose-600 font-bold">回答募集中の質問一覧</a>
       </section>
 </x-app-layout>

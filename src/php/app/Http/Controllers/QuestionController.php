@@ -156,7 +156,8 @@ class QuestionController extends Controller
         }
         $question->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
 
-        return to_route('questions.showMyDraftQuestions',Auth::user()->id)->with('status','情報を更新しました。');
+        // return redirect()->back()->with('status','情報を更新しました。');
+        return to_route('questions.show',$request->id)->with('status','情報を更新しました。');
     }
 
     /**
@@ -168,7 +169,8 @@ class QuestionController extends Controller
     public function destroy(Question $question)
     {
         $question = Question::find($question)->first();
-        $question->is_deleted = Carbon::now()->format('Y/m/d H:i:s');
+        $question->is_deleted = true;
+        $question->save();
 
         return to_route('questions.showMyQuestions',Auth::user()->id)->with('status','削除しました。');
     }
@@ -197,7 +199,10 @@ class QuestionController extends Controller
 
     public function noAnswers(){
 
-        $questions = Question::doesntHave('questionAnswers')->orderBy('created_at','desc')->get();
+        $questions = Question::doesntHave('questionAnswers')
+        ->whereNotNull('shipped_at')
+        ->where('is_deleted',false)
+        ->orderBy('created_at','desc')->get();
         return view('questions/noAnswers',compact('questions'));
     }
 }
