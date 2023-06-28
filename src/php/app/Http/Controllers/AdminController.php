@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Services\SearchUserService;
+use App\Services\SearchService;
 use App\Models\User;
 use App\Models\UserRole;
 use App\Models\Department;
@@ -27,7 +27,7 @@ class AdminController extends Controller
 
     public function users(Request $request)
     {
-        $users = SearchUserService::searchUser($request);
+        $users = SearchService::searchUser($request);
         $departments = Department::all();
 
         return view('admin/users/index',compact('users','departments'));
@@ -118,7 +118,7 @@ class AdminController extends Controller
         $users = collect([]);
         $request->merge(['status' => 'working']);
         if(isset($request->name)){
-            $users = SearchUserService::searchUser($request);
+            $users = SearchService::searchUser($request);
         }
 
         return view('admin/users/registerRolePage',compact('users'));

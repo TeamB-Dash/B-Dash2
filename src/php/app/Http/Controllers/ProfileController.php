@@ -16,7 +16,7 @@ use App\Models\UserFollow;
 use App\Models\Inquiry;
 use App\Models\User;
 use App\Models\UserRole;
-use App\Services\SearchUserService;
+use App\Services\SearchService;
 
 class ProfileController extends Controller
 {
@@ -100,7 +100,7 @@ class ProfileController extends Controller
     public function searchUser(Request $request)
     {
         $request->merge(['status' => 'working']);
-        $users = SearchUserService::searchUser($request);
+        $users = SearchService::searchUser($request);
         $departments = Department::all();
 
         return view('profile/searchUser',compact('users','departments'));

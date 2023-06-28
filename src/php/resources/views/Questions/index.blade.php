@@ -19,7 +19,8 @@
                 <img alt="blog" src="https://dummyimage.com/104x104" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
                 <span class="flex-grow flex flex-col pl-4">
                     <span class="title-font font-medium text-gray-900">{{ $question->user->name }}</span>
-                    <span class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $question->created_at->format('Y-m-d')  }}</span><span>【{{$question->user->department->name}}】</span>
+                    <button type="submit" form="searchForm" name="hireMonth" value="{{$question->created_at->format('Y-m') }}" class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $question->created_at->format('Y-m-d')  }}</button>
+                    <button type="submit" form="searchForm" name="department" value="{{$question->user->department->id}}">【{{$question->user->department->name}}】</button>
                 </span>
                 </a>
                 @foreach ($question->tags as $tag )
@@ -81,6 +82,11 @@
                         </svg>
                       </button>
                     </div>
+                    @foreach ($departments as $department )
+                    <button type="submit" name="department" value="{{$department->id}}">{{$department->name}}</button>
+
+                    @endforeach
+                    <button></button>
                   </div>
             </form>
             <a href="{{ route('questions.noAnswers') }}"  class="text-lg text-rose-600 border-b border-rose-600 font-bold">回答募集中の質問一覧</a>

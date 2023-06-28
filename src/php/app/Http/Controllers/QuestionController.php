@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\RankingService;
+use App\Services\SearchService;
 use Cron\MonthField;
 
 class QuestionController extends Controller
@@ -26,9 +27,6 @@ class QuestionController extends Controller
         $monthlyReportRanking = RankingService::MonthlyReportRanking();
         $articleRanking = RankingService::ArticleRanking();
         $rankingByNumberOfArticlesPerTag = RankingService::TagRanking();
-
-        // dd($monthlyReportRanking,$articleRanking,$rankingByNumberOfArticlesPerTag);
-        // dd($articleRanking[0]);
 
         $questions = Question::with(['user','tags'])
         ->whereNotNull('shipped_at')
@@ -181,8 +179,7 @@ class QuestionController extends Controller
         ->orderBy('created_at','desc')
         ->paginate(2);
 
-        $answers = 'test';
-        return view('questions/myQuestions',compact('questions','answers'));
+        return view('questions/myQuestions',compact('questions'));
     }
 
     public function showMyDraftQuestions($id){
@@ -196,20 +193,17 @@ class QuestionController extends Controller
     }
 
     public function noAnswers(){
-
         $questions = Question::doesntHave('questionAnswers')
         ->whereNotNull('shipped_at')
         ->where('is_deleted',false)
         ->orderBy('created_at','desc')->get();
+
         return view('questions/noAnswers',compact('questions'));
     }
 
     public function searchQuestions(Request $request){
+        $questions = SearchService::searchQuestions($request);
 
-        $questions = Question::doesntHave('questionAnswers')
-        ->whereNotNull('shipped_at')
-        ->where('is_deleted',false)
-        ->orderBy('created_at','desc')->get();
         return view('questions/searchResults',compact('questions'));
     }
 }
