@@ -16,9 +16,29 @@ use App\Models\UserFollow;
 use App\Models\Inquiry;
 use App\Models\User;
 use App\Models\UserRole;
+use App\Services\CheckFormService;
 
 class ProfileController extends Controller
 {
+    public function show($id)
+    {
+        $user = User::find($id);
+        $user_profile = UserProfile::where('user_id', $id)->first();
+        $department = Department::where('id', $user->department_id)->first();
+        $allocation = CheckFormService::checkAllocation($user);
+        $gender = CheckFormService::checkGender($user);
+        $blood_type = CheckFormService::checkBloodType($user_profile);
+
+        return view('profile.show', [
+            'user' => $user,
+            'user_profile' => $user_profile,
+            'department' => $department,
+            'allocation' => $allocation,
+            'gender' => $gender,
+            'blood_type' => $blood_type,
+        ]);
+    }
+
     public function edit(Request $request): View
     {
         $user = $request->user();
