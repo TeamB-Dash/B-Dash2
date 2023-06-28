@@ -198,6 +198,14 @@ class MonthlyReportController extends Controller
         }
         $report->save();
 
+        // タグの保存
+        $tags = [];
+        foreach($request->tags as $tag){
+            $tagInstance = Tag::firstOrCreate(['name' => $tag]);
+            $tags[] = $tagInstance->id;
+        }
+        $report->tags()->sync($tags);
+
         return redirect()->route('monthlyReport.show', $report);
     }
 
