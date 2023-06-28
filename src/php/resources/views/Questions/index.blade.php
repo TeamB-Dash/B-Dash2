@@ -110,5 +110,6 @@
             <x-ranking-of-count-by-tags :rankingByNumberOfArticlesPerTag="$rankingByNumberOfArticlesPerTag">
             </x-ranking-of-count-by-tags>
         </div>
+
       </section>
 </x-app-layout>
