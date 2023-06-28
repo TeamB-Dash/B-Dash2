@@ -31,10 +31,11 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function(){
-    Route::resource('/questions', QuestionController::class);
     Route::get('/questions/users/{id}',[QuestionController::class,'showMyQuestions'])->name('questions.showMyQuestions');
     Route::get('/questions/users/{id}/drafts',[QuestionController::class,'showMyDraftQuestions'])->name('questions.showMyDraftQuestions');
     Route::get('/questions/noAnswers/show',[QuestionController::class,'noAnswers'])->name('questions.noAnswers');
+    Route::get('/questions/searchQuestions',[QuestionController::class,'searchQuestions'])->name('questions.search');
+    Route::resource('/questions', QuestionController::class);
 });
 
 

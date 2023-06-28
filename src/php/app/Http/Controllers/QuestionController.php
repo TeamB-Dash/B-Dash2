@@ -205,4 +205,13 @@ class QuestionController extends Controller
         ->orderBy('created_at','desc')->get();
         return view('questions/noAnswers',compact('questions'));
     }
+
+    public function searchQuestions(Request $request){
+
+        $questions = Question::doesntHave('questionAnswers')
+        ->whereNotNull('shipped_at')
+        ->where('is_deleted',false)
+        ->orderBy('created_at','desc')->get();
+        return view('questions/searchResults',compact('questions'));
+    }
 }
