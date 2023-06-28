@@ -19,6 +19,7 @@ class MonthlyReportController extends Controller
 
         $reports = MonthlyReport::with(['user', 'tags'])
                             ->whereNotNull('shipped_at')
+                            ->where('is_deleted', false)
                             ->orderBy('shipped_at', 'desc')
                             ->paginate(10);
 
@@ -169,7 +170,7 @@ class MonthlyReportController extends Controller
 
     public function update(Request $request, MonthlyReport $monthlyReport) {
 
-        $report = MonthlyReport::find($monthlyReport)->first();
+        $report = MonthlyReport::find($monthlyReport->id);
         // dd($report);
         // 下書き保存の更新処理
         if (isset($request->saveAsDraft)) {
@@ -201,6 +202,11 @@ class MonthlyReportController extends Controller
     }
 
     public function destroy(MonthlyReport $monthlyReport) {
+        $report = MonthlyReport::find($monthlyReport->id);
+        $report->is_deleted = true;
+        $report->save();
+
+        return redirect()->route('monthlyReport.index');
 
     }
 }

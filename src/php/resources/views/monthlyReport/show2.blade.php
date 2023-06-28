@@ -272,26 +272,22 @@
 				data-te-ripple-color="light">
 				編集する
 				</button>
-				
+				<form action="{{ route('monthlyReport.destroy',$report->id) }}" method="POST" class="inline-block " >
+                @csrf
+                @method('DELETE')
+                <button
+                type="submit"
+                class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                style="background-color:rgb(241, 45, 45)"
+                data-te-ripple-init
+                data-te-ripple-color="light"
+                onclick="return confirm('本当に削除しますか?')"
+                >
+                削除する
+                </button>
+                </form>
+
 			</div>
-          <!-- 削除確認モーダル -->
-          <div class="modal fade" id="monthly-report-delete-confirm">
-	      	<div class="modal-dialog">
-	        	<div class="modal-content">
-	            	<div class="modal-header">
-	                	<div class="modal-title">月報を削除</div>
-	               	</div>
-	                <div class="modal-body">本当にこの月報を削除しますか?</div>
-	                <div class="modal-footer">
-	                  	<form id="delete-monthly-report-form" method="post" action="/monthly_reports/delete/3773"><input type="hidden" name="_csrf" value="0fb384a8-429e-4bb7-9de1-974b3d647fcd"/>
-	                  		<input type="hidden" name="target_year" value="2023">
-						    <input class="btn btn-danger" type="submit" value="はい">
-						</form>
-	                    <button id="delete-monthly-report-form-cancel" class="btn btn-default" data-dismiss="modal" type="button">閉じる</button>
-	                </div>
-	             </div>
-	         </div>
-	       </div>
 			<div class="page-footer"></div>
 		</div>
 	</div>

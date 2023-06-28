@@ -296,7 +296,7 @@
                         data-te-ripple-color="light"
                         class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
                         style="background-color: #1da1f2">
-                        質問を更新する
+                        月報を更新する
                         </button>
                     @else
                         <button
