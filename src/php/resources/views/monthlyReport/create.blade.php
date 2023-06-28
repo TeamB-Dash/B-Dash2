@@ -315,7 +315,7 @@
 		newForm.setAttribute('name','tags[]');
 
 		const newLabel = document.createElement('label');
-		newLabel.textContent = 'タグ：';
+		newLabel.textContent = '使用した技術：';
 
 		const newSpan = document.createElement('span');
 		newSpan.classList.add('close-icon', 'text-white', 'rounded-full', 'bg-red-600', 'hover:bg-red-500', 'px-2', 'py-1');

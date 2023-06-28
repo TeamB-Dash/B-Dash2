@@ -171,7 +171,8 @@ class MonthlyReportController extends Controller
     public function update(Request $request, MonthlyReport $monthlyReport) {
 
         $report = MonthlyReport::find($monthlyReport->id);
-        // dd($report);
+        $workingProcess = new MonthlyWorkingProcess();
+
         // 下書き保存の更新処理
         if (isset($request->saveAsDraft)) {
             $report->target_month = $request->target_month;
@@ -180,6 +181,39 @@ class MonthlyReportController extends Controller
             $report->looking_back = $request->looking_back;
             $report->next_month_goals = $request->next_month_goals;
             $report->shipped_at = null;
+
+            $workingProcess->monthly_report_id = $report->id;
+
+            foreach($request->workingProcess as $process) {
+                if($process == 'definition') {
+                    $workingProcess->process_definition = true;
+                }
+                if($process == 'design') {
+                    $workingProcess->process_design = true;
+                }
+                if($process == 'implementation') {
+                    $workingProcess->process_implementation = true;
+                }
+                if($process == 'test') {
+                    $workingProcess->process_test = true;
+                }
+                if($process == 'operation') {
+                    $workingProcess->process_operation = true;
+                }
+                if($process == 'analysis') {
+                    $workingProcess->process_analysis = true;
+                }
+                if($process == 'training') {
+                    $workingProcess->process_training = true;
+                }
+                if($process == 'structure') {
+                    $workingProcess->process_structure = true;
+                }
+                if($process == 'trouble') {
+                    $workingProcess->process_trouble = true;
+                }
+            }
+
         // 公開した質問の更新処理
         } else if (isset($request->update)) {
             $report->target_month = $request->target_month;
@@ -187,6 +221,38 @@ class MonthlyReportController extends Controller
             $report->business_content = $request->business_content;
             $report->looking_back = $request->looking_back;
             $report->next_month_goals = $request->next_month_goals;
+
+            $workingProcess->monthly_report_id = $report->id;
+
+            foreach($request->workingProcess as $process) {
+                if($process == 'definition') {
+                    $workingProcess->process_definition = true;
+                }
+                if($process == 'design') {
+                    $workingProcess->process_design = true;
+                }
+                if($process == 'implementation') {
+                    $workingProcess->process_implementation = true;
+                }
+                if($process == 'test') {
+                    $workingProcess->process_test = true;
+                }
+                if($process == 'operation') {
+                    $workingProcess->process_operation = true;
+                }
+                if($process == 'analysis') {
+                    $workingProcess->process_analysis = true;
+                }
+                if($process == 'training') {
+                    $workingProcess->process_training = true;
+                }
+                if($process == 'structure') {
+                    $workingProcess->process_structure = true;
+                }
+                if($process == 'trouble') {
+                    $workingProcess->process_trouble = true;
+                }
+            }
         // 下書きを公開する処理
         } else if (isset($request->saveAsPublicReport)) {
             $report->target_month = $request->target_month;
@@ -195,6 +261,38 @@ class MonthlyReportController extends Controller
             $report->looking_back = $request->looking_back;
             $report->next_month_goals = $request->next_month_goals;
             $report->shipped_at = Carbon::now()->format('Y/m/d H:i:s');
+
+            $workingProcess->monthly_report_id = $report->id;
+
+            foreach($request->workingProcess as $process) {
+                if($process == 'definition') {
+                    $workingProcess->process_definition = true;
+                }
+                if($process == 'design') {
+                    $workingProcess->process_design = true;
+                }
+                if($process == 'implementation') {
+                    $workingProcess->process_implementation = true;
+                }
+                if($process == 'test') {
+                    $workingProcess->process_test = true;
+                }
+                if($process == 'operation') {
+                    $workingProcess->process_operation = true;
+                }
+                if($process == 'analysis') {
+                    $workingProcess->process_analysis = true;
+                }
+                if($process == 'training') {
+                    $workingProcess->process_training = true;
+                }
+                if($process == 'structure') {
+                    $workingProcess->process_structure = true;
+                }
+                if($process == 'trouble') {
+                    $workingProcess->process_trouble = true;
+                }
+            }
         }
         $report->save();
 
@@ -216,6 +314,18 @@ class MonthlyReportController extends Controller
 
         return redirect()->route('monthlyReport.index');
 
+    }
+
+    public function showMyReports($id) {
+        $user = Auth()->user();
+        $reports = MonthlyReport::with(['user', 'tags'])
+                            ->whereNotNull('shipped_at')
+                            ->where('is_deleted', '=', false)
+                            ->where('user_id', '=', $user->id)
+                            ->orderBy('shipped_at', 'desc')
+                            ->paginate(5);
+        
+        return view('monthlyReport.myReports');
     }
 }
 
