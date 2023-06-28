@@ -3,11 +3,9 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\Tag;
-use App\Models\Article;
-use App\Models\MonthlyReport;
 use App\Models\User;
 use App\Models\Question;
+use App\Models\Department;
 use Carbon\Carbon;
 
 
@@ -56,10 +54,12 @@ class SearchService
      * QA検索のクエリ
      *
      * キーワード、所属、入社日のいづれかで条件分岐して検索
-     * @return Question
+     * @return Question $questions
+     * @return String $filtering
      */
     public static function searchQuestions($request){
         $subQuery = Question::query();
+        $filteredBy = '';
 
         if(isset($request->keyword)){
             // 全角スペースを半角スペースに
@@ -75,19 +75,27 @@ class SearchService
                     $query->where('name','LIKE','%'.$word.'%');
                 });
             }
+            $filteredBy = 'キーワード：'.$spaceConversion;
         }else if(isset($request->department)){
             $department = $request->department;
             $subQuery = $subQuery->whereHas('user',function($query) use ($department){
                 $query->where('department_id',$department);
             });
+            $filteredBy = '所属：'.Department::find($department)->name;
         } else if(isset($request->hireMonth)){
             $hireMonth = $request->hireMonth;
             $subQuery = $subQuery->whereHas('user',function($query) use ($hireMonth) {
                 $query->where('entry_date', 'LIKE', $hireMonth.'%');
             });
+            $filteredBy = '入社日：'.$hireMonth;
+        } else {
+            $questions = Question::with(['user','tags'])
+            ->whereNotNull('shipped_at');
+            $filteredBy = null;
         }
 
-        $questions = $subQuery->where('is_deleted',false)->orderBy('created_at','desc')->paginate(20);
-        return $questions;
+        $questions = $subQuery->where('is_deleted',false)->orderBy('created_at','desc')->paginate(4);
+
+        return [$questions,$filteredBy];
     }
 }

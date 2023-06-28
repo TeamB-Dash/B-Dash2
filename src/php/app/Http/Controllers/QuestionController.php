@@ -22,18 +22,15 @@ class QuestionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $monthlyReportRanking = RankingService::MonthlyReportRanking();
         $articleRanking = RankingService::ArticleRanking();
         $rankingByNumberOfArticlesPerTag = RankingService::TagRanking();
 
-        $questions = Question::with(['user','tags'])
-        ->whereNotNull('shipped_at')
-        ->where('is_deleted',false)
-        ->orderBy('created_at','desc')->paginate(2);
+        list($questions,$filteredBy) = SearchService::searchQuestions($request);
 
-        return view('questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag'));
+        return view('questions/index',compact('questions','filteredBy','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag'));
     }
 
     /**
@@ -199,11 +196,5 @@ class QuestionController extends Controller
         ->orderBy('created_at','desc')->get();
 
         return view('questions/noAnswers',compact('questions'));
-    }
-
-    public function searchQuestions(Request $request){
-        $questions = SearchService::searchQuestions($request);
-
-        return view('questions/searchResults',compact('questions'));
     }
 }
