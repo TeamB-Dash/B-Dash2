@@ -82,6 +82,7 @@
                             </div>
                             <form class="form-horizontal" id="new_monthly_report" action="{{ route('monthlyReport.update', $report) }}" accept-charset="UTF-8" method="post">
                                 @csrf
+                                @method('PATCH')
                                 <input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/>
                                 <div class="form-group">
                                     <label class="control-label col-sm-3" for="target_month">対象月</label>
@@ -310,8 +311,8 @@
                         </button>
                         <button
                         type="submit"
-                        name="saveAsPublicQuestion"
-                        value="saveAsPublicQuestion"
+                        name="saveAsPublicReport"
+                        value="saveAsPublicReport"
                         data-te-ripple-init
                         data-te-ripple-color="light"
                         class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"

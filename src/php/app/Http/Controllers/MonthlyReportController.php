@@ -169,6 +169,35 @@ class MonthlyReportController extends Controller
 
     public function update(Request $request, MonthlyReport $monthlyReport) {
 
+        $report = MonthlyReport::find($monthlyReport)->first();
+        // dd($report);
+        // 下書き保存の更新処理
+        if (isset($request->saveAsDraft)) {
+            $report->target_month = $request->target_month;
+            $report->project_summary = $request->project_summary;
+            $report->business_content = $request->business_content;
+            $report->looking_back = $request->looking_back;
+            $report->next_month_goals = $request->next_month_goals;
+            $report->shipped_at = null;
+        // 公開した質問の更新処理
+        } else if (isset($request->update)) {
+            $report->target_month = $request->target_month;
+            $report->project_summary = $request->project_summary;
+            $report->business_content = $request->business_content;
+            $report->looking_back = $request->looking_back;
+            $report->next_month_goals = $request->next_month_goals;
+        // 下書きを公開する処理
+        } else if (isset($request->saveAsPublicReport)) {
+            $report->target_month = $request->target_month;
+            $report->project_summary = $request->project_summary;
+            $report->business_content = $request->business_content;
+            $report->looking_back = $request->looking_back;
+            $report->next_month_goals = $request->next_month_goals;
+            $report->shipped_at = Carbon::now()->format('Y/m/d H:i:s');
+        }
+        $report->save();
+
+        return redirect()->route('monthlyReport.show', $report);
     }
 
     public function destroy(MonthlyReport $monthlyReport) {
