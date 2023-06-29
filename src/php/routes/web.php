@@ -61,6 +61,7 @@ Route::get('/monthly_reports/{monthlyReport}/edit', [MonthlyReportController::cl
 Route::patch('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'update'])->name('monthlyReport.update');
 Route::delete('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'destroy'])->name('monthlyReport.destroy');
 Route::get('/monthly_reports/users/{id}', [MonthlyReportController::class, 'showMyReports'])->name('monthlyReport.showMyReports');
+Route::get('/monthly_reports/users/{id}/drafts', [MonthlyReportController::class, 'showMyDraftReports'])->name('monthlyReport.showMyDraftReports');
 
 // 管理者関連のルート
 Route::prefix('/admin')->middleware('judgeAdmin')->group(function(){

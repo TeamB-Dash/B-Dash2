@@ -118,7 +118,7 @@
                 <div class="flex-body">
                     <div class="ml-par20 col-sm-6">
                         <div class="page-header">
-                            <h1>{{Auth::user()->name}}さんの月報一覧</h1>
+                            <h1>下書き中の月報一覧</h1>
                         </div>
     
                         <div class="page-content">
@@ -133,12 +133,12 @@
                             <div class="w-full">
                                 <button
                                 type="button"
-                                onclick="location.href='{{ route('monthlyReport.showMyDraftReports', Auth::user()->id) }}' "
+                                onclick="location.href='{{ route('monthlyReport.showMyReports', Auth::user()->id) }}' "
                                 class="inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
-                                style="background-color:rgb(178, 106, 245)"
+                                style="background-color:rgb(139, 194, 56)"
                                 data-te-ripple-init
                                 data-te-ripple-color="light">
-                                下書き中の月報一覧へ
+                                公開済みの月報一覧へ
                                 </button>
                             </div>
 
@@ -161,7 +161,7 @@
                                             <span> - {{ $report->target_month->format('Y')}}年{{ $report->target_month->format('m')}}月分</span>
                                             <br class="visible-xs-block" />
                                             <div class="visible-xs-inline">　</div>
-                                            <small class="monthly-report-shipped-at text-muted hidden-xs">投稿日: {{ $report->shipped_at->format('Y-m-d') }}</small>
+                                            {{-- <small class="monthly-report-shipped-at text-muted hidden-xs">投稿日: {{ $report->shipped_at->format('Y-m-d') }}</small> --}}
                                             <div class="pull-right">
                                                 
                                                 @foreach($report->tags as $tag)

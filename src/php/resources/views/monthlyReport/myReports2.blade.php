@@ -1,343 +1,79 @@
 
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-	<meta charset="utf-8" />
-	<meta content="IE=edge" http-equiv="X-UA-Compatible" />
-	<meta content="width=device-width, initial-scale=1" name="viewport" />
-	<title>Dash</title>
-	<link rel="stylesheet" media="all" href="/css/side_header.css" />
-	<link rel="stylesheet" media="all" href="/css/template.css"/>
-	<link rel="stylesheet" media="all" href="/css/monthly_report/user-list.css"/>
-	<link rel="stylesheet" href="/css/header-profile.css" />
-	<script src="/js/template.js"></script>
-	<script src="/js/monthly_report/user-list.js"></script>
-	<link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
-	<link rel="icon" type="image/png" href="/img/favicon/favicon-32x32.png" sizes="32x32">
-	<link rel="icon" type="image/png" href="/img/favicon/favicon-16x16.png" sizes="16x16">
-	<link rel="manifest" href="/img/favicon/manifest.json">
-	<link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#dd4814">
-	<link rel="shortcut icon" href="/img/favicon/favicon.ico">
-	<meta name="apple-mobile-web-app-title" content="Dash">
-	<meta name="application-name" content="Dash">
-	<meta name="msapplication-config" content="../../static/img/favicon/browserconfig.xml">
-	<meta name="theme-color" content="#ffffff">
-</head>
-<body>
-    <div class="site-body container-fluid">
-      <div class="site-container row">
-        
-			
-        
-        <div class="col-sm-8 col-sm-offset-3">
-          <div class="page-header">
-            <h1>
-              <a class="text-profile-link" href="/user_profiles/1135">野口佳純</a>
-            </h1>
+
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        {{Auth::user()->name}}さんの月報一覧
+        </h2>
+    </x-slot>
+
+    <section class="text-gray-600 body-font overflow-hidden">
+        @if (session('status'))
+        <div class="w-2/3 mx-auto container mt-6 text-center bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
+            <p class="font-bold">{{ session('status') }}</p>
         </div>
-          
-          <!-- /* 月報削除時メッセージ */ -->
-          
-          
-          <div class="page-body">
-            <div class="page-content">
-              <h3><span>2023</span>年の月報</h3>
-              <a class="text-info" href="/monthly_reports/users/1135?target_year=2022">&lt;&lt;<span>2022</span>年</a>
-              <a class="pull-right text-info" href="/monthly_reports/users/1135?target_year=2024"><span>2024</span>年 &gt;&gt;</a>
-              <div id="report_index">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>対象月</th>
-                      <th>ステータス</th>
-                      <th>リンク</th>
-                    </tr>
-                  </thead>
-                  
-                  <!-- ↓月報一覧↓　-->
-                  <tbody >
-                  	<input id = "month_list" type="hidden" value="2022-07-01 00:00:00.0">
-                  	
-                  		
-	                  	<tr id="month-1">
-	                  		<!-- 月 -->
-	                  		<th>1月</th>
-	                  		<!-- ステータス -->
-		                    <th>
-		                        
-		                        
-		                        <span class="label label-warning">未登録</span>
-	                      	</th>
-	                  		<!-- リンク -->
-	                      	<th>
-		                        
-		                        
-		                        <a class="btn btn-sm btn-default" href="/monthly_reports/edit?copyPrev=false&amp;targetMonth=2023-01-01">登録</a>
-		                        
-	                      	</th>
-	                  	</tr>
-                  	
-                  		                 		
-                  	
-                  		
-	                  	<tr id="month-2">
-	                  		<!-- 月 -->
-	                  		<th>2月</th>
-	                  		<!-- ステータス -->
-		                    <th>
-		                        
-		                        
-		                        <span class="label label-warning">未登録</span>
-	                      	</th>
-	                  		<!-- リンク -->
-	                      	<th>
-		                        
-		                        
-		                        <a class="btn btn-sm btn-default" href="/monthly_reports/edit?copyPrev=false&amp;targetMonth=2023-02-01">登録</a>
-		                        
-	                      	</th>
-	                  	</tr>
-                  	
-                  		                 		
-                  	
-                  		
-	                  	<tr id="month-3">
-	                  		<!-- 月 -->
-	                  		<th>3月</th>
-	                  		<!-- ステータス -->
-		                    <th>
-		                        
-		                        
-		                        <span class="label label-warning">未登録</span>
-	                      	</th>
-	                  		<!-- リンク -->
-	                      	<th>
-		                        
-		                        
-		                        <a class="btn btn-sm btn-default" href="/monthly_reports/edit?copyPrev=false&amp;targetMonth=2023-03-01">登録</a>
-		                        
-	                      	</th>
-	                  	</tr>
-                  	
-                  		                 		
-                  	
-                  		
-	                  	<tr id="month-4">
-	                  		<!-- 月 -->
-	                  		<th>4月</th>
-	                  		<!-- ステータス -->
-		                    <th>
-		                        
-		                        
-		                        <span class="label label-warning">未登録</span>
-	                      	</th>
-	                  		<!-- リンク -->
-	                      	<th>
-		                        
-		                        
-		                        <a class="btn btn-sm btn-default" href="/monthly_reports/edit?copyPrev=false&amp;targetMonth=2023-04-01">登録</a>
-		                        
-	                      	</th>
-	                  	</tr>
-                  	
-                  		                 		
-                  	
-                  		
-	                  	<tr id="month-5">
-	                  		<!-- 月 -->
-	                  		<th>5月</th>
-	                  		<!-- ステータス -->
-		                    <th>
-		                        
-		                        
-		                        <span class="label label-warning">未登録</span>
-	                      	</th>
-	                  		<!-- リンク -->
-	                      	<th>
-		                        
-		                        
-		                        <a class="btn btn-sm btn-default" href="/monthly_reports/edit?copyPrev=false&amp;targetMonth=2023-05-01">登録</a>
-		                        
-	                      	</th>
-	                  	</tr>
-                  	
-                  		                 		
-                  	
-                  		
-	                  	<tr id="month-6">
-	                  		<!-- 月 -->
-	                  		<th>6月</th>
-	                  		<!-- ステータス -->
-		                    <th>
-		                        <span class="label label-success">登録済</span>
-		                        
-		                        
-	                      	</th>
-	                  		<!-- リンク -->
-	                      	<th>
-		                        <a class="btn btn-sm btn-default" href="/monthly_reports/3797">閲覧</a>
-		                        <a class="btn btn-sm btn-success" id="edit-monthly-button" href="/monthly_reports/edit?copyPrev=false&amp;targetMonth=2023-06-01">編集</a>
-		                        
-		                        <a class="btn btn-sm btn-danger" data-target="#monthly-report-delete-confirm" data-toggle="modal" data-monthly-report-id="3797">削除</a>
-	                      	</th>
-	                  	</tr>
-                  	
-                  		                 		
-                  	
-                  		
-	                  	<tr id="month-7">
-	                  		<!-- 月 -->
-	                  		<th>7月</th>
-	                  		<!-- ステータス -->
-		                    <th>
-		                        
-		                        
-		                        <span class="label label-warning">未登録</span>
-	                      	</th>
-	                  		<!-- リンク -->
-	                      	<th>
-		                        
-		                        
-		                        <a class="btn btn-sm btn-default" href="/monthly_reports/edit?copyPrev=false&amp;targetMonth=2023-07-01">登録</a>
-		                        
-	                      	</th>
-	                  	</tr>
-                  	
-                  		                 		
-                  	
-                  		
-	                  	<tr id="month-8">
-	                  		<!-- 月 -->
-	                  		<th>8月</th>
-	                  		<!-- ステータス -->
-		                    <th>
-		                        
-		                        
-		                        <span class="label label-warning">未登録</span>
-	                      	</th>
-	                  		<!-- リンク -->
-	                      	<th>
-		                        
-		                        
-		                        <a class="btn btn-sm btn-default" href="/monthly_reports/edit?copyPrev=false&amp;targetMonth=2023-08-01">登録</a>
-		                        
-	                      	</th>
-	                  	</tr>
-                  	
-                  		                 		
-                  	
-                  		
-	                  	<tr id="month-9">
-	                  		<!-- 月 -->
-	                  		<th>9月</th>
-	                  		<!-- ステータス -->
-		                    <th>
-		                        
-		                        
-		                        <span class="label label-warning">未登録</span>
-	                      	</th>
-	                  		<!-- リンク -->
-	                      	<th>
-		                        
-		                        
-		                        <a class="btn btn-sm btn-default" href="/monthly_reports/edit?copyPrev=false&amp;targetMonth=2023-09-01">登録</a>
-		                        
-	                      	</th>
-	                  	</tr>
-                  	
-                  		                 		
-                  	
-                  		
-	                  	<tr id="month-10">
-	                  		<!-- 月 -->
-	                  		<th>10月</th>
-	                  		<!-- ステータス -->
-		                    <th>
-		                        
-		                        
-		                        <span class="label label-warning">未登録</span>
-	                      	</th>
-	                  		<!-- リンク -->
-	                      	<th>
-		                        
-		                        
-		                        <a class="btn btn-sm btn-default" href="/monthly_reports/edit?copyPrev=false&amp;targetMonth=2023-10-01">登録</a>
-		                        
-	                      	</th>
-	                  	</tr>
-                  	
-                  		                 		
-                  	
-                  		
-	                  	<tr id="month-11">
-	                  		<!-- 月 -->
-	                  		<th>11月</th>
-	                  		<!-- ステータス -->
-		                    <th>
-		                        
-		                        
-		                        <span class="label label-warning">未登録</span>
-	                      	</th>
-	                  		<!-- リンク -->
-	                      	<th>
-		                        
-		                        
-		                        <a class="btn btn-sm btn-default" href="/monthly_reports/edit?copyPrev=false&amp;targetMonth=2023-11-01">登録</a>
-		                        
-	                      	</th>
-	                  	</tr>
-                  	
-                  		                 		
-                  	
-                  		
-	                  	<tr id="month-12">
-	                  		<!-- 月 -->
-	                  		<th>12月</th>
-	                  		<!-- ステータス -->
-		                    <th>
-		                        
-		                        
-		                        <span class="label label-warning">未登録</span>
-	                      	</th>
-	                  		<!-- リンク -->
-	                      	<th>
-		                        
-		                        
-		                        <a class="btn btn-sm btn-default" href="/monthly_reports/edit?copyPrev=false&amp;targetMonth=2023-12-01">登録</a>
-		                        
-	                      	</th>
-	                  	</tr>
-                  	
-                  		                 		
-                  	
-                  	</tbody>
-                  <!-- ↑月報一覧↑ -->
-                  
-                </table>
-              </div>
+        @endif
+        <div class="container px-5 py-24 mx-auto">
+          <div class="flex flex-wrap -m-12">
+            <div class="w-full">
+                <button
+                type="button"
+                onclick="location.href='{{ route('questions.showMyDraftQuestions', Auth::user()->id) }}' "
+                class="inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                style="background-color:rgb(178, 106, 245)"
+                data-te-ripple-init
+                data-te-ripple-color="light">
+                下書き中の月報一覧へ
+                </button>
             </div>
+
+            @if ($reports->count() === 0)
+            <div class="w-full">表示する月報はありません</div>
+            @else
+
+                @foreach ( $reports as $report )
+                <div class="p-12 md:w-1/2 flex flex-col items-start">
+                    <a class="inline-flex items-center">
+                    <img alt="blog" src="https://dummyimage.com/104x104" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
+                    <span class="flex-grow flex flex-col pl-4">
+                        <span class="title-font font-medium text-gray-900">{{ $report->user->name }}</span>
+                        <span class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $report->created_at->format('Y-m-d')  }}</span><span>【{{$report->user->department->name}}】</span>
+                    </span>
+                    </a>
+                    @foreach ($report->tags as $tag )
+                    <span class="inline-block py-1 px-2 rounded bg-indigo-50 text-indigo-500 text-xs font-medium tracking-widest">{{ $tag->name }}</span>
+                    @endforeach
+                {{-- <div class="flex items-center flex-wrap pb-4 mb-4 border-b-2 border-gray-100 mt-auto w-full">
+                    <a class="text-indigo-500 inline-flex items-center">Learn More
+                    <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"></path>
+                        <path d="M12 5l7 7-7 7"></path>
+                    </svg>
+                    </a>
+                    <span class="text-gray-400 mr-3 inline-flex items-center ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
+                    <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>1.2K
+                    </span>
+                    <span class="text-gray-400 inline-flex items-center leading-none text-sm">
+                    <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
+                    </svg>{{ $question->questionAnswers->count() }}
+                    </span>
+                </div>
+                <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4"><a href="{{route('questions.show',['question' => $question->id])}}">{{$question->title}}</a></h2>
+                <p class="leading-relaxed mb-8">{{$question->body}}</p> --}}
+                </div>
+                @endforeach
+
+            {{ $reports->links() }}
           </div>
-          <!-- 削除確認モーダル -->
-          <div class="modal fade" id="monthly-report-delete-confirm">
-	      	<div class="modal-dialog">
-	        	<div class="modal-content">
-	            	<div class="modal-header">
-	                	<div class="modal-title">月報を削除</div>
-	               	</div>
-	                <div class="modal-body">本当にこの月報を削除しますか?</div>
-	                <div class="modal-footer">
-	                  	<form id="delete-monthly-report-form" method="post" action="/monthly_reports/delete"><input type="hidden" name="_csrf" value="ddd52cac-d99d-47d5-a5cd-7de7da5d1981"/>
-						    <input class="btn btn-danger" type="submit" value="はい">
-						</form>
-	                    <button id="delete-monthly-report-form-cancel" class="btn btn-default" data-dismiss="modal" type="button">閉じる</button>
-	                </div>
-	             </div>
-	         </div>
-	       </div>
-          
-          <div class="page-footer"></div>
+          @endif
+
         </div>
-      </div>
-    </div>
-</body>
-</html>
+
+
+      </section>
+</x-app-layout>
+

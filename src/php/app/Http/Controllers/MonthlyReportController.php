@@ -336,7 +336,18 @@ class MonthlyReportController extends Controller
                             ->orderBy('shipped_at', 'desc')
                             ->paginate(5);
         
-        return view('monthlyReport.myReports2', compact('reports'));
+        return view('monthlyReport.myReports', compact('reports'));
+    }
+
+    public function showMyDraftReports($id) {
+        $user = Auth()->user();
+        $reports = MonthlyReport::with(['user', 'tags'])
+                            ->whereNull('shipped_at')
+                            ->where('user_id', '=', $user->id)
+                            ->orderBy('created_at', 'desc')
+                            ->paginate(5);
+
+        return view('monthlyReport.myDraftReports', compact('reports'));
     }
 }
 
