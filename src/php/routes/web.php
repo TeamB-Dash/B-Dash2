@@ -44,8 +44,8 @@ Route::prefix('profile')
         Route::get('/{id}', 'show')->name('show');
         Route::get('/', 'edit')->name('edit');
         Route::patch('/', 'update')->name('update');
-        Route::post('/following/destroy{id}', 'followingDestroy')->name('following.destroy');
-        Route::post('/follower/destroy{id}', 'followerDestroy')->name('follower.destroy');
+        Route::post('/follow{id}', 'follow')->name('follow');
+        Route::post('/unfollow{id}', 'unfollow')->name('unfollow');
         Route::post('/submitInquiry', 'submitInquiry')->name('submitInquiry');
         // Route::delete('/', 'destroy')->name('destroy');
     });
