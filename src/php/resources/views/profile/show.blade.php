@@ -32,6 +32,18 @@
                     <x-input-error class="mt-2" :messages="$errors->get('name')" />
                 </div>
 
+                {{-- @if ($article->isFavoritedByUser(Auth::user()))
+                    <form action="{{ route('profile.follow', [$user->id]) }}" method="POST">
+                        @csrf
+                        <button type="submit">フォローする</button>
+                    </form>
+                @else
+                    <form action="{{ route('profile.unfollow', [$user->id]) }}" method="POST">
+                        @csrf
+                        <button type="submit">フォロー解除する</button>
+                    </form>
+                @endif --}}
+
                 <div>
                     <x-input-label for="department_id" :value="__('所属')" />
                     <div id="department_id" name="department_id" type="text" class="mt-1 block w-full" required
@@ -76,33 +88,53 @@
 
                 <div>
                     <x-input-label for="birthday" :value="__('誕生日')" />
-                    <div id="birthday" name="birthday" type="text" class="mt-1 block w-full" required autofocus
-                        autocomplete="birthday">{{ $user_profile->birthday }}</div>
+                    @if (isset($user_profile->birthday))
+                        <div id="birthday" name="birthday" type="text" class="mt-1 block w-full" required autofocus
+                            autocomplete="birthday">{{ $user_profile->birthday }}</div>
+                    @else
+                        <div id="birthday" name="birthday" type="text" class="mt-1 block w-full" required autofocus
+                            autocomplete="birthday">未設定</div>
+                    @endif
                     <x-input-error class="mt-2" :messages="$errors->get('birthday')" />
                 </div>
 
                 <div>
                     <x-input-label for="github_url" :value="__('GitHubアカウント')" />
-                    <div id="github_url" name="github_url" type="text" class="mt-1 block w-full" required autofocus
-                        autocomplete="github_url">{{ $user_profile->github_url }}</div>
+                    @if (isset($user_profile->github_url))
+                        <div id="github_url" name="github_url" type="text" class="mt-1 block w-full" required
+                            autofocus autocomplete="github_url">{{ $user_profile->github_url }}</div>
+                    @else
+                        <div id="github_url" name="github_url" type="text" class="mt-1 block w-full" required
+                            autofocus autocomplete="github_url">未設定</div>
+                    @endif
                     <x-input-error class="mt-2" :messages="$errors->get('github_url')" />
                 </div>
 
                 <div>
                     <x-input-label for="qiita_url" :value="__('Qiitaアカウント')" />
-                    <div id="qiita_url" name="qiita_url" type="text" class="mt-1 block w-full" required autofocus
-                        autocomplete="qiita_url">{{ $user_profile->qiita_url }}</div>
+                    @if (isset($user_profile->qiita_url))
+                        <div id="qiita_url" name="qiita_url" type="text" class="mt-1 block w-full" required autofocus
+                            autocomplete="qiita_url">{{ $user_profile->qiita_url }}</div>
+                    @else
+                        <div id="qiita_url" name="qiita_url" type="text" class="mt-1 block w-full" required autofocus
+                            autocomplete="qiita_url">未設定</div>
+                    @endif
                     <x-input-error class="mt-2" :messages="$errors->get('qiita_url')" />
                 </div>
 
                 <div>
                     <x-input-label for="self_introduction" :value="__('自己紹介')" />
-                    <div id="self_introduction" name="self_introduction" type="text" class="mt-1 block w-full"
-                        required autofocus autocomplete="self_introduction">{{ $user_profile->self_introduction }}
-                    </div>
+                    @if (isset($user_profile->self_introduction))
+                        <div id="self_introduction" name="self_introduction" type="text" class="mt-1 block w-full"
+                            required autofocus autocomplete="self_introduction">{{ $user_profile->self_introduction }}
+                        </div>
+                    @else
+                        <div id="self_introduction" name="self_introduction" type="text" class="mt-1 block w-full"
+                            required autofocus autocomplete="self_introduction">未設定
+                        </div>
+                    @endif
                     <x-input-error class="mt-2" :messages="$errors->get('self_introduction')" />
                 </div>
             </div>
         </section>
-    </div>
 </x-app-layout>
