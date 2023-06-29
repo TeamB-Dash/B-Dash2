@@ -146,6 +146,7 @@ class MonthlyReportController extends Controller
 
         $report = MonthlyReport::find($monthlyReport->id);
         $userId = $monthlyReport->user_id;
+        // $entryDate = Carbon::parse($monthlyReport->user->entry_date)->format('Y年m月');
 
         // 1. 月報情報を取得
         // 2. target_monthカラムのデータをもとにCarbon::parseでdatetime型に整形。月初を取得後、文字列に

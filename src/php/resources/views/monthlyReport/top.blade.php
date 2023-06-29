@@ -427,7 +427,7 @@
                                     <a class="list-group-item" href="{{ route('monthlyReport.show', $report)}}">
                                         <span>【</span>
                                         <span class="tag label label-success">{{ $report->user->department->name }}</span>
-                                        <span>{{ $report->user->entry_date}}入社</span>
+                                        <span>{{ \Carbon\Carbon::parse($report->user->entry_date)->format('Y年m月') }}入社</span>
                                         <span>】</span>
                                         <span class="glyphicon glyphicon-user"></span>
                                         
