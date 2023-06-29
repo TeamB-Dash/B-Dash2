@@ -17,6 +17,7 @@ use App\Models\Inquiry;
 use App\Models\User;
 use App\Models\UserRole;
 use App\Services\SearchService;
+use App\Http\Requests\InquiryRequest;
 
 class ProfileController extends Controller
 {
@@ -112,7 +113,7 @@ class ProfileController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function submitInquiry(Request $request)
+    public function submitInquiry(InquiryRequest $request)
     {
         $user_name = User::find($request->user_id)->name;
         $toUser = User::whereHas('role',function($query){
