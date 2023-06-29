@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Services\RankingService;
 use App\Services\SearchService;
 use Cron\MonthField;
+use App\Http\Requests\QuestionRequest;
 
 class QuestionController extends Controller
 {
@@ -49,7 +50,7 @@ class QuestionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(QuestionRequest $request)
     {
         DB::beginTransaction();
         try{
@@ -59,7 +60,7 @@ class QuestionController extends Controller
                 $question = Question::create([
                     'user_id' => $user->id,
                     'title' => $request->title,
-                    'body' => $request->content,
+                    'body' => $request->body,
                     'is_deleted' =>false,
                     'answer_count' => 0,
                     'shipped_at' => null,
@@ -68,7 +69,7 @@ class QuestionController extends Controller
                 $question = Question::create([
                     'user_id' => $user->id,
                     'title' => $request->title,
-                    'body' => $request->content,
+                    'body' => $request->body,
                     'is_deleted' =>false,
                     'answer_count' => 0,
                     'shipped_at' => Carbon::now()->format('Y/m/d H:i:s'),
@@ -126,35 +127,42 @@ class QuestionController extends Controller
      * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Question $question)
+    public function update(QuestionRequest $request, Question $question)
     {
-        // 下書き保存の更新処理
-        if(isset($request->saveAsDraft)){
-            $question->title = $request->title;
-            $question->body = $request->content;
-            $question->shipped_at = null;
-        // 公開した質問の更新処理
-        }else if(isset($request->update)){
-            $question->title = $request->title;
-            $question->body = $request->content;
-        // 下書きを公開する処理
-        }else if(isset($request->saveAsPublicQuestion)){
-            $question->title = $request->title;
-            $question->body = $request->content;
-            $question->shipped_at = Carbon::now()->format('Y/m/d H:i:s');
-        }
-        $question->save();
 
-        // タグの保存
-        $tags = [];
-        foreach($request->tags as $tag){
-            $tagInstance = Tag::firstOrCreate(['name' => $tag]);
-            $tags[] = $tagInstance->id;
-        }
-        $question->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
+        DB::beginTransaction();
+        try {
+            // 下書き保存の更新処理
+            if(isset($request->saveAsDraft)){
+                $question->title = $request->title;
+                $question->body = $request->body;
+                $question->shipped_at = null;
+            // 公開した質問の更新処理
+            }else if(isset($request->update)){
+                $question->title = $request->title;
+                $question->body = $request->body;
+                // 下書きを公開する処理
+            }else if(isset($request->saveAsPublicQuestion)){
+                $question->title = $request->title;
+                $question->body = $request->body;
+                $question->shipped_at = Carbon::now()->format('Y/m/d H:i:s');
+            }
+            $question->save();
 
-        // return redirect()->back()->with('status','情報を更新しました。');
-        return to_route('questions.show',$request->id)->with('status','情報を更新しました。');
+            // タグの保存
+            $tags = [];
+            foreach($request->tags as $tag){
+                $tagInstance = Tag::firstOrCreate(['name' => $tag]);
+                $tags[] = $tagInstance->id;
+            }
+            $question->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
+
+            return to_route('questions.show',$request->id)->with('status','情報を更新しました。');
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return route('dashboard');
+        }
     }
 
     /**
