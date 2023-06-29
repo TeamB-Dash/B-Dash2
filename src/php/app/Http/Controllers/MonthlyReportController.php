@@ -171,7 +171,23 @@ class MonthlyReportController extends Controller
     public function update(Request $request, MonthlyReport $monthlyReport) {
 
         $report = MonthlyReport::find($monthlyReport->id);
-        $workingProcess = new MonthlyWorkingProcess();
+        $workingProcess = MonthlyWorkingProcess::where('monthly_report_id', '=', $monthlyReport->id)->first();
+
+        // working_processテーブルの全てのカラムをfalseに設定する
+        $workingProcess->process_definition = false;
+        $workingProcess->process_design = false;
+        $workingProcess->process_implementation = false;
+        $workingProcess->process_test = false;
+        $workingProcess->process_operation = false;
+        $workingProcess->process_analysis = false;
+        $workingProcess->process_training = false;
+        $workingProcess->process_structure = false;
+        $workingProcess->process_trouble = false;
+        $workingProcess->save();
+
+        // $colums = $workingProcess->getColums();
+        // dd($colums);
+        
 
         // 下書き保存の更新処理
         if (isset($request->saveAsDraft)) {
@@ -181,8 +197,6 @@ class MonthlyReportController extends Controller
             $report->looking_back = $request->looking_back;
             $report->next_month_goals = $request->next_month_goals;
             $report->shipped_at = null;
-
-            $workingProcess->monthly_report_id = $report->id;
 
             foreach($request->workingProcess as $process) {
                 if($process == 'definition') {
@@ -222,8 +236,6 @@ class MonthlyReportController extends Controller
             $report->looking_back = $request->looking_back;
             $report->next_month_goals = $request->next_month_goals;
 
-            $workingProcess->monthly_report_id = $report->id;
-
             foreach($request->workingProcess as $process) {
                 if($process == 'definition') {
                     $workingProcess->process_definition = true;
@@ -262,8 +274,6 @@ class MonthlyReportController extends Controller
             $report->next_month_goals = $request->next_month_goals;
             $report->shipped_at = Carbon::now()->format('Y/m/d H:i:s');
 
-            $workingProcess->monthly_report_id = $report->id;
-
             foreach($request->workingProcess as $process) {
                 if($process == 'definition') {
                     $workingProcess->process_definition = true;
@@ -295,6 +305,7 @@ class MonthlyReportController extends Controller
             }
         }
         $report->save();
+        $workingProcess->save();
 
         // タグの保存
         $tags = [];
@@ -325,7 +336,7 @@ class MonthlyReportController extends Controller
                             ->orderBy('shipped_at', 'desc')
                             ->paginate(5);
         
-        return view('monthlyReport.myReports');
+        return view('monthlyReport.myReports2', compact('reports'));
     }
 }
 
