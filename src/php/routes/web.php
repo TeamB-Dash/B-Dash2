@@ -53,15 +53,18 @@ Route::resource('/articles', ArticleController::class)
 Route::get('/articles/users/{id}', [ArticleController::class, 'showArticles'])->name('articles.myblog');
 
 // 月報関連のルート
-Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name('monthlyReport.index');
-Route::get('/monthly_reports/create', [MonthlyReportController::class, 'create'])->name('monthlyReport.create');
-Route::post('/monthly_reports', [MonthlyReportController::class, 'store'])->name('monthlyReport.store');
-Route::get('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'show'])->name('monthlyReport.show');
-Route::get('/monthly_reports/{monthlyReport}/edit', [MonthlyReportController::class, 'edit'])->name('monthlyReport.edit');
-Route::patch('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'update'])->name('monthlyReport.update');
-Route::delete('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'destroy'])->name('monthlyReport.destroy');
-Route::get('/monthly_reports/users/{id}', [MonthlyReportController::class, 'showMyReports'])->name('monthlyReport.showMyReports');
-Route::get('/monthly_reports/users/{id}/drafts', [MonthlyReportController::class, 'showMyDraftReports'])->name('monthlyReport.showMyDraftReports');
+Route::middleware('auth')->group(function() {
+
+    Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name('monthlyReport.index');
+    Route::get('/monthly_reports/create', [MonthlyReportController::class, 'create'])->name('monthlyReport.create');
+    Route::post('/monthly_reports', [MonthlyReportController::class, 'store'])->name('monthlyReport.store');
+    Route::get('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'show'])->name('monthlyReport.show');
+    Route::get('/monthly_reports/{monthlyReport}/edit', [MonthlyReportController::class, 'edit'])->name('monthlyReport.edit');
+    Route::patch('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'update'])->name('monthlyReport.update');
+    Route::delete('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'destroy'])->name('monthlyReport.destroy');
+    Route::get('/monthly_reports/users/{id}', [MonthlyReportController::class, 'showMyReports'])->name('monthlyReport.showMyReports');
+    Route::get('/monthly_reports/users/{id}/drafts', [MonthlyReportController::class, 'showMyDraftReports'])->name('monthlyReport.showMyDraftReports');
+});
 
 // 管理者関連のルート
 Route::prefix('/admin')->middleware('judgeAdmin')->group(function(){

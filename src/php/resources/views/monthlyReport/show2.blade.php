@@ -262,7 +262,7 @@
 				</div>
 				<!-- コメント投稿フォームここまで -->
 				<br><br>
-
+				@if (Auth::user()->id == $report->user_id)
 				<button
 				type="button"
 				onclick="location.href='{{ route('monthlyReport.edit',$report->id) }}' "
@@ -285,6 +285,7 @@
                 >
                 削除する
                 </button>
+				@endif
                 </form>
 
 			</div>
