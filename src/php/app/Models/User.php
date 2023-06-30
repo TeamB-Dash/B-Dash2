@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\MonthlyReport;
 use App\Models\Question;
 use App\Models\UserRole;
+use App\Models\Badge;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -115,6 +116,11 @@ class User extends Authenticatable
     public function articleLikes()
     {
         return $this->belongsToMany(Article::class, 'article_likes')->withTimestamps();
+    }
+
+    // Badgeへの関連を定義
+    public function badge(){
+        return $this->belongsToMany(Badge::class,'user_badges');
     }
 
 }
