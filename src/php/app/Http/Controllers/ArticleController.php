@@ -8,6 +8,7 @@ use App\Models\Article;
 use App\Models\User;
 use App\Models\Tag;
 use App\Models\ArticleFavorites;
+use App\Models\ArticleComments;
 use Ramsey\Uuid\Type\Integer;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -23,13 +24,15 @@ class ArticleController extends Controller
     public function index(Request $request)
     {
         $articlesQuery = Article::query()
-            ->orderByDesc('created_at');
+            ->orderByDesc('created_at')
+            ->whereNotNull('shipped_at');
     
             //キーワード検索
             $keyword = $request->input('keyword');
             $article_category_id = $request->input('article_category_id');
             $department_id = $request->input('department_id');
-            
+            $entryDate = $request->input('articleEntryDate');
+
             if (!empty($keyword)) {
                 // 全角スペースを半角スペースに変換
                 $keyword = mb_convert_kana($keyword, 's');
@@ -59,6 +62,14 @@ class ArticleController extends Controller
             $articlesQuery->whereHas('user', function ($q) use ($department_id) {
                 $q->where('department_id', $department_id);
             });
+        }
+
+        //入社年月検索
+        if (!empty($entryDate)) {
+            $entryDate = Carbon::parse($entryDate)->format('Y-m');
+        $articlesQuery->whereHas('user', function ($q) use ($entryDate) {
+            $q->whereRaw('to_char(entry_date, \'YYYY-MM\') = ?', [$entryDate]);
+        });
         }
     
         $articles = $articlesQuery->paginate(20);
@@ -138,13 +149,18 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Article $article, User $user, ArticleFavorites $articleFavorites)
+    public function show(Article $article, User $user, ArticleFavorites $articleFavorites, ArticleComments $comments)
     {
+
+        // $article = Article::with('articleComments')->find($article->id);
+        $article->load('articleComments.user');
+
 
         return view('articles.show', [
             'article' => $article,
             'user' => $user,
             'articleFavorites' => $articleFavorites,
+            'comments' => $comments,
         ]);
     }
 
@@ -256,13 +272,13 @@ public function favorite(Article $article, Request $request)
 
 public function unfavorite(Article $article, Request $request)
 {
-if (Auth::check()) {
+// if (Auth::check()) {
     $user = Auth::user();
 
     $article->articleFavorites()
     ->where('article_id', $article->id)
     ->update(['is_deleted' => true]);
-}
+// }
     return redirect()->route('articles.show', ['article' => $article->id]);
 }
 public function showMyDraftArticles($id){
@@ -275,4 +291,44 @@ public function showMyDraftArticles($id){
     return view('articles/myDraftArticles',compact('articles'));
 }
 
+public function commentStore(Request $request, Article $article)
+{
+    $inputs = request()->validate([
+        'comment' => 'required|max:255'
+    ]);
+
+    $comments = ArticleComments::create([
+        'comment' => $inputs['comment'],
+        'user_id' => auth()->user()->id,
+        'article_id' => $article->id,
+        'is_deleted' => false,
+
+    ]);
+
+    return redirect()->route('articles.show', ['article' => $article->id]);
+
+}
+
+public function commentUpdate(Request $request, $article, $comment)
+{
+    $article = Article::findOrFail($article);
+    $comment = ArticleComments::findOrFail($comment);
+
+    $comment->update([
+        'comment' => $request->input('comment'),
+        'user_id' => auth()->user()->id,
+        'article_id' => $article->id,
+        'is_deleted' => false,
+    ]);
+
+    return redirect()->route('articles.show', ['article' => $article->id]);
+}
+
+public function commentDestroy(Article $article, ArticleComments $comment)
+{
+    $comment->delete();
+
+    return redirect()->route('articles.show', ['article' => $article->id]);
+}
+    
 }

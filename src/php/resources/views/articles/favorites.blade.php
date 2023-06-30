@@ -39,6 +39,7 @@
 		  @if ($favorite->is_deleted === false)
               <div class="card mt-3">
                   <div class="card-body">
+					{{-- <a class="text-info" href="/articles?articleEntryDate={{ \Carbon\Carbon::parse($article->user->entry_date)->format('Y-m-d') }}">{{ $article->user->entry_date }}</a> --}}
                       <a class="text-dark" href="{{ route('articles.show', ['article' => $favorite->articles->id]) }}">
                           <h5 class="card-title">{{ $favorite->articles->title }}</h5>
                       </a>  

@@ -45,18 +45,42 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/submitInquiry',[ProfileController::class,'submitInquiry'])->name('profile.submitInquiry');
 });
 
-Route::resource('/articles', ArticleController::class)
-->middleware('auth');
-Route::resource('/articles', ArticleController::class)
-->only(['show']);
+//ブログ関連のルーティング
+Route::middleware(['auth'])->group(function () {
+    Route::resource('/articles', ArticleController::class)->except(['index', 'show']);
+    Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
+    Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
+    Route::get('/articles/users/{id}', [ArticleController::class, 'showArticles'])->name('articles.myblog');
+    Route::get('/articles/users-favorite/{id}', [ArticleController::class, 'showFavoriteArticles'])->name('articles.favorites');
+    Route::get('/articles/users/{id}/drafts', [ArticleController::class, 'showMyDraftArticles'])->name('articles.showMyDraftArticles');
+    Route::post('/articles/{article}/favorite', [ArticleController::class, 'favorite'])->name('articles.favorite');
+    Route::delete('/articles/{article}/unfavorite', [ArticleController::class, 'unfavorite'])->name('articles.unfavorite');
+    Route::post('/articles/{article}/comments', [ArticleController::class, 'commentStore'])->name('articles.commentStore');
+    Route::patch('/articles/{article}/comments/{comment}', [ArticleController::class, 'commentUpdate'])->name('articles.commentUpdate');
+    Route::delete('/articles/{article}/{comment}', [ArticleController::class, 'commentDestroy'])->name('articles.commentDestroy');
+});
 
-    Route::get('/articles/users/{id}',[ArticleController::class,'showArticles'])->name('articles.myblog');
-    Route::get('/articles/users-favorite/{id}',[ArticleController::class,'showFavoriteArticles'])->name('articles.favorites');
-    Route::get('/articles/users/{id}/drafts',[ArticleController::class,'showMyDraftArticles'])->name('articles.showMyDraftArticles');
+// Route::resource('/articles', ArticleController::class)
+// ->middleware('auth');
+// Route::resource('/articles', ArticleController::class)
+// ->only(['show']);
+
+//     Route::get('/articles/users/{id}',[ArticleController::class,'showArticles'])->name('articles.myblog');
+//     Route::get('/articles/users-favorite/{id}',[ArticleController::class,'showFavoriteArticles'])->name('articles.favorites');
+//     Route::get('/articles/users/{id}/drafts',[ArticleController::class,'showMyDraftArticles'])->name('articles.showMyDraftArticles');
 
 
-Route::post('/articles/{article}/favorite',[ArticleController::class,'favorite'])->name('articles.favorite');
-Route::delete('/articles/{article}/unfavorite',[ArticleController::class,'unfavorite'])->name('articles.unfavorite');
+// Route::post('/articles/{article}/favorite',[ArticleController::class,'favorite'])->name('articles.favorite');
+// Route::delete('/articles/{article}/unfavorite',[ArticleController::class,'unfavorite'])->name('articles.unfavorite');
+
+// Route::post('/articles/{article}/comments', [ArticleController::class, 'commentStore'])->name('articles.commentStore');
+// Route::patch('/articles/{article}/comments/{comment}', [ArticleController::class, 'commentUpdate'])->name('articles.commentUpdate');
+// // Route::delete('/articles/comments/{comment}', [ArticleController::class, 'commentDestroy'])->name('articles.commentDestroy');
+// // Route::delete('/articles/{article}/comments', [ArticleController::class, 'commentDestroy'])->name('articles.commentDestroy');
+// Route::delete('/articles/{article}/{comment}', [ArticleController::class, 'commentDestroy'])->name('articles.commentDestroy');
+
+
+
 
 // 月報関連のルート
 Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name('monthlyReport.index');
