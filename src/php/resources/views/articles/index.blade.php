@@ -26,7 +26,7 @@
 <body>
 	<div class="site-body container-fluid">
 		<div class="site-container row">
-		
+
 			<!-- 		menuここから  -->
 			<header class="site-header bg-primary col-sm-2 hidden-xs side_scroll">
 				<div class="header-menu center-block">
@@ -40,13 +40,13 @@
 				</a>
 				<ul class="nav nav-pills nav-stacked" style="padding-inline-start:10px;margin-bottom:10px;">
 					<li style="margin-bottom:3px"><a class="bg-primary" href="/articles/create">新規投稿</a></li>
-					<li><a class="bg-primary" href="{{ route('articles.myblog',Auth::user()->id) }}">マイブログ</a></li>
-					<li><a class="bg-primary" href="{{ route('articles.favorites',['id' => Auth::user()->id]) }}">お気に入りブログ</a></li>
+					<li><a class="bg-primary" href="{{ route('articles.myblog',Auth::id()) }}">マイブログ</a></li>
+					<li><a class="bg-primary" href="{{ route('articles.favorites',['id' => Auth::id()]) }}">お気に入りブログ</a></li>
                     {{-- <li><a class="bg-primary" href="{{ route('articles.favorites', ['id' => $favorites->id]) }}">お気に入りブログ</a></li> --}}
 
 				</ul>
 			</li>
-				
+
 		</div>
 	</div>
 			</header>
@@ -56,27 +56,27 @@
 					<h1>ブログ一覧</h1>
 				</div>
 				<div class="article-user">
-					
-	
+
+
 					<!-- /* ブログ削除時メッセージ */ -->
-					
+
 					<!-- /* バッジ剥奪時メッセージ */ -->
-					
-					
+
+
 		  			<div class="page-content mt-15px">
 						<!-- ブログ一覧 -->
 
                         <div class="container">
-                            @foreach($articles as $article) 
+                            @foreach($articles as $article)
                               <div class="card mt-3">
                                 <div class="card-body d-flex flex-row">
                                   <i class="fas fa-user-circle fa-3x mr-1"></i>
                                   <div>
                                     <div class="font-weight-bold">
-                                      {{ $article->user->name }} 
-                                    </div> 
+                                      {{ $article->user->name }}
+                                    </div>
                                     <div class="font-weight-lighter">
-                                      {{ $article->created_at->format('Y/m/d H:i') }} 
+                                      {{ $article->created_at->format('Y/m/d H:i') }}
                                     </div>
                                   </div>
                                 </div>
@@ -84,7 +84,7 @@
                                   <h3 class="h4 card-title">
                                     <a class="text-dark" href="{{ route('articles.show', ['article' => $article]) }}">
                                         {{ $article->title }}
-                                      </a>                                
+                                      </a>
                                      </h3>
                                   <div class="card-text">
                                     {{ Str::limit($article->body, 150, '...') }}
@@ -92,8 +92,8 @@
                                   <hr>
                                 </div>
                               </div>
-                            @endforeach 
-                          </div>	
+                            @endforeach
+                          </div>
                           <!-- ページング -->
                           {{$articles->links('pagination::bootstrap-4')}}
                         </div>
@@ -103,7 +103,7 @@
         </body>
 	  			<div class="page-footer"></div>
 	  		</div>
-			
+
 			<!-- side content -->
 			<div id="sideContent" class="col-sm-3" style="height: 2492px;">
 				<div class="m-search sticky">
@@ -144,12 +144,12 @@
                       </div>
                 </div>
             </div>
-					{{-- 
+					{{--
 				<div class="rank-div">
 						<h4>いいね！獲得ランキング</h4>
 						<h5>対象月：2023年1月～2023年6月</h5>
 						<br>
-						
+
 					<div>
 							<p>
 								<span>1.</span>

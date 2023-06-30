@@ -24,19 +24,19 @@ class ArticleController extends Controller
     {
         $articlesQuery = Article::query()
             ->orderByDesc('created_at');
-    
+
             //キーワード検索
             $keyword = $request->input('keyword');
             $article_category_id = $request->input('article_category_id');
             $department_id = $request->input('department_id');
-            
+
             if (!empty($keyword)) {
                 // 全角スペースを半角スペースに変換
                 $keyword = mb_convert_kana($keyword, 's');
-            
+
                 // キーワードを空白で区切る
                 $keywords = explode(' ', $keyword);
-            
+
                 $articlesQuery->where(function ($query) use ($keywords) {
                     foreach ($keywords as $keyword) {
                         $query->where(function ($query) use ($keyword) {
@@ -53,16 +53,16 @@ class ArticleController extends Controller
         if (!empty($article_category_id)) {
             $articlesQuery->where('article_category_id', $article_category_id);
         }
-    
+
         //職種検索
         if (!empty($department_id)) {
             $articlesQuery->whereHas('user', function ($q) use ($department_id) {
                 $q->where('department_id', $department_id);
             });
         }
-    
+
         $articles = $articlesQuery->paginate(20);
-    
+
         return view('articles.index', compact('articles', 'keyword', 'article_category_id', 'department_id'));
     }
 
@@ -112,15 +112,15 @@ class ArticleController extends Controller
                     'shipped_at' => Carbon::now()->format('Y/m/d H:i:s'),
                 ]);
             };
-            
-        
+
+
         $tags = [];
-        
+
         foreach($request->tags as $tag){
             $tagInstance = Tag::firstOrCreate(['name' => $tag]);
             $tags[] = $tagInstance->id;
         }
-        
+
         $article->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
         DB::commit();
         return to_route('articles.index')->with('status','投稿を作成しました。');
@@ -130,7 +130,7 @@ class ArticleController extends Controller
         return to_route('articles.index');
 }
 }
-    
+
 
     /**
      * Display the specified resource.
@@ -159,7 +159,7 @@ class ArticleController extends Controller
         $article = Article::with(['tags'])->find($article->id);
         $tags = $article->tags;
 
-        return view('articles.edit', compact('article','tags'));    
+        return view('articles.edit', compact('article','tags'));
 
     }
 
@@ -201,7 +201,7 @@ class ArticleController extends Controller
         }
         $article->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
 
-        return to_route('articles.showMyDraftArticles',Auth::user()->id)->with('status','情報を更新しました。');
+        return to_route('articles.showMyDraftArticles',Auth::id())->with('status','情報を更新しました。');
     }
 
     /**
@@ -213,7 +213,7 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         $article->delete();
-        
+
         return redirect()->route('articles.index');
     }
 
@@ -228,7 +228,7 @@ class ArticleController extends Controller
         $answers = 'test';
         return view('articles.myblog',compact('user','articles'));
     }
-    
+
     public function showFavoriteArticles($id)
 {
     // ユーザーのお気に入り記事を取得
@@ -236,7 +236,7 @@ class ArticleController extends Controller
     $articleFavorites = $user->articleFavorites()->with('user')
     ->orderBy('created_at', 'desc')
     ->paginate(10);
-    
+
     return view('articles.favorites', compact('user','articleFavorites'));
 }
 

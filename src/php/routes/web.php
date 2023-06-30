@@ -9,6 +9,7 @@ use App\Http\Controllers\QuestionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MonthlyReportController;
 use App\Models\MonthlyReport;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,9 +31,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function(){
-    Route::resource('/questions', QuestionController::class);
     Route::get('/questions/users/{id}',[QuestionController::class,'showMyQuestions'])->name('questions.showMyQuestions');
     Route::get('/questions/users/{id}/drafts',[QuestionController::class,'showMyDraftQuestions'])->name('questions.showMyDraftQuestions');
+    Route::get('/questions/noAnswers/show',[QuestionController::class,'noAnswers'])->name('questions.noAnswers');
+    Route::resource('/questions', QuestionController::class);
 });
 
 
@@ -43,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/following/destroy{id}', [ProfileController::class, 'followingUserDestroy'])->name('following.destroy');
     Route::post('/profile/followed/destroy{id}', [ProfileController::class, 'followedUserDestroy'])->name('followed.destroy');
     Route::post('/profile/submitInquiry',[ProfileController::class,'submitInquiry'])->name('profile.submitInquiry');
+    Route::get('/searchUser',[ProfileController::class,'searchUser'])->name('searchUser');
 });
 
 Route::resource('/articles', ArticleController::class)
