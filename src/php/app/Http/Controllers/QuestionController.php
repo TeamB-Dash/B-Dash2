@@ -16,6 +16,7 @@ use App\Services\SearchService;
 use Cron\MonthField;
 use App\Http\Requests\QuestionRequest;
 
+
 class QuestionController extends Controller
 {
     /**
@@ -77,7 +78,6 @@ class QuestionController extends Controller
             };
 
             $tags = [];
-            dd($request->tags);
             foreach($request->tags as $tag){
                 $tagInstance = Tag::firstOrCreate(['name' => $tag]);
                 $tags[] = $tagInstance->id;
@@ -129,7 +129,6 @@ class QuestionController extends Controller
      */
     public function update(QuestionRequest $request, Question $question)
     {
-
         DB::beginTransaction();
         try {
             // 下書き保存の更新処理
@@ -141,7 +140,7 @@ class QuestionController extends Controller
             }else if(isset($request->update)){
                 $question->title = $request->title;
                 $question->body = $request->body;
-                // 下書きを公開する処理
+            // 下書きを公開する処理
             }else if(isset($request->saveAsPublicQuestion)){
                 $question->title = $request->title;
                 $question->body = $request->body;
@@ -156,9 +155,8 @@ class QuestionController extends Controller
                 $tags[] = $tagInstance->id;
             }
             $question->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
-
-            return to_route('questions.show',$request->id)->with('status','情報を更新しました。');
             DB::commit();
+            return to_route('questions.show',$request->id)->with('status','情報を更新しました。');
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e->getMessage());
