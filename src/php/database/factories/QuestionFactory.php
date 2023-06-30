@@ -22,7 +22,7 @@ class QuestionFactory extends Factory
             'user_id' => User::factory(),
             'title' => fake()->text(20),
             'body' => fake()->text(100),
-            'shipped_at' => null,
+            'shipped_at' => Carbon::now(),
             'is_deleted' => false,
             'answer_count' => 0,
             'created_at' => Carbon::yesterday(),
