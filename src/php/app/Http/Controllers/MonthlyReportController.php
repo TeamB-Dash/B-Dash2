@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\Department;
 use App\Models\MonthlyReport;
 use App\Models\MonthlyWorkingProcess;
-use Illuminate\Http\Request;	
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
@@ -137,7 +137,7 @@ class MonthlyReportController extends Controller
             // dd($tags);
 
             $report->tags()->sync($tags);
-        
+
         $workingProcess->save();
 
         return redirect()->route('monthlyReport.index');
@@ -158,7 +158,6 @@ class MonthlyReportController extends Controller
         $previousMonthlyReport = MonthlyReport::where('user_id',$userId)->whereDate('target_month','=',$fromDate)->first();
 
         // dd($previousMonthlyReport);
-        
 
         return view('monthlyReport.show2', compact('report', 'previousMonthlyReport','user','comments','monthlyReport'));
     }

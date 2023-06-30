@@ -1,7 +1,7 @@
 <body>
 	<div class="site-body container-fluid">
 		<div class="site-container row">
-		
+
 			<!-- 		menuここから  -->
 			<header class="site-header bg-primary col-sm-2 hidden-xs side_scroll">
 				<div class="header-menu center-block">
@@ -17,11 +17,12 @@
 					<li style="margin-bottom:3px"><a class="bg-primary" href="/articles/create">新規投稿</a></li>
 					<li><a class="bg-primary" href="{{ route('articles.myblog',Auth::user()->id) }}">マイブログ</a></li>
 					<li><a class="bg-primary" href="{{ route('articles.favorites',['id' => Auth::user()->id]) }}">お気に入りブログ</a></li>
+
 				</ul>
-			</li>				
+			</li>
+				
 		</div>
 	</div>
-
 	<x-app-layout>
 		<x-slot name="header">
 			<h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -80,52 +81,48 @@
 				{{ $articles->links() }}
 			  </div>
 			</div>
-			<div>
-				<form action="{{ route('articles.index') }}" method="GET">
-				  <input type="text" name="keyword" value="{{ $keyword }}">
-				  <input type="submit" value="検索">
-				  <br>
-				  <div class="text-center" style="margin-bottom:1.5rem">
-					<span>
-						<a class="text-info side-dep" href="/articles?department_id=1">【 WEB 】</a>
-					</span><span>
-						<a class="text-info side-dep" href="/articles?department_id=2">【 CL 】</a>
-					</span><span>
-						<a class="text-info side-dep" href="/articles?department_id=3">【 ML 】</a>
-					</span><span>
-						<a class="text-info side-dep" href="/articles?department_id=4">【 内勤 】</a>
-					</span><span>
-						<a class="text-info side-dep" href="/articles?department_id=6">【 FR 】</a>
-					</span><span>
-						<a class="text-info side-dep" href="/articles?department_id=7">【 QA 】</a>
-					</span><span>
-						<a class="text-info side-dep" href="/articles?department_id=8">【 PHP 】</a>
-					</span>
-				</div>
-				  <div class="text-center" style="padding-bottom:1.5rem">
-					<span>
-						<a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=1">備忘録</a>
-					</span><span>
-						<a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=2">技術共有</a>
-					</span><span>
-						<a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=3">体験共有</a>
-					</span><span>
-						<a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=4">その他</a>
-					</span>
-				</div>
-				</form>
-			  </div>
-	
-			<div class="container px-5 py-24 mx-auto flex justify-around">
-				{{-- いいね別投稿数ランキング（月報） --}}
-				{{-- <x-ranking-of-monthly-report :monthlyReportRanking="$monthlyReportRanking">
-				</x-ranking-of-monthly-report> --}}
-				{{-- いいね獲得ランキング（ブログ） --}}
-				{{-- <x-ranking-of-article-likes :articleRanking="$articleRanking">
-				</x-ranking-of-article-likes> --}}
-				{{-- タグ別投稿数ランキング --}}
-				{{-- <x-ranking-of-count-by-tags :rankingByNumberOfArticlesPerTag="$rankingByNumberOfArticlesPerTag">
-				</x-ranking-of-count-by-tags> --}}
+			
+			<!-- side content -->
+			<div id="sideContent" class="col-sm-3" style="height: 2492px;">
+				<div class="m-search sticky">
+                    <div>
+                        <form action="{{ route('articles.index') }}" method="GET">
+                          <input type="text" name="keyword" value="{{ $keyword }}">
+                          <input type="submit" value="検索">
+						  <br>
+						  <div class="text-center" style="margin-bottom:1.5rem">
+							<span>
+								<a class="text-info side-dep" href="/articles?department_id=1">【 WEB 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=2">【 CL 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=3">【 ML 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=4">【 内勤 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=6">【 FR 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=7">【 QA 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=8">【 PHP 】</a>
+							</span>
+						</div>
+                          <div class="text-center" style="padding-bottom:1.5rem">
+                            <span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=1">備忘録</a>
+                            </span><span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=2">技術共有</a>
+                            </span><span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=3">体験共有</a>
+                            </span><span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=4">その他</a>
+                            </span>
+                        </div>
+                        </form>
+                      </div>
+                </div>
+            </div>
+			
 			</div>
 		  </section>
 	</x-app-layout>

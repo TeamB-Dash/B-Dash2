@@ -1,7 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        @if (is_null($filteredBy))
         質問一覧
+        @else
+        {{$filteredBy}}に合致する質問一覧
+        @endif
         </h2>
     </x-slot>
     <section class="text-gray-600 body-font overflow-hidden">
@@ -10,16 +14,17 @@
             <p class="font-bold">{{ session('status') }}</p>
         </div>
         @endif
-        <div class="container px-5 py-24 mx-auto">
-          <div class="flex flex-wrap -m-12">
+        <div class="container px-5 py-24 mx-auto flex">
+          <div class="w-3/4">
 
             @foreach ( $questions as $question )
-            <div class="p-12 md:w-1/2 flex flex-col items-start">
+            <div class=" items-start">
                 <a class="inline-flex items-center">
                 <img alt="blog" src="https://dummyimage.com/104x104" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
                 <span class="flex-grow flex flex-col pl-4">
                     <span class="title-font font-medium text-gray-900">{{ $question->user->name }}</span>
-                    <span class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $question->created_at->format('Y-m-d')  }}</span><span>【{{$question->user->department->name}}】</span>
+                    <button type="submit" form="searchForm" name="hireMonth" value="{{$question->created_at->format('Y-m') }}" class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $question->created_at->format('Y-m-d')  }}</button>
+                    <button type="submit" form="searchForm" name="department" value="{{$question->user->department->id}}">【{{$question->user->department->name}}】</button>
                 </span>
                 </a>
                 @foreach ($question->tags as $tag )
@@ -48,21 +53,62 @@
             </div>
             @endforeach
 
-            {{ $questions->links() }}
+            {{$questions->appends(request()->query())->links()}}
           </div>
+
+          <div class="w-1/5 ml-auto ">
+            <form id="searchForm" action="{{route('questions.index')}}" method="GET">
+                <div class="mb-3">
+                    <div class="relative mb-4 flex w-full flex-wrap items-stretch">
+                      <input
+                        type="search"
+                        name="keyword"
+                        class="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
+                        placeholder="Search"
+                        aria-label="Search"
+                        aria-describedby="button-addon1" />
+
+                      <!--Search button-->
+                      <button
+                        class="relative z-[2] flex items-center rounded-r bg-blue-400 px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-blue-600 hover:shadow-lg focus:bg-blue-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-lg"
+                        type="submit"
+                        id="button-addon1"
+                        data-te-ripple-init
+                        data-te-ripple-color="light">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          class="h-5 w-5">
+                          <path
+                            fill-rule="evenodd"
+                            d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                            clip-rule="evenodd" />
+                        </svg>
+                      </button>
+                    </div>
+                    @foreach ($departments as $department )
+                    <button type="submit" name="department" value="{{$department->id}}">{{$department->name}}</button>
+                    @endforeach
+                  </div>
+            </form>
+            <a href="{{ route('questions.noAnswers') }}"  class="text-lg text-rose-600 border-b border-rose-600 font-bold">回答募集中の質問一覧</a>
+          </div>
+
         </div>
 
-        {{-- <div class="container px-5 py-24 mx-auto flex justify-around"> --}}
+
+
+        <div class="container px-5 py-24 mx-auto flex justify-around">
             {{-- いいね別投稿数ランキング（月報） --}}
-            {{-- <x-ranking-of-monthly-report :monthlyReportRanking="$monthlyReportRanking">
-            </x-ranking-of-monthly-report> --}}
+            <x-ranking-of-monthly-report :monthlyReportRanking="$monthlyReportRanking">
+            </x-ranking-of-monthly-report>
             {{-- いいね獲得ランキング（ブログ） --}}
-            {{-- <x-ranking-of-article-likes :articleRanking="$articleRanking">
-            </x-ranking-of-article-likes> --}}
+            <x-ranking-of-article-likes :articleRanking="$articleRanking">
+            </x-ranking-of-article-likes>
             {{-- タグ別投稿数ランキング --}}
-            {{-- <x-ranking-of-count-by-tags :rankingByNumberOfArticlesPerTag="$rankingByNumberOfArticlesPerTag">
-            </x-ranking-of-count-by-tags> --}}
-        {{-- </div> --}}
-      
+            <x-ranking-of-count-by-tags :rankingByNumberOfArticlesPerTag="$rankingByNumberOfArticlesPerTag">
+            </x-ranking-of-count-by-tags>
+        </div>
       </section>
 </x-app-layout>

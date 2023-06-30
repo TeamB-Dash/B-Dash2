@@ -10,7 +10,7 @@
             <div class="bg-white pt-2 pl-3 overflow-hidden shadow-sm sm:rounded-lg">
 				{{-- 自分のブログだったら編集ができる --}}
 				<div>
-					@if ($article->user->id === Auth::user()->id)
+					@if ($article->user->id === Auth::id())
 						@if(isset($article->shipped_at))
 						<div class="rounded mb-2 rounded px-6 py-2.5 text-s text-center font-medium uppercase text-white" style="background-color:rgb(11, 146, 51)">公開済み</div>
 						@else
@@ -118,8 +118,8 @@
 		</favorite-button>
 
 		<div class="pull-right article-user-link">
-			@if($article->user_id === Auth::user()->id)
-				<li><a class="bg-primary" href="{{ route('articles.myblog', Auth::user()->id) }}">マイブログへ</a></li>
+			@if($article->user_id === Auth::id())
+				<li><a class="bg-primary" href="{{ route('articles.myblog', Auth::id()) }}">マイブログへ</a></li>
 			@else
 				<a href="{{ route('articles.myblog', ['id' => $article->user_id]) }}"><span>{{ $article->user->name }}</span>さんのブログ一覧へ</a>
 			@endif

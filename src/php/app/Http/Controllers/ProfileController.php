@@ -16,6 +16,8 @@ use App\Models\UserFollow;
 use App\Models\Inquiry;
 use App\Models\User;
 use App\Models\UserRole;
+use App\Services\SearchService;
+use App\Http\Requests\InquiryRequest;
 
 class ProfileController extends Controller
 {
@@ -91,12 +93,27 @@ class ProfileController extends Controller
     }
 
     /**
+     * ユーザー検索
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function searchUser(Request $request)
+    {
+        $request->merge(['status' => 'working']);
+        $users = SearchService::searchUser($request);
+        $departments = Department::all();
+
+        return view('profile/searchUser',compact('users','departments'));
+    }
+
+    /**
      * 問い合わせを新規作成し、担当の管理者へメール通知を行う
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function submitInquiry(Request $request)
+    public function submitInquiry(InquiryRequest $request)
     {
         $user_name = User::find($request->user_id)->name;
         $toUser = User::whereHas('role',function($query){
