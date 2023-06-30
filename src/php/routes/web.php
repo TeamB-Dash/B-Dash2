@@ -33,6 +33,11 @@ Route::middleware('auth')->group(function(){
     Route::resource('/questions', QuestionController::class);
     Route::get('/questions/users/{id}',[QuestionController::class,'showMyQuestions'])->name('questions.showMyQuestions');
     Route::get('/questions/users/{id}/drafts',[QuestionController::class,'showMyDraftQuestions'])->name('questions.showMyDraftQuestions');
+
+    //コメント関連
+    Route::post('/questions/{question}/comments', [QuestionController::class, 'commentStore'])->name('questions.commentStore');
+    Route::patch('/questions/{question}/comments/{comment}', [QuestionController::class, 'commentUpdate'])->name('questions.commentUpdate');
+    Route::delete('/questions/{question}/{comment}', [QuestionController::class, 'commentDestroy'])->name('questions.commentDestroy');
 });
 
 
@@ -87,6 +92,11 @@ Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name(
 Route::get('/monthly_reports/create', [MonthlyReportController::class, 'create'])->name('monthlyReport.create');
 Route::post('/monthly_reports', [MonthlyReportController::class, 'store'])->name('monthlyReport.store');
 Route::get('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'show'])->name('monthlyReport.show');
+
+ //コメント関連
+ Route::post('/monthly_reports/{monthlyReport}/comments', [MonthlyReportController::class, 'commentStore'])->name('monthlyReport.commentStore');
+ Route::patch('/monthly_reports/{monthlyReport}/comments/{comment}', [MonthlyReportController::class, 'commentUpdate'])->name('monthlyReport.commentUpdate');
+ Route::delete('/monthly_reports/{monthlyReport}/{comment}', [MonthlyReportController::class, 'commentDestroy'])->name('monthlyReport.commentDestroy');
 
 // 管理者関連のルート
 Route::prefix('/admin')->middleware('judgeAdmin')->group(function(){

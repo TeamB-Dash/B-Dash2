@@ -65,6 +65,16 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\ArticleComments');
     }
 
+    public function monthlyReportComments(): HasMany
+    {
+        return $this->hasMany('App\Models\MonthlyReportComments');
+    }
+
+    public function questionComments(): HasMany
+    {
+        return $this->hasMany('App\Models\QuestionAnswers');
+    }
+
     public function followings()
     {
         return $this->belongsToMany(User::class, 'user_follows', 'followed_user_id', 'user_id');

@@ -52,16 +52,17 @@
           </div>
         </div>
 
-        <div class="container px-5 py-24 mx-auto flex justify-around">
+        {{-- <div class="container px-5 py-24 mx-auto flex justify-around"> --}}
             {{-- いいね別投稿数ランキング（月報） --}}
-            <x-ranking-of-monthly-report :monthlyReportRanking="$monthlyReportRanking">
-            </x-ranking-of-monthly-report>
+            {{-- <x-ranking-of-monthly-report :monthlyReportRanking="$monthlyReportRanking">
+            </x-ranking-of-monthly-report> --}}
             {{-- いいね獲得ランキング（ブログ） --}}
-            <x-ranking-of-article-likes :articleRanking="$articleRanking">
-            </x-ranking-of-article-likes>
+            {{-- <x-ranking-of-article-likes :articleRanking="$articleRanking">
+            </x-ranking-of-article-likes> --}}
             {{-- タグ別投稿数ランキング --}}
-            <x-ranking-of-count-by-tags :rankingByNumberOfArticlesPerTag="$rankingByNumberOfArticlesPerTag">
-            </x-ranking-of-count-by-tags>
-        </div>
+            {{-- <x-ranking-of-count-by-tags :rankingByNumberOfArticlesPerTag="$rankingByNumberOfArticlesPerTag">
+            </x-ranking-of-count-by-tags> --}}
+        {{-- </div> --}}
+      
       </section>
 </x-app-layout>

@@ -7,6 +7,8 @@ use App\Models\Tag;
 use App\Models\User;
 use App\Models\Article;
 use App\Models\MonthlyReport;
+use App\Models\MonthlyReportComments;
+use App\Models\QuestionAnswers;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -23,9 +25,9 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        $monthlyReportRanking = RankingService::MonthlyReportRanking();
-        $articleRanking = RankingService::ArticleRanking();
-        $rankingByNumberOfArticlesPerTag = RankingService::TagRanking();
+        // $monthlyReportRanking = RankingService::MonthlyReportRanking();
+        // $articleRanking = RankingService::ArticleRanking();
+        // $rankingByNumberOfArticlesPerTag = RankingService::TagRanking();
 
         // dd($monthlyReportRanking,$articleRanking,$rankingByNumberOfArticlesPerTag);
         // dd($articleRanking[0]);
@@ -34,7 +36,8 @@ class QuestionController extends Controller
         ->whereNotNull('shipped_at')
         ->where('is_deleted',false)
         ->orderBy('created_at','desc')->paginate(2);
-        return view('questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag'));
+        // return view('questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag'));
+        return view('questions/index',compact('questions'));
     }
 
     /**
@@ -101,10 +104,10 @@ class QuestionController extends Controller
      * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function show(Question $question)
+    public function show(Question $question,User $user, MonthlyReportComments $comments)
     {
         $question = Question::find($question->id);
-        return view('questions/show',compact('question'));
+        return view('questions/show',compact('question','user','comments'));
     }
 
     /**
@@ -193,4 +196,52 @@ class QuestionController extends Controller
 
         return view('questions/myDraftQuestions',compact('questions'));
     }
+
+    public function commentStore(Request $request, Question $question)
+{
+    $inputs = request()->validate([
+        'answer' => 'required|max:255'
+    ]);
+
+    $comments = QuestionAnswers::create([
+        'answer' => $inputs['answer'],
+        'user_id' => auth()->user()->id,
+        'question_id' => $question->id,
+        'is_reply' => false,
+        // 'reply_parent_id' => $comment->id,
+        'reply_parent_id' => 0,
+        'is_deleted' => false,
+
+    ]);
+
+    
+
+    return redirect()->route('questions.show', ['question' => $question->id]);
+
+}
+
+public function commentUpdate(Request $request, $question, $comment)
+{
+    $question = Question::findOrFail($question);
+    $comment = QuestionAnswers::findOrFail($comment);
+
+    $comment->update([
+        'answer' => $request->input('answer'),
+        'user_id' => auth()->user()->id,
+        'question_id' => $question->id,
+        'is_reply' => false,
+        // 'reply_parent_id' => $comment->id,
+        'reply_parent_id' => 0,
+        'is_deleted' => false,
+    ]);
+
+    return redirect()->route('questions.show', ['question' => $question->id]);
+}
+
+public function commentDestroy(Question $question, QuestionAnswers $comment)
+{
+    $comment->delete();
+
+    return redirect()->route('questions.show', ['question' => $question->id]);
+}
 }
