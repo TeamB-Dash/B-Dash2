@@ -77,7 +77,7 @@ class QuestionController extends Controller
             };
 
             $tags = [];
-
+            dd($request->tags);
             foreach($request->tags as $tag){
                 $tagInstance = Tag::firstOrCreate(['name' => $tag]);
                 $tags[] = $tagInstance->id;
@@ -161,6 +161,7 @@ class QuestionController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e->getMessage());
             return route('dashboard');
         }
     }
