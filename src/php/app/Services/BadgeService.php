@@ -8,6 +8,7 @@ use App\Models\Article;
 use App\Models\MonthlyReport;
 use App\Models\User;
 use App\Models\UserBadge;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 
@@ -15,8 +16,8 @@ class BadgeService
 {
     // 記事公開によってバッジステータスを上げる処理
     public static function upGradeBadgeStatus($request){
-        $countOfArticles = Article::where($request->user()->id)->where('is_deleted',false)->count();
-        $comment = '';
+        $countOfArticles = Article::where('user_id',$request->user()->id)->where('is_deleted',false)->count();
+        $comment = null;
 
         if($countOfArticles === 1){
             $badge = UserBadge::updateOrCreate(['user_id' => $request->user()->id,'badge_id' => 1,],
@@ -52,48 +53,48 @@ class BadgeService
             $comment = '通算100投稿を達成したので、新しいメダルを獲得しました!';
         }
 
-        return $comment;
+        session()->flash('message',$comment);
     }
 
     // 記事削除によってバッジステータスを下げる処理
-    public static function downGradeBadgeStatus($request){
-        $countOfArticles = Article::where($request->user()->id)->where('is_deleted',false)->count();
+    public static function downGradeBadgeStatus(){
+        $countOfArticles = Article::where('user_id',Auth::id())->where('is_deleted',false)->count();
         $comment = '';
-        if($countOfArticles == 0){
-            $badge = UserBadge::updateOrCreate(['user_id' => $request->user()->id,'badge_id' => 1,],
+        if($countOfArticles === 0){
+            $badge = UserBadge::updateOrCreate(['user_id' => Auth::id(),'badge_id' => 1,],
             ['is_deleted' => true]);
             $comment = 'メダルをすべて失いました。新しい投稿をしてメダルを獲得しましょう!';
-        }else if(1 <= $countOfArticles < 3){
-            $badge = UserBadge::updateOrCreate(['user_id' => $request->user()->id,'badge_id' => 2,],
+        }else if($countOfArticles === 2){
+            $badge = UserBadge::updateOrCreate(['user_id' => Auth::id(),'badge_id' => 2,],
             ['is_deleted' => true]);
             $comment = 'メダルを失いました。新しい投稿をしてメダルを獲得しましょう!';
-        } else if(3 <= $countOfArticles < 5){
-            $badge = UserBadge::updateOrCreate(['user_id' => $request->user()->id,'badge_id' => 3,],
+        } else if($countOfArticles === 4){
+            $badge = UserBadge::updateOrCreate(['user_id' => Auth::id(),'badge_id' => 3,],
             ['is_deleted' => true]);
             $comment = 'メダルを失いました。新しい投稿をしてメダルを獲得しましょう!';
-        } else if(5 <= $countOfArticles < 10){
-            $badge = UserBadge::updateOrCreate(['user_id' => $request->user()->id,'badge_id' => 4,],
+        } else if($countOfArticles === 9){
+            $badge = UserBadge::updateOrCreate(['user_id' => Auth::id(),'badge_id' => 4,],
             ['is_deleted' => true]);
             $comment = 'メダルを失いました。新しい投稿をしてメダルを獲得しましょう!';
-        } else if(10 <= $countOfArticles < 20){
-            $badge = UserBadge::updateOrCreate(['user_id' => $request->user()->id,'badge_id' => 5,],
+        } else if($countOfArticles === 19){
+            $badge = UserBadge::updateOrCreate(['user_id' => Auth::id(),'badge_id' => 5,],
             ['is_deleted' => true]);
             $comment = 'メダルを失いました。新しい投稿をしてメダルを獲得しましょう!';
-        } else if(10 <= $countOfArticles < 30){
-            $badge = UserBadge::updateOrCreate(['user_id' => $request->user()->id,'badge_id' => 6,],
+        } else if($countOfArticles === 29){
+            $badge = UserBadge::updateOrCreate(['user_id' => Auth::id(),'badge_id' => 6,],
             ['is_deleted' => true]);
             $comment = 'メダルを失いました。新しい投稿をしてメダルを獲得しましょう!';
-        } else if(30 <= $countOfArticles < 75){
-            $badge = UserBadge::updateOrCreate(['user_id' => $request->user()->id,'badge_id' => 7,],
+        } else if($countOfArticles === 74){
+            $badge = UserBadge::updateOrCreate(['user_id' => Auth::id(),'badge_id' => 7,],
             ['is_deleted' => true]);
             $comment = 'メダルを失いました。新しい投稿をしてメダルを獲得しましょう!';
-        } else if(75 <= $countOfArticles < 100){
-            $badge = UserBadge::updateOrCreate(['user_id' => $request->user()->id,'badge_id' => 8,],
+        } else if($countOfArticles === 99){
+            $badge = UserBadge::updateOrCreate(['user_id' => Auth::id(),'badge_id' => 8,],
             ['is_deleted' => true]);
             $comment = 'メダルを失いました。新しい投稿をしてメダルを獲得しましょう!';
         }
 
-        return $comment;
+        session()->flash('message',$comment);
     }
 
 }
