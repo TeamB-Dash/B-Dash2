@@ -16,11 +16,17 @@
     <div>
         @foreach ($followers as $follower)
             {{ $follower->name }}
-
-            <form action="{{ route('follower.destroy', [$follower->id]) }}" method="POST">
-                @csrf
-                <button type="submit">削除</button>
-            </form>
+            @if ($follower->isFollowing(Auth::user()))
+                <form action="{{ route('profile.unfollow', [$follower->id]) }}" method="POST">
+                    @csrf
+                    <button type="submit">フォロー解除する</button>
+                </form>
+            @else
+                <form action="{{ route('profile.follow', [$follower->id]) }}" method="POST">
+                    @csrf
+                    <button type="submit">フォローする</button>
+                </form>
+            @endif
         @endforeach
     </div>
 </section>

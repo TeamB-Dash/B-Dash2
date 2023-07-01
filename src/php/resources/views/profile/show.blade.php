@@ -32,17 +32,17 @@
                     <x-input-error class="mt-2" :messages="$errors->get('name')" />
                 </div>
 
-                {{-- @if ($article->isFavoritedByUser(Auth::user()))
-                    <form action="{{ route('profile.follow', [$user->id]) }}" method="POST">
-                        @csrf
-                        <button type="submit">フォローする</button>
-                    </form>
-                @else
+                @if ($user->isFollowing(Auth::user()))
                     <form action="{{ route('profile.unfollow', [$user->id]) }}" method="POST">
                         @csrf
                         <button type="submit">フォロー解除する</button>
                     </form>
-                @endif --}}
+                @else
+                    <form action="{{ route('profile.follow', [$user->id]) }}" method="POST">
+                        @csrf
+                        <button type="submit">フォローする</button>
+                    </form>
+                @endif
 
                 <div>
                     <x-input-label for="department_id" :value="__('所属')" />
@@ -68,7 +68,7 @@
                 <div>
                     <x-input-label for="entry_date" :value="__('入社日')" />
                     <div id="entry_date" name="entry_date" type="text" class="mt-1 block w-full" required autofocus
-                        autocomplete="entry_date">{{ $user->entry_date }}</div>
+                        autocomplete="entry_date">{{ $entry_date }}</div>
                     <x-input-error class="mt-2" :messages="$errors->get('entry_date')" />
                 </div>
 
@@ -90,7 +90,8 @@
                     <x-input-label for="birthday" :value="__('誕生日')" />
                     @if (isset($user_profile->birthday))
                         <div id="birthday" name="birthday" type="text" class="mt-1 block w-full" required autofocus
-                            autocomplete="birthday">{{ $user_profile->birthday }}</div>
+                            autocomplete="birthday">{{ $birthday }}
+                        </div>
                     @else
                         <div id="birthday" name="birthday" type="text" class="mt-1 block w-full" required autofocus
                             autocomplete="birthday">未設定</div>
@@ -129,8 +130,8 @@
                             required autofocus autocomplete="self_introduction">{{ $user_profile->self_introduction }}
                         </div>
                     @else
-                        <div id="self_introduction" name="self_introduction" type="text" class="mt-1 block w-full"
-                            required autofocus autocomplete="self_introduction">未設定
+                        <div id="self_introduction" name="self_introduction" type="text"
+                            class="mt-1 block w-full" required autofocus autocomplete="self_introduction">未設定
                         </div>
                     @endif
                     <x-input-error class="mt-2" :messages="$errors->get('self_introduction')" />

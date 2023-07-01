@@ -69,10 +69,18 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'user_follows', 'user_id', 'followed_user_id');
     }
 
-    // 日付フォーマットエラー回避のための定義
-    // protected $dates = [
-    //     'entry_date',
-    // ];
+    public function userFollows()
+    {
+        return $this->belongsToMany(User::class, 'user_follows');
+    }
+
+    public function isFollowing($user)
+    {
+        return $this->userFollows()
+            ->where('followed_user_id', $user->id)
+            ->where('is_deleted', false)
+            ->exists();
+    }
 
     // monthly_reportsテーブルと紐付け
     public function monthlyReports()
@@ -116,5 +124,4 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Article::class, 'article_likes')->withTimestamps();
     }
-
 }

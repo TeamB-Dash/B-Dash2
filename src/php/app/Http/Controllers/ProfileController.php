@@ -6,7 +6,6 @@ use App\Http\Requests\ProfileUpdateRequest;
 use App\Mail\SendInquiryMail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
@@ -15,12 +14,14 @@ use App\Models\Department;
 use App\Models\UserFollow;
 use App\Models\Inquiry;
 use App\Models\User;
-use App\Models\UserRole;
 use App\Services\CheckFormService;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    public function show($id)
+    // 他のユーザーのプロフィール詳細画面
+    public function show(Request $request, $id)
     {
         $user = User::find($id);
         $user_profile = UserProfile::where('user_id', $id)->first();
@@ -28,6 +29,8 @@ class ProfileController extends Controller
         $allocation = CheckFormService::checkAllocation($user);
         $gender = CheckFormService::checkGender($user);
         $blood_type = CheckFormService::checkBloodType($user_profile);
+        $entry_date = Carbon::parse($user->entry_date)->format('Y年m月d日');
+        $birthday = Carbon::parse($user_profile->birthday)->format('Y年m月d日');
 
         return view('profile.show', [
             'user' => $user,
@@ -36,16 +39,19 @@ class ProfileController extends Controller
             'allocation' => $allocation,
             'gender' => $gender,
             'blood_type' => $blood_type,
+            'entry_date' => $entry_date,
+            'birthday' => $birthday,
         ]);
     }
 
+    // 自分のプロフィール編集画面
     public function edit(Request $request): View
     {
         $user = $request->user();
         $user_profile = UserProfile::where('user_id', $user->id)->first();
         $departments = Department::all();
-        $followings = $user->followings()->get();
-        $followers = $user->followers()->get();
+        $followings = $user->followings()->orderBy('user_id')->get();
+        $followers = $user->followers()->orderBy('followed_user_id')->get();
 
         return view('profile.edit', [
             'user' => $user,
@@ -56,6 +62,7 @@ class ProfileController extends Controller
         ]);
     }
 
+    // 自分のプロフィール編集
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
@@ -77,7 +84,7 @@ class ProfileController extends Controller
         $request->user()->save();
         $user_profile->save();
 
-        return redirect()->route('profile.edit');
+        return redirect()->back();
     }
 
     // public function destroy(Request $request): RedirectResponse
@@ -98,16 +105,20 @@ class ProfileController extends Controller
     //     return Redirect::to('/');
     // }
 
-    public function followingDestroy($id)
+    // フォロー機能
+    public function follow($id)
     {
-        UserFollow::where('user_id', $id)->delete();
-        return redirect()->route('profile.edit');
+        UserFollow::updateOrCreate(['user_id' => $id, 'followed_user_id' => Auth::id()], ['is_deleted' => false]);
+
+        return redirect()->back();
     }
 
-    public function followerDestroy($id)
+    // フォロー解除機能
+    public function unfollow($id)
     {
-        UserFollow::where('follower_user_id', $id)->delete();
-        return redirect()->route('profile.edit');
+        UserFollow::where(['user_id' => $id, 'followed_user_id' => Auth::id()])->update(['is_deleted' => true]);
+
+        return redirect()->back();
     }
 
     /**
