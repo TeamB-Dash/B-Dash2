@@ -52,12 +52,10 @@ class RankingService
 
     // タグ別投稿数ランキング取得のクエリ
     public static function TagRanking(){
-        $rankingByNumberOfArticlesPerTag = Tag::with(['articles'])
-        ->withCount('ArticleTags')
-        ->orderBy('article_tags_count','desc')
+        $rankingByNumberOfArticlesPerTag = Tag::withCount('articles')
+        ->orderBy('articles_count','desc')
         ->take(10)
         ->get();
-
         return $rankingByNumberOfArticlesPerTag;
     }
 }

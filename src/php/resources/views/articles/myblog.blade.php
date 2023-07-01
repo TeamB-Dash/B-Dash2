@@ -27,7 +27,7 @@
       <div class="w-full">
           <button
           type="button"
-          onclick="location.href='{{ route('articles.showMyDraftArticles', Auth::user()->id) }}' "
+          onclick="location.href='{{ route('articles.showMyDraftArticles', Auth::id()) }}' "
           class="inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
           style="background-color:rgb(178, 106, 245)"
           data-te-ripple-init
@@ -45,20 +45,20 @@
 					<h1>マイブログ一覧</h1>
 				</div>
 				<div class="article-user">
-					
+
 					<!-- /* ブログ削除時メッセージ */ -->
 					<!-- /* バッジ剥奪時メッセージ */ -->
-						
+
 		  			<div class="page-content mt-15px">
 						<!-- ブログ一覧 -->
 
                         <div class="container">
-                            @foreach($articles as $article) 
+                            @foreach($articles as $article)
                               <div class="card mt-3">
                                 <div class="card-body d-flex flex-row">
                                   <i class="fas fa-user-circle fa-3x mr-1"></i>
                                     <div class="font-weight-lighter">
-                                      {{ $article->created_at->format('Y/m/d H:i') }} 
+                                      {{ $article->created_at->format('Y/m/d H:i') }}
                                     </div>
                                   </div>
                                 </div>
@@ -66,7 +66,7 @@
                                   <h3 class="h4 card-title">
                                     <a class="text-dark" href="{{ route('articles.show', ['article' => $article]) }}">
                                         {{ $article->title }}
-                                      </a>                                
+                                      </a>
                                      </h3>
                                   @if( Auth::id() === $article->user_id )
                                   <!-- dropdown -->
@@ -89,7 +89,7 @@
                                     </div>
                                   </div>
                                   <!-- dropdown -->
-                          
+
                                   <!-- modal -->
                                   <div id="modal-delete-{{ $article->id }}" class="modal fade" tabindex="-1" role="dialog">
                                     <div class="modal-dialog" role="document">
@@ -119,8 +119,8 @@
                                   <hr>
                                 </div>
                               </div>
-                            @endforeach 
-                          </div>	
+                            @endforeach
+                          </div>
                           <!-- ページング -->
                           {{$articles->links('pagination::bootstrap-4')}}
                         </div>

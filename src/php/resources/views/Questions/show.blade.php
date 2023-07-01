@@ -5,12 +5,17 @@
         </h2>
     </x-slot>
 
+    @if (session('status'))
+    <div class="w-2/3 mx-auto container mt-6 text-center bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
+        <p class="font-bold">{{ session('status') }}</p>
+    </div>
+    @endif
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white pt-2 pl-3 overflow-hidden shadow-sm sm:rounded-lg">
                 {{-- 自分の質問だったら編集ができる --}}
                 <div>
-                    @if ($question->user->id === Auth::user()->id)
+                    @if ($question->user->id === Auth::id())
                         @if(isset($question->shipped_at))
                         <div class="rounded mb-2 rounded px-6 py-2.5 text-s text-center font-medium uppercase text-white" style="background-color:rgb(11, 146, 51)">公開済み</div>
                         @else
