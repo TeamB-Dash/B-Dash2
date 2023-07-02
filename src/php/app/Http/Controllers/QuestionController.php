@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\DB;
 use App\Services\RankingService;
 use App\Services\SearchService;
 use Cron\MonthField;
-use App\Http\Requests\QuestionRequest;
 
 
 class QuestionController extends Controller
@@ -51,12 +50,18 @@ class QuestionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(QuestionRequest $request)
+    public function store(Request $request)
     {
+        $rules = [
+            'title' => ['string', 'max:255','required'],
+            'body' => ['string', 'max:255','required'],
+            'tags' => ['array','required'],
+        ];
+
         DB::beginTransaction();
         try{
             $user = Auth::user();
-            // 下書き保存か公開かで分岐
+            // 下書き保存処理
             if(isset($request->saveAsDraft)){
                 $question = Question::create([
                     'user_id' => $user->id,
@@ -66,7 +71,9 @@ class QuestionController extends Controller
                     'answer_count' => 0,
                     'shipped_at' => null,
                 ]);
+            // 保存して公開処理
             }else if(isset($request->create)){
+                $this->validate($request,$rules);
                 $question = Question::create([
                     'user_id' => $user->id,
                     'title' => $request->title,
@@ -127,8 +134,14 @@ class QuestionController extends Controller
      * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function update(QuestionRequest $request, Question $question)
+    public function update(Request $request, Question $question)
     {
+        $rules = [
+            'title' => ['string', 'max:255','required'],
+            'body' => ['string', 'max:255','required'],
+            'tags' => ['array','required'],
+        ];
+
         DB::beginTransaction();
         try {
             // 下書き保存の更新処理
@@ -138,10 +151,12 @@ class QuestionController extends Controller
                 $question->shipped_at = null;
             // 公開した質問の更新処理
             }else if(isset($request->update)){
+                $this->validate($request,$rules);
                 $question->title = $request->title;
                 $question->body = $request->body;
             // 下書きを公開する処理
             }else if(isset($request->saveAsPublicQuestion)){
+                $this->validate($request,$rules);
                 $question->title = $request->title;
                 $question->body = $request->body;
                 $question->shipped_at = Carbon::now()->format('Y/m/d H:i:s');
