@@ -33,10 +33,6 @@ class QuestionController extends Controller
 
         list($questions,$filteredBy) = SearchService::searchQuestions($request);
 
-        $questions = Question::with(['user','tags','questionAnswers'])
-        ->whereNotNull('shipped_at')
-        ->where('is_deleted',false)
-        ->orderBy('created_at','desc')->paginate(2);
         return view('questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag'));
     }
 
