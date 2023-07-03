@@ -1,188 +1,242 @@
-<head>
-	<meta charset="utf-8">
-	<meta content="IE=edge" http-equiv="X-UA-Compatible">
-	<meta content="width=device-width, initial-scale=1" name="viewport">
-	<title>Dash</title>
-	<link rel="stylesheet" media="all" href="/css/side_header.css">
-	<link rel="stylesheet" media="all" href="/css/template.css">
-	<link rel="stylesheet" href="/css/article/article_list.css">
-	<link rel="stylesheet" href="/css/header-profile.css">
-    <link rel="stylesheet" href="{{ asset('css/tailwind.css') }}">
-	<script src="/js/template.js"></script>
-	<script src="/js/common/inquiry.js"></script>
-	<script src="/js/article/article_list.js"></script>
-	<link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
-	<link rel="icon" type="image/png" href="/img/favicon/favicon-32x32.png" sizes="32x32">
-	<link rel="icon" type="image/png" href="/img/favicon/favicon-16x16.png" sizes="16x16">
-	<link rel="manifest" href="/img/favicon/manifest.json">
-	<link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#dd4814">
-	<link rel="shortcut icon" href="/img/favicon/favicon.ico">
-	<meta name="apple-mobile-web-app-title" content="Dash">
-	<meta name="application-name" content="Dash">
-	<meta name="msapplication-config" content="../../static/img/favicon/browserconfig.xml">
-	<meta name="theme-color" content="#ffffff">
-</head>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            ブログ詳細画面
+        </h2>
+    </x-slot>
 
-<body>
-	<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-	<div class="site-body container-fluid">
-		<div class="site-container row">
-		
-			<!-- 		menuここから  -->
-			<header class="site-header bg-primary col-sm-2 hidden-xs side_scroll">
-				<div class="header-menu center-block">
-		<div class="header-menu-title">
-			<a href="/"><h1 class="bg-primary">Dash</h1></a>
-			<br>
-			<li class="dropdown">
-				<a class="lead bg-primary" href="/articles">
-					<span class="glyphicon glyphicon-th-list"></span>
-					<span> ブログ</span>
-				</a>
-				<ul class="nav nav-pills nav-stacked" style="padding-inline-start:10px;margin-bottom:10px;">
-					<li style="margin-bottom:3px"><a class="bg-primary" href="/articles/create">新規投稿</a></li>
-					<li><a class="bg-primary" href="{{ route('articles.myblog',Auth::user()->id) }}">マイブログ</a></li>
-					<li><a class="bg-primary" href="/articles/users-favorite/1422">お気に入りブログ</a></li>
-				</ul>
-		</div>
-	</div>
-			</header> 
-			<!-- 		menuここまで  -->			
-	        <div class="col-sm-7 col-sm-offset-3">
-          
-              <!-- /* バッジ獲得時メッセージ */ -->
-		      
-					
-	          <div class="page-header">
-	          	<div id="article-header">
-					<span>【</span>
-					<span>2023-04</span>
-					<span>WEB</span>
-					<span>】</span>
-	          	</div>
-				  <div id="article-body" class="panel-body">
-					  <div class="markdown-view">
-						  
-						  <div class="container">
-							  <div class="card mt-3">
-								  <div class="card-body d-flex flex-row">
-									  <i class="fas fa-user-circle fa-3x mr-1"></i>
-									  <div>
-										  <div class="font-weight-bold">
-											  {{ $article->user->name }} 
-											</div> 
-											<div class="font-weight-lighter">
-												{{ $article->created_at->format('Y/m/d H:i') }} に更新
-											</div>
-										</div>
-									</div>
-									<div>
-										<span id="article-category" class="btn btn-xs none-pointer">備忘録</span>
-									  <span class="h1 word-wrap">非同期通信について</span>
-									</div>
-								</div>
-								<div class="page-body">
-								  <div class="well well-sm" style="overflow:hidden">
-								  
-									  <div id="article-tag-list" class="tag-list bootstrap-tags bootstrap-3">
-										<div class="tags" style="position: relative;">
-											
-												<div class="tag label btn-success md none-pointer">
-													<span>&nbsp;&nbsp;JavaScript&nbsp;&nbsp;</span>
-												</div>
-										</div>
-									  </div>
-								  </div>  
-							  </div>
-							<div class="card-body pt-0 pb-2">
-							  <h3 class="h4 card-title">
-									{{ $article->title }}
-								  </a>                                
-								 </h3>
-							  <div class="card-text">
-								{!! nl2br(e( $article->body )) !!} 
-							  </div>
-							  <hr>
-							</div>
-						  </div>
-					  </div>	
-					</div>
-				</div>
-			</div>
-		</div>
-		{{-- @if( Auth::id() !== $user->id ) --}}
-		{{-- @if(Auth::user()->id !== $article->user_id)
-		<favorite-button
-		  class="ml-auto"
-		>
-		</favorite-button>
-	  @endif --}}
-            <div class="pull-right article-user-link">
-@if($article->user_id === Auth::user()->id)
-    <li><a class="bg-primary" href="{{ route('articles.myblog', Auth::user()->id) }}">マイブログへ</a></li>
-@else
-    <a href="{{ route('articles.myblog', ['id' => $article->user_id]) }}"><span>{{ $article->user->name }}</span>さんのブログ一覧へ</a>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white pt-2 pl-3 overflow-hidden shadow-sm sm:rounded-lg">
+                {{-- 自分のブログだったら編集ができる --}}
+                <div>
+                    @if ($article->user->id === Auth::id())
+                        @if (isset($article->shipped_at))
+                            <div class="rounded mb-2 rounded px-6 py-2.5 text-s text-center font-medium uppercase text-white"
+                                style="background-color:rgb(11, 146, 51)">公開済み</div>
+                        @else
+                            <div class="rounded mb-2 rounded px-6 py-2.5 text-s text-center font-medium uppercase text-white"
+                                style="background-color:rgb(142, 11, 146)">下書き</div>
+                        @endif
+                        <div>
+                            <button type="button" onclick="location.href='{{ route('articles.edit', $article->id) }}' "
+                                class="inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                                style="background-color:rgb(11, 146, 51)" data-te-ripple-init
+                                data-te-ripple-color="light">
+                                編集する
+                            </button>
+                            <form action="{{ route('articles.destroy', $article->id) }}" method="POST"
+                                class="inline-block ">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                                    style="background-color:rgb(241, 45, 45)" data-te-ripple-init
+                                    data-te-ripple-color="light" onclick="return confirm('本当に削除しますか?')">
+                                    削除する
+                                </button>
+                            </form>
+                        </div>                
+                                <div>
+                                    <a class="inline-flex items-center">
+                                        <img alt="blog" src="https://dummyimage.com/104x104"
+                                            class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
+                                        <span class="flex-grow flex flex-col pl-4">
+                                            <span
+                                                class="title-font font-medium text-gray-900">{{ $article->user->name }}</span>
+                                            <span
+                                                class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $article->created_at->format('Y-m-d') }}</span><span>【{{ $article->user->department->name }}】</span>
+                                        </span>
+                                    </a>
+                                </div>
+                                <h3 class="text-center font-semibold text-xl text-gray-800 leading-tight">
+                                    {{ $article->title }}
+                                </h3>
+                                <div
+                                    class="mx-auto block max-w-lg rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+                                    @foreach ($article->tags as $tag)
+                                        <span class="bg-cyan-400 text-white">{{ $tag->name }}</span>
+                                    @endforeach
+                                    <div>{{ $article->body }}</div>
+                                </div>
+                                <span class="text-gray-400 inline-flex items-center leading-none text-sm">
+                                    <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                        <path
+                                            d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z">
+                                        </path>
+                                    </svg>
+                                    {{-- {{ $article->articleComments->count() }} --}}
+                                </span>
+
+                        {{-- 自分以外のブログだったら表示のみ --}}
+                    @else
+                        <div>
+                            <a class="inline-flex items-center">
+                                <img alt="blog" src="https://dummyimage.com/104x104"
+                                    class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
+                                <span class="flex-grow flex flex-col pl-4">
+                                    <span
+                                        class="title-font font-medium text-gray-900">{{ $article->user->name }}</span>
+                                    <span
+                                        class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $article->created_at->format('Y-m-d') }}</span><span>【{{ $article->user->department->name }}】</span>
+                                </span>
+                            </a>
+                        </div>
+                        <h3 class="text-center font-semibold text-xl text-gray-800 leading-tight">
+                            {{ $article->title }}</h3>
+                        <div
+                            class="mx-auto block max-w-lg rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+                            @foreach ($article->tags as $tag)
+                                <span class="bg-cyan-400 text-white">{{ $tag->name }}</span>
+                            @endforeach
+                            <div>{{ $article->body }}</div>
+                        </div>
+                        <span class="text-gray-400 inline-flex items-center leading-none text-sm">
+                            <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none"
+                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path
+                                    d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z">
+                                </path>
+                            </svg>
+                            {{-- {{ $article->articleComments->count() }} --}}
+                        </span>
+                    @endif
+                </div>
+
+            <favorite-button>
+@if (Auth::check())
+    @if ($article->isFavoritedByUser(Auth::user()))
+        <form action="{{ route('articles.unfavorite', ['article' => $article->id]) }}" method="POST" class="mb-4">
+            @csrf
+            @method('DELETE')
+            <input type="hidden" name="article_id" value="{{ $article->id }}">
+            <button type="submit">
+                お気に入り解除
+            </button>
+        </form>
+    @else
+        <form action="{{ route('articles.favorite', ['article' => $article->id]) }}" method="POST" class="mb-4">
+            @csrf
+            <input type="hidden" name="article_id" value="{{ $article->id }}">
+            <button type="submit">
+                お気に入り
+            </button>
+        </form>
+    @endif
+	@else
+	<p>お気に入り機能を利用するにはログインしてください。</p>
 @endif
-              </div>
-            </div>
-	            
-	            <!-- /*下書きでなければコメント欄表示する*/ -->
-	           	
-	           		{{-- <div id="article-like-responsive">
-			           	<div class="like-btn">
-							<span class="hidden" id="login-user-name">喜多村太綱</span>
-							<span role="button" class="btn like-button btn-success">いいね！</span>
-						</div>
-						<div class="like-count">
-							<strong><a class="text-info article-like1" data-toggle="modal" data-target="#like-user-modal" href="">8</a></strong>
-						</div>
-					</div>
-					<br>
-					<div id="article-favorite-responsive">
-						<div id="article-favorite-btn"> 
-							<span class="hidden" id="login-user-name">喜多村太綱</span>
-							<span role="button" class="btn change-favoriteBtn pushBtn" id="favorite-button-mobile">★お気に入り</span>
-						</div>
-				    </div>
-						</div> --}}
-						<br>
-						<!-- /* コメント編集フォーム */ -->
-					<div id="comment"></div>
-		            <h2>コメント</h2>
-								
-				            </div>
-						</div>
-		            
-		           
-					<div class="markdown-editor">
-		              <form class="new_article_comment" action="/article_comments" accept-charset="UTF-8" method="post"><input type="hidden" name="_csrf" value="fec033dd-189a-45e7-b179-0585526122aa">
-						<input type="hidden" name="articleId" value="504">
-		                <ul class="nav nav-tabs">
-		                  <li class="tab-md-write active">
-		                    <a data-toggle="tab" class="text-info" href="#new-comment-write">Write</a>
-		                  </li>
-		                  <li class="tab-md-preview">
-		                    <a data-toggle="tab" class="text-info" href="#new-comment-preview">Preview</a>
-		                  </li>
-		                  <li class="pull-right">
-		                    <button id="articleBtn" name="button" type="submit" class="btn btn-success">Comment</button>
-		                  </li>
-		                </ul>
-		                <div class="tab-content markdown-content">
-		                  <div class="tab-pane active" id="new-comment-write">
-		                    <textarea id="articleComment" rows="5" class="form-control" name="comment"></textarea>
-		                    <p>
-		                      <a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a>
-		                      <span>記法が使えます。</span>
-		                    </p>
-		                  </div>
-		                  <div class="tab-pane content-md-preview markdown-body" id="new-comment-preview"></div>
-		                </div>
-		              </form>
-		            </div>
-	            
-	          	<div class="page-footer"></div>
-	          
-	          </div>
+		</favorite-button>
 
-</div></body> 
+		<div class="pull-right article-user-link">
+			@if($article->user_id === Auth::id())
+				<li><a class="bg-primary" href="{{ route('articles.myblog', Auth::id()) }}">マイブログへ</a></li>
+			@else
+				<a href="{{ route('articles.myblog', ['id' => $article->user_id]) }}"><span>{{ $article->user->name }}</span>さんのブログ一覧へ</a>
+			@endif
+		</div>
+
+<div class="py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white pt-2 pl-3 overflow-hidden shadow-sm sm:rounded-lg">
+            <!-- コメントフォーム -->
+            <form action="{{ route('articles.commentStore', ['article' => $article->id]) }}" method="POST">
+                @csrf
+                <textarea name="comment" rows="3" cols="50"></textarea>
+                <button type="submit">コメントする</button>
+            </form>
+
+<!-- コメント一覧 -->
+<h2>コメント一覧</h2>
+<hr>
+			<div>
+				<ul>
+				@forelse ($article->articleComments as $comment)
+					<li>
+						<p id="comment-{{ $comment->id }}">{{ $comment->comment }}</p>
+						@if (Auth::check() && Auth::user()->id === $comment->user->id)
+							<!-- コメント編集フォーム -->
+							<form id="edit-comment-form-{{ $comment->id }}" class="edit-comment-form" action="{{ route('articles.commentUpdate', ['comment' => $comment->id, 'article' => $article->id]) }}" method="POST">
+								@csrf
+								@method('POST')
+								<input type="hidden" name="_method" value="PATCH">
+								<textarea id="edit-comment-{{ $comment->id }}" name="comment" rows="2" cols="40"></textarea>
+								<button type="button" class="update-comment-button inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg" data-comment-id="{{ $comment->id }}" style="background-color: rgb(11, 146, 51)" data-te-ripple-init data-te-ripple-color="light">
+									更新
+								</button>
+							</form>
+							<button type="button" class="edit-comment-button inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg" data-comment-id="{{ $comment->id }}" style="background-color: rgb(11, 146, 51)" data-te-ripple-init data-te-ripple-color="light">
+								編集する
+							</button>
+							{{-- <form action="{{ route('articles.commentDestroy',$article->id) }}" method="POST" class="inline-block"> --}}
+								{{-- <form action="{{ route('articles.commentDestroy', ['article' => $article->id]) }}" method="POST" class="inline-block"> --}}
+								<form action="{{ route('articles.commentDestroy', ['article' => $article->id, 'comment' => $comment->id]) }}" method="POST" class="inline-block">
+								@csrf
+								@method('DELETE')
+								<button type="submit"
+									class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+									style="background-color:rgb(241, 45, 45)"
+									data-te-ripple-init
+									data-te-ripple-color="light"
+									onclick="return confirm('本当に削除しますか?')">
+									削除する
+								</button>
+							</form>
+						@endif
+					</li>
+				@empty
+					<li>コメントはありません</li>
+				@endforelse
+				</ul>
+			</div> 
+			
+			<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+			<script>
+				$(document).ready(function() {
+					$('.edit-comment-form').hide();
+			
+					// 編集ボタンのクリックイベント
+					$('.edit-comment-button').click(function() {
+						var commentId = $(this).data('comment-id');
+						var commentText = $('#comment-' + commentId).text().trim();
+			
+						// 編集フォームを表示してコメントテキストをセット
+						$('#comment-' + commentId).hide();
+						$('#edit-comment-' + commentId).val(commentText);
+						$('#edit-comment-form-' + commentId).show();
+					});
+			
+					// 更新ボタンのクリックイベント
+					$('.update-comment-button').click(function() {
+						var commentId = $(this).data('comment-id');
+						var updatedComment = $('#edit-comment-' + commentId).val();
+			
+						// Ajaxリクエストを送信
+						$.ajax({
+							url: '/articles/{{ $article->id }}/comments/' + commentId,
+							type: 'POST', // POSTメソッドに変更
+							data: {
+								_method: 'PATCH', // _methodフィールドを追加
+								comment: updatedComment,
+								_token: '{{ csrf_token() }}'
+							},
+							success: function(response) {
+								// ページをリロードして更新したコメントを表示
+								location.reload();
+							},
+							error: function(xhr) {
+								console.log(xhr.responseText);
+							}
+						});
+					});
+				});
+			</script>
+
+{{-- <x-answerpanel></x-answerpanel> --}}
+
+        </div>
+    </div>
+</div>
+</x-app-layout>
+

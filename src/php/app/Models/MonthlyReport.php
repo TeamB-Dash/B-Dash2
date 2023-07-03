@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Tag;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -49,6 +50,10 @@ class MonthlyReport extends Model
     // MonthlyReportLikesへの関連を定義
     public function monthlyReportLikes(){
         return $this->belongsToMany(User::class,'monthly_report_likes')->withTimestamps();
+    }
+    public function monthlyReportComments(): HasMany
+    {
+        return $this->hasMany('App\Models\MonthlyReportComments');
     }
 
 

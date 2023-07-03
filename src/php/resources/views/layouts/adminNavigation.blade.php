@@ -213,7 +213,7 @@
                 <x-responsive-nav-link :href="route('questions.create')">
                     質問投稿
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('questions.showMyQuestions',Auth::user()->id)">
+                <x-responsive-nav-link :href="route('questions.showMyQuestions',Auth::id())">
                     マイ質問
                 </x-responsive-nav-link>
 

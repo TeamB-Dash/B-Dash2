@@ -1,32 +1,7 @@
-<head>
-	<meta charset="utf-8">
-	<meta content="IE=edge" http-equiv="X-UA-Compatible">
-	<meta content="width=device-width, initial-scale=1" name="viewport">
-	<title>Dash</title>
-	<link rel="stylesheet" media="all" href="/css/side_header.css">
-	<link rel="stylesheet" media="all" href="/css/template.css">
-	<link rel="stylesheet" href="/css/article/article_list.css">
-	<link rel="stylesheet" href="/css/header-profile.css">
-    <link rel="stylesheet" href="{{ asset('css/tailwind.css') }}">
-	<script src="/js/template.js"></script>
-	<script src="/js/common/inquiry.js"></script>
-	<script src="/js/article/article_list.js"></script>
-	<link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
-	<link rel="icon" type="image/png" href="/img/favicon/favicon-32x32.png" sizes="32x32">
-	<link rel="icon" type="image/png" href="/img/favicon/favicon-16x16.png" sizes="16x16">
-	<link rel="manifest" href="/img/favicon/manifest.json">
-	<link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#dd4814">
-	<link rel="shortcut icon" href="/img/favicon/favicon.ico">
-	<meta name="apple-mobile-web-app-title" content="Dash">
-	<meta name="application-name" content="Dash">
-	<meta name="msapplication-config" content="../../static/img/favicon/browserconfig.xml">
-	<meta name="theme-color" content="#ffffff">
-</head>
-
 <body>
 	<div class="site-body container-fluid">
 		<div class="site-container row">
-		
+
 			<!-- 		menuここから  -->
 			<header class="site-header bg-primary col-sm-2 hidden-xs side_scroll">
 				<div class="header-menu center-block">
@@ -41,66 +16,71 @@
 				<ul class="nav nav-pills nav-stacked" style="padding-inline-start:10px;margin-bottom:10px;">
 					<li style="margin-bottom:3px"><a class="bg-primary" href="/articles/create">新規投稿</a></li>
 					<li><a class="bg-primary" href="{{ route('articles.myblog',Auth::user()->id) }}">マイブログ</a></li>
-					<li><a class="bg-primary" href="/articles/users-favorite/1422">お気に入りブログ</a></li>
+					<li><a class="bg-primary" href="{{ route('articles.favorites',['id' => Auth::user()->id]) }}">お気に入りブログ</a></li>
+
 				</ul>
 			</li>
 				
 		</div>
 	</div>
-			</header>
-			<!-- 		menuここまで  -->
-			<div class="ml-par20 col-sm-6">
-				<div class="page-header">
-					<h1>ブログ一覧</h1>
-				</div>
-				<div class="article-user">
-					
+	<x-app-layout>
+		<x-slot name="header">
+			<h2 class="font-semibold text-xl text-gray-800 leading-tight">
+			ブログ一覧
+			</h2>
+		</x-slot>
+		<section class="text-gray-600 body-font overflow-hidden">
+			@if (session('status'))
+			<div class="w-2/3 mx-auto container mt-6 text-center bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
+				<p class="font-bold">{{ session('status') }}</p>
+			</div>
+			@endif
+			<div class="container px-5 py-24 mx-auto">
+			  <div class="flex flex-wrap -m-12">
 	
-					<!-- /* ブログ削除時メッセージ */ -->
-					
-					<!-- /* バッジ剥奪時メッセージ */ -->
-					
-					
-		  			<div class="page-content mt-15px">
-						<!-- ブログ一覧 -->
-
-                        <div class="container">
-                            @foreach($articles as $article) 
-                              <div class="card mt-3">
-                                <div class="card-body d-flex flex-row">
-                                  <i class="fas fa-user-circle fa-3x mr-1"></i>
-                                  <div>
-                                    <div class="font-weight-bold">
-                                      {{ $article->user->name }} 
-                                    </div> 
-                                    <div class="font-weight-lighter">
-                                      {{ $article->created_at->format('Y/m/d H:i') }} 
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="card-body pt-0 pb-2">
-                                  <h3 class="h4 card-title">
-                                    <a class="text-dark" href="{{ route('articles.show', ['article' => $article]) }}">
-                                        {{ $article->title }}
-                                      </a>                                
-                                     </h3>
-                                  <div class="card-text">
-                                    {{ Str::limit($article->body, 150, '...') }}
-                                  </div>
-                                  <hr>
-                                </div>
-                              </div>
-                            @endforeach 
-                          </div>	
-                          <!-- ページング -->
-                          {{$articles->links('pagination::bootstrap-4')}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </body>
-	  			<div class="page-footer"></div>
-	  		</div>
+				@foreach($articles as $article) 
+				@if ($article->shipped_at)
+				<div class="p-12 md:w-1/2 flex flex-col items-start">
+					<a class="inline-flex items-center">
+					<img alt="blog" src="https://dummyimage.com/104x104" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
+					<span class="flex-grow flex flex-col pl-4">
+						<a class="text-info" href="/articles?articleEntryDate={{ \Carbon\Carbon::parse($article->user->entry_date)->format('Y-m') }}">{{ $article->user->entry_date }}</a>
+						<span class="title-font font-medium text-gray-900">{{ $article->user->name }}</span>
+						<span class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $article->created_at->format('Y-m-d')  }}</span><span>【{{$article->user->department->name}}】</span>
+					</span>
+					</a>
+					@foreach ($article->tags as $tag )
+					<span class="inline-block py-1 px-2 rounded bg-indigo-50 text-indigo-500 text-xs font-medium tracking-widest">{{ $tag->name }}</span>
+					@endforeach
+				  <div class="flex items-center flex-wrap pb-4 mb-4 border-b-2 border-gray-100 w-full">
+					<a class="text-indigo-500 inline-flex items-center">Learn More
+					  <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M5 12h14"></path>
+						<path d="M12 5l7 7-7 7"></path>
+					  </svg>
+					</a>
+					<span class="text-gray-400 mr-3 inline-flex items-center ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
+					  <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+						<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+						<circle cx="12" cy="12" r="3"></circle>
+					  </svg>1.2K
+					</span>
+					<span class="text-gray-400 inline-flex items-center leading-none text-sm">
+					  <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+						<path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
+					  </svg>
+					  {{-- {{ $article->articleComments->count() }} --}}
+					</span>
+				  </div>
+				  <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4"><a href="{{route('articles.show',['article' => $article->id])}}">{{$article->title}}</a></h2>
+				  {{ Str::limit($article->body, 150, '...') }}
+				</div>
+				@endif
+				@endforeach
+	
+				{{ $articles->links() }}
+			  </div>
+			</div>
 			
 			<!-- side content -->
 			<div id="sideContent" class="col-sm-3" style="height: 2492px;">
@@ -109,163 +89,41 @@
                         <form action="{{ route('articles.index') }}" method="GET">
                           <input type="text" name="keyword" value="{{ $keyword }}">
                           <input type="submit" value="検索">
+						  <br>
+						  <div class="text-center" style="margin-bottom:1.5rem">
+							<span>
+								<a class="text-info side-dep" href="/articles?department_id=1">【 WEB 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=2">【 CL 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=3">【 ML 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=4">【 内勤 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=6">【 FR 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=7">【 QA 】</a>
+							</span><span>
+								<a class="text-info side-dep" href="/articles?department_id=8">【 PHP 】</a>
+							</span>
+						</div>
+                          <div class="text-center" style="padding-bottom:1.5rem">
+                            <span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=1">備忘録</a>
+                            </span><span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=2">技術共有</a>
+                            </span><span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=3">体験共有</a>
+                            </span><span>
+                                <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=4">その他</a>
+                            </span>
+                        </div>
                         </form>
                       </div>
-					{{-- <div class="text-center" style="margin-bottom:1.5rem">
-						<span>
-							<a class="text-info side-dep" href="/articles?articleDepartmentId=1">【 WEB 】</a>
-						</span><span>
-							<a class="text-info side-dep" href="/articles?articleDepartmentId=2">【 CL 】</a>
-						</span><span>
-							<a class="text-info side-dep" href="/articles?articleDepartmentId=3">【 ML 】</a>
-						</span><span>
-							<a class="text-info side-dep" href="/articles?articleDepartmentId=4">【 内勤 】</a>
-						</span><span>
-							<a class="text-info side-dep" href="/articles?articleDepartmentId=6">【 FR 】</a>
-						</span><span>
-							<a class="text-info side-dep" href="/articles?articleDepartmentId=7">【 QA 】</a>
-						</span><span>
-							<a class="text-info side-dep" href="/articles?articleDepartmentId=8">【 PHP 】</a>
-						</span>
-					</div>
-					<div class="text-center" style="padding-bottom:1.5rem">
-						<span>
-							<a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?articleCategoryId=1">備忘録</a>
-						</span><span>
-							<a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?articleCategoryId=2">技術共有</a>
-						</span><span>
-							<a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?articleCategoryId=3">体験共有</a>
-						</span><span>
-							<a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?articleCategoryId=4">その他</a>
-						</span>
-					</div>
-					
-				<div class="rank-div">
-						<h4>いいね！獲得ランキング</h4>
-						<h5>対象月：2023年1月～2023年6月</h5>
-						<br>
-						
-					<div>
-							<p>
-								<span>1.</span>
-								<span> 👤</span>
-								<span><a class="likeRankUserName" href="/articles?articleUserId=1482&amp;articleUserName=%E5%B6%8B%E7%94%B0%E7%B4%94%E5%B8%8C">嶋田純希</a></span>
-								<span> 👍217</span>
-							</p>
-							<p>
-								<span>2.</span>
-								<span> 👤</span>
-								<span><a class="likeRankUserName" href="/articles?articleUserId=1490&amp;articleUserName=%E6%9C%9B%E6%9C%88%E8%8A%B1">望月花</a></span>
-								<span> 👍97</span>
-							</p>
-							<p>
-								<span>3.</span>
-								<span> 👤</span>
-								<span><a class="likeRankUserName" href="/articles?articleUserId=1496&amp;articleUserName=%E6%96%B0%E5%9E%A3%E5%A4%AA%E4%B9%85%E6%9C%97">新垣太久朗</a></span>
-								<span> 👍68</span>
-							</p>
-							<p>
-								<span>3.</span>
-								<span> 👤</span>
-								<span><a class="likeRankUserName" href="/articles?articleUserId=1380&amp;articleUserName=%E6%A9%8B%E6%9C%AC%E8%91%89%E4%BB%8B">橋本葉介</a></span>
-								<span> 👍68</span>
-							</p>
-							<p>
-								<span>5.</span>
-								<span> 👤</span>
-								<span><a class="likeRankUserName" href="/articles?articleUserId=1491&amp;articleUserName=%E7%9F%B3%E9%87%8E%E6%97%AD%E5%95%93">石野旭啓</a></span>
-								<span> 👍65</span>
-							</p>
-							<p>
-								<span>6.</span>
-								<span> 👤</span>
-								<span><a class="likeRankUserName" href="/articles?articleUserId=1391&amp;articleUserName=%E8%B2%9D%E5%8E%9F%E5%B0%86%E6%98%9F">貝原将星</a></span>
-								<span> 👍59</span>
-							</p>
-							<p>
-								<span>7.</span>
-								<span> 👤</span>
-								<span><a class="likeRankUserName" href="/articles?articleUserId=363&amp;articleUserName=%E5%B0%8F%E5%B7%9D%E7%B5%90%E5%AD%90">小川結子</a></span>
-								<span> 👍55</span>
-							</p>
-							<p>
-								<span>8.</span>
-								<span> 👤</span>
-								<span><a class="likeRankUserName" href="/articles?articleUserId=1481&amp;articleUserName=%E6%A8%AA%E5%B1%B1%E7%BF%94%E4%B8%80">横山翔一</a></span>
-								<span> 👍45</span>
-							</p>
-							<p>
-								<span>8.</span>
-								<span> 👤</span>
-								<span><a class="likeRankUserName" href="/articles?articleUserId=1485&amp;articleUserName=%E7%94%B0%E5%B7%BB%E4%BD%B3%E7%A5%90">田巻佳祐</a></span>
-								<span> 👍45</span>
-							</p>
-							<p>
-								<span>10.</span>
-								<span> 👤</span>
-								<span><a class="likeRankUserName" href="/articles?articleUserId=1480&amp;articleUserName=%E5%AF%8C%E7%94%B0%E7%9B%B4%E5%B8%8C">富田直希</a></span>
-								<span> 👍37</span>
-							</p>
-							<br>
-					</div>
-				</div>
-
-				<div class="rank-div hidden-xs">
-					<h4>タグ別投稿数ランキング</h4>
-					<div>
-						<div class="tag-rank">
-							<div class="tag-rank-num">1.</div>
-							<a class="tag label label-success tag-rank-name" href="/articles?articleTagId=996">CL</a>
-							<span>(<span>41</span>)</span>
-						</div>
-						<div class="tag-rank">
-							<div class="tag-rank-num">2.</div>
-							<a class="tag label label-success tag-rank-name" href="/articles?articleTagId=74">AWS</a>
-							<span>(<span>25</span>)</span>
-						</div>
-						<div class="tag-rank">
-							<div class="tag-rank-num">3.</div>
-							<a class="tag label label-success tag-rank-name" href="/articles?articleTagId=208">Vue.js</a>
-							<span>(<span>25</span>)</span>
-						</div>
-						<div class="tag-rank">
-							<div class="tag-rank-num">4.</div>
-							<a class="tag label label-success tag-rank-name" href="/articles?articleTagId=61">Linux</a>
-							<span>(<span>19</span>)</span>
-						</div>
-						<div class="tag-rank">
-							<div class="tag-rank-num">5.</div>
-							<a class="tag label label-success tag-rank-name" href="/articles?articleTagId=6">Java</a>
-							<span>(<span>16</span>)</span>
-						</div>
-						<div class="tag-rank">
-							<div class="tag-rank-num">6.</div>
-							<a class="tag label label-success tag-rank-name" href="/articles?articleTagId=8">PHP</a>
-							<span>(<span>13</span>)</span>
-						</div>
-						<div class="tag-rank">
-							<div class="tag-rank-num">7.</div>
-							<a class="tag label label-success tag-rank-name" href="/articles?articleTagId=55">VMware</a>
-							<span>(<span>11</span>)</span>
-						</div>
-						<div class="tag-rank">
-							<div class="tag-rank-num">8.</div>
-							<a class="tag label label-success tag-rank-name" href="/articles?articleTagId=298">インフラ</a>
-							<span>(<span>11</span>)</span>
-						</div>
-						<div class="tag-rank">
-							<div class="tag-rank-num">9.</div>
-							<a class="tag label label-success tag-rank-name" href="/articles?articleTagId=541">ESXi</a>
-							<span>(<span>10</span>)</span>
-						</div>
-						<div class="tag-rank">
-							<div class="tag-rank-num">10.</div>
-							<a class="tag label label-success tag-rank-name" href="/articles?articleTagId=886">自己学習</a>
-							<span>(<span>10</span>)</span>
-						</div>
-					</div>
-				</div>
+                </div>
+            </div>
+			
 			</div>
-			</div>
-		</div>
-	</div> --}}
+		  </section>
+	</x-app-layout>
+	

@@ -6,8 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\ArticleComments;
+use App\Models\ArticleFavorites;
+use App\Models\Tag;
 
 class Article extends Model
 {
@@ -48,4 +51,20 @@ class Article extends Model
     {
         return $this->hasMany('App\Models\ArticleComments');
     }
+
+    public function articleFavorites(): HasMany
+    {
+        return $this->hasMany('App\Models\ArticleFavorites');
+    }
+
+    public function isFavoritedByUser($user)
+    {
+        return $this->articleFavorites()
+                    ->where('user_id', $user->id)
+                    ->where('is_deleted', false)
+                    ->exists();
+    }
+
+    
+
 }

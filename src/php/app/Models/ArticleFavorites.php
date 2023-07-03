@@ -4,30 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Question;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Article;
+use App\Models\User;
 
-
-class QuestionAnswers extends Model
+class ArticleFavorites extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'user_id',
-        'answer',
-        'question_id',
-        'is_reply',
-        'reply_parent_id',
-        'is_deleted',
+        'article_id',
     ];
 
-    // Questionへの関連を定義
-    public function question(){
-        return $this->belongsTo(Question::class);
-    }
+    use HasFactory;
 
     public function user(): BelongsTo
     {
         return $this->belongsTo('App\Models\User');
     }
+    
+    public function articles(): BelongsTo
+    {
+
+        return $this->belongsTo(Article::class, 'article_id');
+    }
+    
 }

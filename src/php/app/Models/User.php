@@ -4,17 +4,20 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Article;
 use App\Models\Department;
+use App\Models\ArticleFavorites;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\MonthlyReport;
 use App\Models\Question;
 use App\Models\UserRole;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -51,31 +54,54 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function articles(): HasMany
+    {
+    return $this->hasMany('App\Models\Article');
+    // return $this->belongsTo('App\Models\Article');
+    }
+
+    public function articleComments(): HasMany
+    {
+        return $this->hasMany('App\Models\ArticleComments');
+    }
+
+    public function monthlyReportComments(): HasMany
+    {
+        return $this->hasMany('App\Models\MonthlyReportComments');
+    }
+
+    public function questionComments(): HasMany
+    {
+        return $this->hasMany('App\Models\QuestionAnswers');
+    }
+
     public function followings()
     {
         return $this->belongsToMany(User::class, 'user_follows', 'followed_user_id', 'user_id');
     }
 
-    public function followeds()
+    public function followers()
     {
         return $this->belongsToMany(User::class, 'user_follows', 'user_id', 'followed_user_id');
     }
 
-    // 日付フォーマットエラー回避のための定義
-    // protected $dates = [
-    //     'entry_date',
-    // ];
+    public function userFollows()
+    {
+        return $this->belongsToMany(User::class, 'user_follows');
+    }
+
+    public function isFollowing($user)
+    {
+        return $this->userFollows()
+            ->where('followed_user_id', $user->id)
+            ->where('is_deleted', false)
+            ->exists();
+    }
 
     // monthly_reportsテーブルと紐付け
     public function monthlyReports()
     {
         return $this->hasMany(MonthlyReport::class);
-    }
-
-    // departmentsテーブルと紐付け
-    public function articles(): HasMany
-    {
-        return $this->hasMany('App\Models\Article');
     }
 
     // Questionへの関連を定義
@@ -88,6 +114,13 @@ class User extends Authenticatable
     public function department()
     {
         return $this->belongsTo(Department::class);
+    }
+
+    public function articleFavorites()
+    {
+
+        return $this->hasMany(ArticleFavorites::class, 'user_id', 'id');
+
     }
 
     // UserRoleへの関連を定義

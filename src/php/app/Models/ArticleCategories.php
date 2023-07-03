@@ -7,25 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Article;
 
-class ArticleComments extends Model
+class ArticleCategories extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'comment',
-        'article_id',
-        'is_deleted',
-    ];
-
-    // public function article(): BelongsTo
     public function articles(): BelongsTo
     {
         return $this->belongsTo('App\Models\Article');
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo('App\Models\User');
     }
 }

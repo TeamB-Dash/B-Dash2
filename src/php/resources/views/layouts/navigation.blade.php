@@ -66,15 +66,20 @@
 
                                 <x-slot name="content">
 
-                                    <x-dropdown-link :href="route('dashboard')">
-                                        ブログ新規投稿
+                                    <x-dropdown-link :href="route('articles.index')">
+                                        ブログ一覧
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('dashboard')">
+                                    <x-dropdown-link :href="route('articles.create')">
+                                        ブログ新規投稿
+                                    </x-dropdown-link>
+                                    {{-- ToDOログインした場合のみ表示させた方がいい？ --}}
+
+                                    <x-dropdown-link :href="route('articles.favorites',['id' => Auth::id()])">
                                         お気に入りブログ
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('dashboard')">
+                                    <x-dropdown-link :href="route('articles.myblog',Auth::id())">
                                         マイブログ
                                     </x-dropdown-link>
                                 </x-slot>
@@ -109,24 +114,21 @@
                                     質問投稿
                                 </x-dropdown-link>
 
-                                <x-dropdown-link :href="route('questions.showMyQuestions',Auth::user()->id)">
+                                <x-dropdown-link :href="route('questions.showMyQuestions',Auth::id())">
                                     マイ質問
                                 </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
                     </div>
                 </div>
-                {{-- <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        ブログ
+                <!-- ユーザー検索 -->
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('searchUser')" :active="request()->routeIs('searchUser')">
+                            ユーザー検索
                     </x-nav-link>
-                </div> --}}
-                {{-- <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        Q&A
-                    </x-nav-link>
-                </div> --}}
+                </div>
             </div>
+
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -235,7 +237,7 @@
                 <x-responsive-nav-link :href="route('questions.create')">
                     質問投稿
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('questions.showMyQuestions',Auth::user()->id)">
+                <x-responsive-nav-link :href="route('questions.showMyQuestions',Auth::id())">
                     マイ質問
                 </x-responsive-nav-link>
 

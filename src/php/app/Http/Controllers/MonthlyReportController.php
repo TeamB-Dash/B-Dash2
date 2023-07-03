@@ -8,10 +8,12 @@ use App\Models\User;
 use App\Models\Department;
 use App\Models\MonthlyReport;
 use App\Models\MonthlyWorkingProcess;
-use Illuminate\Http\Request;	
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
+use App\Models\MonthlyReportComments;
+
 
 class MonthlyReportController extends Controller
 {
@@ -146,16 +148,18 @@ class MonthlyReportController extends Controller
             // dd($tags);
 
             $report->tags()->sync($tags);
-        
+
         $workingProcess->save();
 
         return redirect()->route('monthlyReport.show');
     }
 
-    public function show(MonthlyReport $monthlyReport) {
+    public function show(MonthlyReport $monthlyReport, User $user, MonthlyReportComments $comments) {
 
         $report = MonthlyReport::find($monthlyReport->id);
         $userId = $monthlyReport->user_id;
+        $monthlyReport->load('monthlyReportComments.user');
+
 
         if ($report->is_deleted == true) {
             abort(404);
@@ -168,7 +172,7 @@ class MonthlyReportController extends Controller
         $fromDate = Carbon::parse($monthlyReport->target_month)->subMonthWithNoOverflow(1)->startOfMonth()->toDateString();
         $previousMonthlyReport = MonthlyReport::where('user_id',$userId)->whereDate('target_month','=',$fromDate)->first();
 
-        return view('monthlyReport.show2', compact('report', 'previousMonthlyReport'));
+        return view('monthlyReport.show2', compact('report', 'previousMonthlyReport','user','comments','monthlyReport'));
     }
 
     public function edit(MonthlyReport $monthlyReport) {
@@ -375,5 +379,44 @@ class MonthlyReportController extends Controller
 
         return view('monthlyReport.myDraftReports', compact('reports'));
     }
+
+    public function commentStore(Request $request, MonthlyReport $monthlyReport)
+{
+    $inputs = request()->validate([
+        'comment' => 'required|max:255'
+    ]);
+
+    $comments = MonthlyReportComments::create([
+        'comment' => $inputs['comment'],
+        'user_id' => auth()->user()->id,
+        'monthly_report_id' => $monthlyReport->id,
+
+    ]);
+
+    return redirect()->route('monthlyReport.show', ['monthlyReport' => $monthlyReport->id]);
+
+}
+
+
+public function commentUpdate(Request $request, $monthlyReport, $comment)
+{
+    $monthlyReport = MonthlyReport::findOrFail($monthlyReport);
+    $comment = MonthlyReportComments::findOrFail($comment);
+
+    $comment->update([
+        'comment' => $request->input('comment'),
+        'user_id' => auth()->user()->id,
+        'monthly_report_id' => $monthlyReport->id,
+    ]);
+
+    return redirect()->route('monthlyReport.show', ['monthlyReport' => $monthlyReport->id]);
+}
+
+public function commentDestroy(MonthlyReport $monthlyReport, MonthlyReportComments $comment)
+{
+    $comment->delete();
+
+    return redirect()->route('monthlyReport.show', ['monthlyReport' => $monthlyReport->id]);
+}
 }
 
