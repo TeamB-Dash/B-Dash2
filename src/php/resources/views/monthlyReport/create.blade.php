@@ -75,6 +75,7 @@
 		
 				
 				<div class="page-body">
+					<x-input-error class="mb-4" :messages="$errors->all()"/>
 					<div class="text-right">※セッションの有効期限は60分です。</div>
 					<div class="page-content well">
 						<div id="prev_month_report_copy">
@@ -87,7 +88,7 @@
 								<label class="control-label col-sm-3" for="target_month">対象月</label>
 								<div class="col-sm-9">
 									<select name="target_month" class="form-control" id="target_month">
-										<option value="2023-05-01">2023年06月</option>
+										<option value="2023-06-01">2023年06月</option>
 										<option value="2023-05-01">2023年05月</option>
 										<option value="2023-04-01">2023年04月</option>
 										<option value="2023-03-01">2023年03月</option>
@@ -172,7 +173,7 @@
 									<label class="control-label col-sm-3">担当した工程</label>
 									<div class="col-sm-9 btn-group" data-toggle="buttons">
 										<label class="btn btn-default">
-											<input type="checkbox" name="workingProcess[]" id="working_process_" value="definition" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
+											<input type="checkbox" name="workingProcess[]" id="working_process_" value="definition" autocomplete="off" checked="checked"/><input type="hidden" name="_workingProcess" value="on" checked="checked"/>
 											<span>要件定義</span>
 										</label>
 										<label class="btn btn-default">

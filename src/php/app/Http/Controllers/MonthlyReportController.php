@@ -35,6 +35,16 @@ class MonthlyReportController extends Controller
 
         $workingProcess = new MonthlyWorkingProcess();
 
+        // バリデーション
+        $inputs = $request->validate([
+            'target_month' => 'required',
+            'project_summary' => 'required',
+            'business_content' => 'required',
+            'looking_back' => 'required',
+            'next_month_goals' => 'required',
+            'assign' => 'required',
+        ]);
+
         if(isset($request->saveAsDraft)) {
             $report = MonthlyReport::create([
                 'user_id' => auth()->user()->id,
@@ -146,7 +156,6 @@ class MonthlyReportController extends Controller
 
         $report = MonthlyReport::find($monthlyReport->id);
         $userId = $monthlyReport->user_id;
-        // $entryDate = Carbon::parse($monthlyReport->user->entry_date)->format('Y年m月');
 
         // 1. 月報情報を取得
         // 2. target_monthカラムのデータをもとにCarbon::parseでdatetime型に整形。月初を取得後、文字列に
@@ -155,9 +164,6 @@ class MonthlyReportController extends Controller
         $fromDate = Carbon::parse($monthlyReport->target_month)->subMonthWithNoOverflow(1)->startOfMonth()->toDateString();
         $previousMonthlyReport = MonthlyReport::where('user_id',$userId)->whereDate('target_month','=',$fromDate)->first();
 
-        // dd($previousMonthlyReport);
-        
-
         return view('monthlyReport.show2', compact('report', 'previousMonthlyReport'));
     }
 
@@ -165,14 +171,25 @@ class MonthlyReportController extends Controller
 
         $report = MonthlyReport::with(['tags'])->find($monthlyReport->id);
         $tags = $report->tags;
+        // dd($tags);
 
-        return view('monthlyReport.edit', compact('report'));
+        return view('monthlyReport.edit', compact('report', 'tags'));
     }
 
     public function update(Request $request, MonthlyReport $monthlyReport) {
 
         $report = MonthlyReport::find($monthlyReport->id);
         $workingProcess = MonthlyWorkingProcess::where('monthly_report_id', '=', $monthlyReport->id)->first();
+
+         // バリデーション
+         $inputs = $request->validate([
+            'target_month' => 'required',
+            'project_summary' => 'required',
+            'business_content' => 'required',
+            'looking_back' => 'required',
+            'next_month_goals' => 'required',
+            'assign' => 'required',
+        ]);
 
         // working_processテーブルの全てのカラムをfalseに設定する
         $workingProcess->process_definition = false;
@@ -197,6 +214,7 @@ class MonthlyReportController extends Controller
             $report->business_content = $request->business_content;
             $report->looking_back = $request->looking_back;
             $report->next_month_goals = $request->next_month_goals;
+            $report->assign = $request->assign;
             $report->shipped_at = null;
 
             foreach($request->workingProcess as $process) {
@@ -236,6 +254,7 @@ class MonthlyReportController extends Controller
             $report->business_content = $request->business_content;
             $report->looking_back = $request->looking_back;
             $report->next_month_goals = $request->next_month_goals;
+            $report->assign = $request->assign;
 
             foreach($request->workingProcess as $process) {
                 if($process == 'definition') {
@@ -273,6 +292,7 @@ class MonthlyReportController extends Controller
             $report->business_content = $request->business_content;
             $report->looking_back = $request->looking_back;
             $report->next_month_goals = $request->next_month_goals;
+            $report->assign = $request->assign;
             $report->shipped_at = Carbon::now()->format('Y/m/d H:i:s');
 
             foreach($request->workingProcess as $process) {
@@ -310,6 +330,7 @@ class MonthlyReportController extends Controller
 
         // タグの保存
         $tags = [];
+        // dd($tags);
         foreach($request->tags as $tag){
             $tagInstance = Tag::firstOrCreate(['name' => $tag]);
             $tags[] = $tagInstance->id;
@@ -329,15 +350,15 @@ class MonthlyReportController extends Controller
     }
 
     public function showMyReports($id) {
-        $user = Auth()->user();
+        $user = User::find($id);
         $reports = MonthlyReport::with(['user', 'tags'])
                             ->whereNotNull('shipped_at')
                             ->where('is_deleted', '=', false)
                             ->where('user_id', '=', $user->id)
-                            ->orderBy('shipped_at', 'desc')
+                            ->orderBy('target_month', 'desc')
                             ->paginate(5);
         
-        return view('monthlyReport.myReports', compact('reports'));
+        return view('monthlyReport.myReports', compact('reports', 'user'));
     }
 
     public function showMyDraftReports($id) {

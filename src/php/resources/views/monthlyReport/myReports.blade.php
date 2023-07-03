@@ -118,7 +118,7 @@
                 <div class="flex-body">
                     <div class="ml-par20 col-sm-6">
                         <div class="page-header">
-                            <h1>{{Auth::user()->name}}さんの月報一覧</h1>
+                            <h1>{{$user->name}}さんの月報一覧</h1>
                         </div>
     
                         <div class="page-content">

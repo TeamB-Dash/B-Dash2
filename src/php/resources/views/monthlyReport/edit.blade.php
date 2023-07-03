@@ -75,6 +75,7 @@
             
                     
                     <div class="page-body">
+                        <x-input-error class="mb-4" :messages="$errors->all()"/>
                         <div class="text-right">※セッションの有効期限は60分です。</div>
                         <div class="page-content well">
                             <div id="prev_month_report_copy">
@@ -88,7 +89,7 @@
                                     <label class="control-label col-sm-3" for="target_month">対象月</label>
                                     <div class="col-sm-9">
                                         <select name="target_month" class="form-control" id="target_month">
-                                            <option value="2023-05-01">2023年06月</option>
+                                            <option value="2023-06-01">2023年06月</option>
                                             <option value="2023-05-01">2023年05月</option>
                                             <option value="2023-04-01">2023年04月</option>
                                             <option value="2023-03-01">2023年03月</option>
@@ -162,8 +163,8 @@
                 
                                             <button type="button" id="addTagBtn" class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg text-white" style="background-color:rgba(107, 159, 29, 0.89)">タグを増やす</button><br>
                                             <div class="tag-item">
-                                                <label>使用した技術：
-                                                <input type="text" name="tags[]" id="tag" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                                {{-- <label>使用した技術：
+                                                <input type="text" name="tags[]" id="tag" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"> --}}
                                                 </label>
                                             </div>
                                         </div>
@@ -173,7 +174,7 @@
                                         <label class="control-label col-sm-3">担当した工程</label>
                                         <div class="col-sm-9 btn-group" data-toggle="buttons">
                                             <label class="btn btn-default">
-                                                <input type="checkbox" name="workingProcess[]" id="working_process_" value="definition" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
+                                                <input type="checkbox" name="workingProcess[]" id="working_process_" value="definition" autocomplete="off" checked /><input type="hidden" name="_workingProcess" value="on"/>
                                                 <span>要件定義</span>
                                             </label>
                                             <label class="btn btn-default">
@@ -345,6 +346,7 @@
             newForm.type = 'text';
             newForm.className = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
             newForm.setAttribute('name','tags[]');
+            newForm.required = true;
     
             const newLabel = document.createElement('label');
             newLabel.textContent = '使用した技術：';

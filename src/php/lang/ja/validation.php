@@ -160,6 +160,11 @@ return [
         'github_url' => 'GitHubアカウント',
         'qiita_url' => 'Qiitaアカウント',
         'self_introduction' => '自己紹介',
+        'project_summary' => 'プロジェクト概要',
+        'business_content' => '業務内容',
+        'looking_back' => '今月の振り返り',
+        'next_month_goals' => '来月の目標',
+        'assign' => '今月のアサイン状況',
     ],
 
 ];
