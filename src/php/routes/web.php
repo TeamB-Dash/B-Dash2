@@ -35,6 +35,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/questions/users/{id}/drafts', [QuestionController::class, 'showMyDraftQuestions'])->name('questions.showMyDraftQuestions');
     Route::get('/questions/noAnswers/show', [QuestionController::class, 'noAnswers'])->name('questions.noAnswers');
     Route::resource('/questions', QuestionController::class);
+
+    //コメント関連
+    Route::post('/questions/{question}/comments', [QuestionController::class, 'commentStore'])->name('questions.commentStore');
+    Route::patch('/questions/{question}/comments/{comment}', [QuestionController::class, 'commentUpdate'])->name('questions.commentUpdate');
+    Route::delete('/questions/{question}/{comment}', [QuestionController::class, 'commentDestroy'])->name('questions.commentDestroy');
 });
 
 
@@ -46,6 +51,21 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/followed/destroy{id}', [ProfileController::class, 'followedUserDestroy'])->name('followed.destroy');
     Route::post('/profile/submitInquiry', [ProfileController::class, 'submitInquiry'])->name('profile.submitInquiry');
     Route::get('/searchUser', [ProfileController::class, 'searchUser'])->name('searchUser');
+});
+
+//ブログ関連のルーティング
+Route::middleware(['auth'])->group(function () {
+    Route::resource('/articles', ArticleController::class)->except(['index', 'show']);
+    Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
+    Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
+    Route::get('/articles/users/{id}', [ArticleController::class, 'showArticles'])->name('articles.myblog');
+    Route::get('/articles/users-favorite/{id}', [ArticleController::class, 'showFavoriteArticles'])->name('articles.favorites');
+    Route::get('/articles/users/{id}/drafts', [ArticleController::class, 'showMyDraftArticles'])->name('articles.showMyDraftArticles');
+    Route::post('/articles/{article}/favorite', [ArticleController::class, 'favorite'])->name('articles.favorite');
+    Route::delete('/articles/{article}/unfavorite', [ArticleController::class, 'unfavorite'])->name('articles.unfavorite');
+    Route::post('/articles/{article}/comments', [ArticleController::class, 'commentStore'])->name('articles.commentStore');
+    Route::patch('/articles/{article}/comments/{comment}', [ArticleController::class, 'commentUpdate'])->name('articles.commentUpdate');
+    Route::delete('/articles/{article}/{comment}', [ArticleController::class, 'commentDestroy'])->name('articles.commentDestroy');
 });
 
 // プロフィール関連のルート
@@ -63,24 +83,16 @@ Route::prefix('profile')
         // Route::delete('/', 'destroy')->name('destroy');
     });
 
-Route::resource('/articles', ArticleController::class)
-    ->middleware('auth');
-Route::resource('/articles', ArticleController::class)
-    ->only(['show']);
-
-Route::get('/articles/users/{id}', [ArticleController::class, 'showArticles'])->name('articles.myblog');
-Route::get('/articles/users-favorite/{id}', [ArticleController::class, 'showFavoriteArticles'])->name('articles.favorites');
-Route::get('/articles/users/{id}/drafts', [ArticleController::class, 'showMyDraftArticles'])->name('articles.showMyDraftArticles');
-
-
-Route::post('/articles/{article}/favorite', [ArticleController::class, 'favorite'])->name('articles.favorite');
-Route::delete('/articles/{article}/unfavorite', [ArticleController::class, 'unfavorite'])->name('articles.unfavorite');
-
 // 月報関連のルート
 Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name('monthlyReport.index');
 Route::get('/monthly_reports/create', [MonthlyReportController::class, 'create'])->name('monthlyReport.create');
 Route::post('/monthly_reports', [MonthlyReportController::class, 'store'])->name('monthlyReport.store');
 Route::get('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'show'])->name('monthlyReport.show');
+
+ //コメント関連
+ Route::post('/monthly_reports/{monthlyReport}/comments', [MonthlyReportController::class, 'commentStore'])->name('monthlyReport.commentStore');
+ Route::patch('/monthly_reports/{monthlyReport}/comments/{comment}', [MonthlyReportController::class, 'commentUpdate'])->name('monthlyReport.commentUpdate');
+ Route::delete('/monthly_reports/{monthlyReport}/{comment}', [MonthlyReportController::class, 'commentDestroy'])->name('monthlyReport.commentDestroy');
 
 // 管理者関連のルート
 Route::prefix('/admin')->middleware('judgeAdmin')->group(function () {

@@ -56,9 +56,25 @@ class User extends Authenticatable
 
     public function articles(): HasMany
     {
-        return $this->hasMany('App\Models\Article');
-        // return $this->belongsTo('App\Models\Article');
+    return $this->hasMany('App\Models\Article');
+    // return $this->belongsTo('App\Models\Article');
     }
+
+    public function articleComments(): HasMany
+    {
+        return $this->hasMany('App\Models\ArticleComments');
+    }
+
+    public function monthlyReportComments(): HasMany
+    {
+        return $this->hasMany('App\Models\MonthlyReportComments');
+    }
+
+    public function questionComments(): HasMany
+    {
+        return $this->hasMany('App\Models\QuestionAnswers');
+    }
+
     public function followings()
     {
         return $this->belongsToMany(User::class, 'user_follows', 'followed_user_id', 'user_id');
