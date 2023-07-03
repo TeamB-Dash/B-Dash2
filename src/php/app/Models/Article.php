@@ -65,4 +65,6 @@ class Article extends Model
                     ->exists();
     }
 
+    
+
 }

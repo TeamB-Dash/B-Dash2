@@ -47,6 +47,7 @@
                     </form>
                 </div>
                 {{-- <x-answerpanel></x-answerpanel> --}}
+
                 <div>
                     <a class="inline-flex items-center">
                     <img alt="blog" src="https://dummyimage.com/104x104" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
@@ -247,6 +248,150 @@
                 </div>
             </li>
             </ol>
+
+
+                            {{-- ブログ流用のコメント機能 --}}
+                            <div class="py-12">
+                                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                                    <div class="bg-white pt-2 pl-3 overflow-hidden shadow-sm sm:rounded-lg">
+                                        <!-- コメントフォーム -->
+                                        <form action="{{ route('questions.commentStore', ['question' => $question->id]) }}" method="POST">
+                                            @csrf
+                                            <textarea name="answer" rows="3" cols="50"></textarea>
+                                            <button type="submit">コメントする</button>
+                                        </form>
+                            
+                            <!-- コメント一覧 -->
+                            <h2>コメント一覧</h2>
+                            <hr>
+                                        <div>
+                                            <ul>
+                                            @forelse ($question->questionAnswers as $comment)
+                                                <li>
+                                                        <strong><h3 id="comment-{{ $comment->id }}-name">{{ $comment->user->name }}</h3></strong>
+                                                        <p id="comment-{{ $comment->id }}-answer">{{ $comment->answer }}</p>
+                                                    <hr>
+                                                    <br>
+                                                    @if (Auth::check() && Auth::user()->id === $comment->user->id)
+                                                        <!-- コメント編集フォーム -->
+                                                        <form id="edit-comment-form-{{ $comment->id }}" class="edit-comment-form" action="{{ route('questions.commentUpdate', ['question' => $question->id, 'comment' => $comment->id]) }}" method="POST">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <textarea id="edit-comment-{{ $comment->id }}-answer" name="answer" rows="2" cols="40">{{ $comment->answer }}</textarea>
+                                                            <button type="button" class="update-comment-button inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg" data-comment-id="{{ $comment->id }}" style="background-color: rgb(11, 146, 51)" data-te-ripple-init data-te-ripple-color="light">
+                                                                更新
+                                                            </button>
+                                                        </form>                                                        
+                                                        <button type="button" class="edit-comment-button inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg" data-comment-id="{{ $comment->id }}" style="background-color: rgb(11, 146, 51)" data-te-ripple-init data-te-ripple-color="light">
+                                                            編集する
+                                                        </button>
+                                                        {{-- <form action="{{ route('articles.commentDestroy',$article->id) }}" method="POST" class="inline-block"> --}}
+                                                            {{-- <form action="{{ route('articles.commentDestroy', ['article' => $article->id]) }}" method="POST" class="inline-block"> --}}
+                                                            <form action="{{ route('questions.commentDestroy', ['question' => $question->id, 'comment' => $comment->id]) }}" method="POST" class="inline-block">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                                                                style="background-color:rgb(241, 45, 45)"
+                                                                data-te-ripple-init
+                                                                data-te-ripple-color="light"
+                                                                onclick="return confirm('本当に削除しますか?')">
+                                                                削除する
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                </li>
+                                            @empty
+                                                <li>コメントはありません</li>
+                                            @endforelse
+                                            </ul>
+                                        </div> 
+                                        
+                                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                                        <script>
+                                            // $(document).ready(function() {
+                                            //     $('.edit-comment-form').hide();
+                                        
+                                            //     // 編集ボタンのクリックイベント
+                                            //     $('.edit-comment-button').click(function() {
+                                            //         var commentId = $(this).data('comment-id');
+                                            //         var commentText = $('#comment-' + commentId).text().trim();
+                                        
+                                            //         // 編集フォームを表示してコメントテキストをセット
+                                            //         $('#comment-' + commentId).hide();
+                                            //         $('#edit-comment-' + commentId).val(commentText);
+                                            //         $('#edit-comment-form-' + commentId).show();
+                                            //     });
+                                        
+                                            //     // 更新ボタンのクリックイベント
+                                            //     $('.update-comment-button').click(function() {
+                                            //         var commentId = $(this).data('comment-id');
+                                            //         // var updatedComment = $('#edit-comment-' + commentId).val();
+                                            //         var updatedComment = $('#edit-comment-' + commentId + '-answer').val();
+                                        
+                                            //         // Ajaxリクエストを送信
+                                            //         $.ajax({
+                                            //             url: '/questions/{{ $question->id }}/comments/' + commentId,
+                                            //             type: 'POST', // POSTメソッドに変更
+                                            //             data: {
+                                            //                 _method: 'PATCH', // _methodフィールドを追加
+                                            //                 comment: updatedComment,
+                                            //                 _token: '{{ csrf_token() }}'
+                                            //             },
+                                            //             success: function(response) {
+                                            //                 // ページをリロードして更新したコメントを表示
+                                            //                 location.reload();
+                                            //             },
+                                            //             error: function(xhr) {
+                                            //                 console.log(xhr.responseText);
+                                            //             }
+                                            //         });
+                                            //     });
+                                            // });
+                                            $(document).ready(function() {
+                                            $('.edit-comment-form').hide();
+
+                                            // 編集ボタンのクリックイベント
+                                            $('.edit-comment-button').click(function() {
+                                                var commentId = $(this).data('comment-id');
+                                                var commentAnswer = $('#comment-' + commentId + '-answer').text().trim();
+
+                                                // 編集フォームを表示してコメントテキストをセット
+                                                $('#comment-' + commentId + '-answer').hide();
+                                                $('#edit-comment-' + commentId + '-answer').val(commentAnswer);
+                                                $('#edit-comment-form-' + commentId).show();
+                                            });
+
+                                            // 更新ボタンのクリックイベント
+                                            $('.update-comment-button').click(function() {
+                                                var commentId = $(this).data('comment-id');
+                                                var updatedComment = $('#edit-comment-' + commentId + '-answer').val();
+
+                                                // Ajaxリクエストを送信
+                                                $.ajax({
+                                                    url: '/questions/' + {{ $question->id }} + '/comments/' + commentId,
+                                                    type: 'POST',
+                                                    data: {
+                                                        _method: 'PATCH',
+                                                        answer: updatedComment,
+                                                        _token: '{{ csrf_token() }}'
+                                                    },
+                                                    success: function(response) {
+                                                        // ページをリロードして更新したコメントを表示
+                                                        location.reload();
+                                                    },
+                                                    error: function(xhr) {
+                                                        console.log(xhr.responseText);
+                                                    }
+                                                });
+                                            });
+                                        });
+
+                                        </script>
+            
+                                                        {{-- ブログ流用のコメント機能　ここまで --}}
+
+
         </div>
     </div>
 </x-app-layout>

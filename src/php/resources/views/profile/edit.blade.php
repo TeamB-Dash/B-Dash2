@@ -15,13 +15,13 @@
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
-                    @include('profile.partials.show-following-user')
+                    @include('profile.partials.show-following')
                 </div>
             </div>
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
-                    @include('profile.partials.show-followed-user')
+                    @include('profile.partials.show-follower')
                 </div>
             </div>
 

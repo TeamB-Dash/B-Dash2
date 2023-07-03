@@ -35,11 +35,11 @@
                                         月報トップ
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('dashboard')">
-                                        月報編集
+                                    <x-dropdown-link :href="route('monthlyReport.create')">
+                                        月報登録
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('dashboard')">
+                                    <x-dropdown-link :href="route('monthlyReport.showMyReports')">
                                         マイ月報
                                     </x-dropdown-link>
                                 </x-slot>
