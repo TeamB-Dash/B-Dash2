@@ -35,7 +35,6 @@ class MonthlyReportController extends Controller
     public function store(Request $request) {
 
         $workingProcess = new MonthlyWorkingProcess();
-
         // バリデーション
         $inputs = $request->validate([
             'target_month' => 'required',
@@ -150,7 +149,7 @@ class MonthlyReportController extends Controller
 
         $workingProcess->save();
 
-        return redirect()->route('monthlyReport.show');
+        return redirect()->route('monthlyReport.show',$report->id);
     }
 
     public function show(MonthlyReport $monthlyReport, User $user, MonthlyReportComments $comments) {
@@ -376,7 +375,7 @@ class MonthlyReportController extends Controller
                             ->orderBy('created_at', 'desc')
                             ->paginate(5);
 
-        return view('monthlyReport.myDraftReports', compact('reports'));
+        return view('monthlyReport.myDraftReports', compact('reports','user'));
     }
 
     public function commentStore(Request $request, MonthlyReport $monthlyReport)

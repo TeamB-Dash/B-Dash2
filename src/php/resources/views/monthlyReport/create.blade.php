@@ -17,7 +17,7 @@
                             <input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/>
 							<div class="form-group">
 								<label class="control-label col-sm-3" for="target_month">対象月</label>
-                                <input type="month" placeholder="対象月" name="fromMonth"
+                                <input type="month" placeholder="対象月" name="target_month"
                                 class="w-full focus:outline-none text-gray-700"/>
 							</div>
 						{{-- </form> --}}
