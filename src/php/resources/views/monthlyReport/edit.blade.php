@@ -89,9 +89,9 @@
                                     <label class="control-label col-sm-3" for="target_month">対象月</label>
                                     <div class="col-sm-9">
                                         <select name="target_month" class="form-control" id="target_month">
-                                            <option value="2023-06-01">2023年06月</option>
+                                            <option value="2023-06-01" @if( old('target_month') == '2023-06-01') selected @endif>2023年06月</option>
                                             <option value="2023-05-01">2023年05月</option>
-                                            <option value="2023-04-01">2023年04月</option>
+                                            <option value="2023-04-01" @if( old('target_month') == '2023-04-01') selected @endif>2023年04月</option>
                                             <option value="2023-03-01">2023年03月</option>
                                             <option value="2023-02-01">2023年02月</option>
                                             <option value="2023-01-01">2023年01月</option>
