@@ -95,7 +95,8 @@ class QuestionController extends Controller
             return to_route('questions.index')->with('status','投稿を作成しました。');
         }catch(\Exception $e){
             DB::rollBack();
-            return route('dashboard');
+            return to_route('questions.index')->with('status','エラー：更新処理に失敗しました。');
+
         }
     }
 
@@ -174,8 +175,7 @@ class QuestionController extends Controller
             return to_route('questions.show',$request->id)->with('status','情報を更新しました。');
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
-            return route('dashboard');
+            return to_route('questions.show',$request->id)->with('status','エラー：更新処理に失敗しました。');
         }
     }
 
