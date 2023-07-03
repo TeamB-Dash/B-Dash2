@@ -39,7 +39,7 @@
                                         月報登録
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('monthlyReport.showMyReports')">
+                                    <x-dropdown-link :href="route('monthlyReport.showMyReports',Auth::id())">
                                         マイ月報
                                     </x-dropdown-link>
                                 </x-slot>
