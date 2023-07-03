@@ -1,107 +1,24 @@
 <x-app-layout>
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-	<meta charset="utf-8" />
-	<meta content="IE=edge" http-equiv="X-UA-Compatible" />
-	<meta content="width=device-width, initial-scale=1" name="viewport" />
-	<title>Dash</title>
-	<link rel="stylesheet" media="all" href="/css/side_header.css" />
-	<link rel="stylesheet" media="all" href="/css/template.css"/>
-	<link rel="stylesheet" media="all" href="/css/monthly_report/register-monthly-report.css"/>
-	<link rel="stylesheet" href="/css/header-profile.css" />
-	<script src="/js/template.js"></script>
-	<script src="/js/common/inquiry.js"></script>
-	<script src="/js/monthly_report/register-monthly-report.js"></script>
-	<!-- <script src="../../static/js/article/form.js" th:src="@{/js/article/form.js}"></script> -->
-	<link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
-	<link rel="icon" type="image/png" href="/img/favicon/favicon-32x32.png" sizes="32x32">
-	<link rel="icon" type="image/png" href="/img/favicon/favicon-16x16.png" sizes="16x16">
-	<link rel="manifest" href="/img/favicon/manifest.json">
-	<link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#dd4814">
-	<link rel="shortcut icon" href="/img/favicon/favicon.ico">
-	<meta name="apple-mobile-web-app-title" content="Dash">
-	<meta name="application-name" content="Dash">
-	<meta name="msapplication-config" content="../../static/img/favicon/browserconfig.xml">
-	<meta name="theme-color" content="#ffffff">
-	<script>
-		$(function(){
-			
-  			var refresh_tags_input = function(self) {
-    			var input = $('#monthly_report_tags_input');
-    			(typeof(input) == undefined) ? null : input.val(self.getTags());
- 			 }
-  			
-  			var selectedTags = [  ];
-  			var allTags = [ "C","C++","C#","Bash","Java","Ruby","PHP","Scala","Swift","Objective-C","Android","Perl","Python","Haskell","Coldfusion","Brainfuck","Whitespace","JavaScript","jQuery","AngularJS","CoffeeScript","TypeScript","Node.js","MySQL","PostgreSQL","Oracle","SQLite","PL/SQL","Git","Subversion","Struts","Seasar2","Spring","Ruby on Rails","Sinatra","Laravel","CakePHP","FuelPHP","Zend Framework","Symfony","CodeIgniter","Play","Scalatra","Skinny Framework","Express","Meteor","Django","Mojolicious","GitHub","GitLab","GitBucket","BitBucket","VirtualBox","VMware","KVM","Docker","Heroku","Windows","Mac","Linux","CentOS","Ubuntu","RedHat","VB.NET","SQL Server","IIS","PowerShell","Jenkins","webpack","Slack","React","AWS","Mithril","JUnit","Redis","SourceTree","Apex","SOQL","Aura","Visualforce","Spring Boot","MongoDB","JSP","Servlet","Thymeleaf","Backbone.js","Highcharts","CSS","LESS","HTML","SQL","Bootstrap","DBFlute","JasperReports","Redmine","Talend","ShellScript","shell","astah","Poderosa","サクラエディタ","JIRA","Confluence","ZK","Nginx","Eclipse","SVF","Postman","LINQPad","Atom","Ethna","Backlog","Skype","kintone","TestRail","Velocity","Mako","Solr" ];
-  			
-		  	var tagger = $('#monthly_report_tags').tags({
-      			tagData:  selectedTags,
-    	 		suggestions: allTags,
-      			suggestOnClick: true,
-      			caseInsensitive: true,
-      			tagClass: 'btn-success',
-      			afterAddingTag: function() {
-        			refresh_tags_input(this);
-      			},
-     		 	afterDeletingTag: function() {
-        			refresh_tags_input(this);
-      			},
-     		 	promptText: "例） Java + \u003cEnter\u003e"
- 			});
-			refresh_tags_input(tagger);
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        月報投稿
+        </h2>
+    </x-slot>
 
-		 	$('#monthly_report_tags').focusout(function() { this.value = ''; });
-		});
+    <x-input-error class="mb-4" :messages="$errors->all()"/>
 
-
-        $(function() {
-
-            $('input:checkbox:checked').parent().removeClass("btn btn-default");
-            $('input:checkbox:checked').parent().addClass("btn btn-default active");
-
-            $('input[name="assign"]:checked').parent().removeClass("btn btn-default");
-            $('input[name="assign"]:checked').parent().addClass("btn btn-default active");
-
-            $("#target_month").val($("#hidden-target-month").val())
-
-        });
-</script>
-</head>
-<body>
-	<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-	<div class="site-body container-fluid">
-		<div class="site-container row">
-		
-				
-				<div class="page-body">
-					<x-input-error class="mb-4" :messages="$errors->all()"/>
+	<div class="py-12">
+		<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+				<div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
 					<div class="text-right">※セッションの有効期限は60分です。</div>
-					<div class="page-content well">
-						<div id="prev_month_report_copy">
-							
-						</div>
+					<div class="mt-8 mx-auto w-2/3 block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
 						<form class="form-horizontal" id="new_monthly_report" action="{{ route('monthlyReport.store') }}" accept-charset="UTF-8" method="post">
                             @csrf
                             <input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/>
 							<div class="form-group">
 								<label class="control-label col-sm-3" for="target_month">対象月</label>
-								<div class="col-sm-9">
-									<select name="target_month" class="form-control" id="target_month">
-										<option value="2023-06-01">2023年06月</option>
-										<option value="2023-05-01">2023年05月</option>
-										<option value="2023-04-01">2023年04月</option>
-										<option value="2023-03-01">2023年03月</option>
-										<option value="2023-02-01">2023年02月</option>
-										<option value="2023-01-01">2023年01月</option>
-										<option value="2022-12-01">2022年12月</option>
-										<option value="2022-11-01">2022年11月</option>
-										<option value="2022-10-01">2022年10月</option>
-										<option value="2022-09-01">2022年09月</option>
-										<option value="2022-08-01">2022年08月</option>
-										<option value="2022-07-01">2022年07月</option>
-									</select>
-								</div>
+                                <input type="month" placeholder="対象月" name="fromMonth"
+                                class="w-full focus:outline-none text-gray-700"/>
 							</div>
 						{{-- </form> --}}
 						{{-- <form class="form-horizontal" id="new_monthly_report" action="{{ route('monthlyReport.store') }}" accept-charset="UTF-8" method="post"><input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/> --}}
@@ -125,7 +42,7 @@
 										<div class="markdown-editor">
 											<div class="tab-content markdown-content">
 												<div class="tab-pane active" id="project_summary-write">
-													<textarea rows="15" class="form-control" placeholder="例）# 英語学習アプリ開発" name="project_summary" id="project_summary"></textarea>
+													<textarea rows="15" cols="30" class=" w-full" placeholder="例）# 英語学習アプリ開発" name="project_summary" id="project_summary"></textarea>
 													{{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
 												</div>
 												<div class="tab-pane content-md-preview markdown-body" id="project_summary-preview"></div>
@@ -159,7 +76,7 @@
 												@endforeach
 											@endif
 										</div>
-			
+
 										<button type="button" id="addTagBtn" class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg text-white" style="background-color:rgba(107, 159, 29, 0.89)">タグを増やす</button><br>
 										<div class="tag-item">
 											<label>使用した技術：
@@ -218,11 +135,11 @@
 										<div class="markdown-editor">
 											<div class="tab-content markdown-content">
 												<div class="tab-pane active" id="business_content-write">
-													<textarea rows="15" class="form-control" placeholder=
+													<textarea rows="15" cols="30" class=" w-full" placeholder=
 "例）
 #### API仕様を整理する
 既に利用しているAPIに関するドキュメントが散らばっている＆欠けている状態だったので、GithubのIssuesに整理したドキュメントを書いた。
-進捗 100%" 
+進捗 100%"
 														name="business_content" id="business_content"></textarea>
 													{{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
 												</div>
@@ -234,7 +151,7 @@
 								<div class="form-group">
 									<label class="control-label col-sm-3" for="this_month_goals">今月の目標</label>
 									<div class="col-sm-9">
-										<div class="form-control-static">
+										<div class="-static">
 											<div class="markdown-view">
 												<textarea class="hidden">先月の月報が入力されていません。
 先月の月報の「来月の目標」が表示されます。</textarea>
@@ -249,10 +166,10 @@
 									</div>
 									<div class="col-sm-9">
 										<div class="markdown-editor">
-											
+
 											<div class="tab-content markdown-content">
 												<div class="tab-pane active" id="looking_back-write">
-													<textarea rows="15" class="form-control" placeholder=
+													<textarea rows="15" cols="30" class=" w-full" placeholder=
 "例）
 1. ・・・・のでできた。
 2. ・・・・なのであまりできなかった。
@@ -273,10 +190,10 @@
 										<div class="markdown-editor">
 										<div class="tab-content markdown-content">
 											<div class="tab-pane active" id="next_month_goals-write">
-												<textarea rows="15" class="form-control" placeholder=
+												<textarea rows="15" cols="30" class=" w-full" placeholder=
 "例）
-1. 
-2. 
+1.
+2.
 3."
 													 name="next_month_goals" id="next_month_goals"></textarea>
 												{{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
@@ -287,18 +204,18 @@
 								</div>
 							</div>
 							<input type="hidden" name="targetMonth" value="2023-05-01" id="hidden-target-month"/>
-							<button name="saveAsDraft" value="saveAsDraft" type="submit" class="btn btn-lg btn-info btn-block">Save as WIP（下書き保存）</button>
-							<button name="create" value="create" type="submit" class="btn btn-lg btn-success btn-block">Ship（保存して公開）</button>
-							
+							<button name="saveAsDraft" value="saveAsDraft" type="submit" class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                            style="background-color: #f21dab">Save as WIP（下書き保存）</button>
+							<button name="create" value="create" type="submit" class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                            style="background-color: #1da1f2">Ship（保存して公開）</button>
 						</form>
 					</div>
-					
 				</div>
 			</div>
 		</div>
 	</div>
-</body>
-</html>
+
+
 {{-- タグ機能のjs --}}
 <script>
 	const addTagBtn = document.getElementById('addTagBtn');
