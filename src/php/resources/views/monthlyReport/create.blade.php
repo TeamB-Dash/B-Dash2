@@ -73,209 +73,9 @@
 	<div class="site-body container-fluid">
 		<div class="site-container row">
 		
- 			<!-- 		menuここから  -->
-			{{-- <header class="site-header bg-primary col-sm-2 hidden-xs side_scroll">
-				<div class="header-menu center-block">
-		<div class="header-menu-title" >
-			<a href="/"><h1 class="bg-primary">Dash</h1></a>
-			<br>
-			<ul class="nav nav-pills nav-stacked">
-				<li class="dropdown">
-				<a class="lead bg-primary" href="/monthly_reports">
-					<span class="glyphicon glyphicon-th-list"></span>
-					<span> 月報</span>
-				</a>
-				<ul class="nav nav-pills nav-stacked" style="padding-inline-start:10px;margin-bottom:10px;">
-					<li>
-						
-						<a class="bg-primary" href="/monthly_reports/edit">月報登録</a>
-					</li>
-					<li style="margin-bottom:1px">
-						<a class="bg-primary" href="/monthly_reports/users/1135">マイ月報</a>
-					</li>
-				</ul>
-			</li>
-				<li class="dropdown">
-				<a class="lead bg-primary" href="/articles">
-					<span class="glyphicon glyphicon-th-list"></span>
-					<span> ブログ</span>
-				</a>
-				<ul class="nav nav-pills nav-stacked" style="padding-inline-start:10px;margin-bottom:10px;">
-					<li style="margin-bottom:3px"><a class="bg-primary" href="/articles/new">新規投稿</a></li>
-					<li><a class="bg-primary" href="/articles/users/1135">マイブログ</a></li>
-					<li><a class="bg-primary" href="/articles/users-favorite/1135">お気に入りブログ</a></li>
-				</ul>
-			</li>
-				<li class="dropdown">
-				<a class="lead bg-primary" href="/questions">
-					<span class="glyphicon glyphicon-th-list"></span>
-					<span> Q&A</span>
-				</a>
-				<ul class="nav nav-pills nav-stacked" style="padding-inline-start:10px;margin-bottom:10px;">
-					<li style="margin-bottom:3px"><a class="bg-primary" href="/questions/new">質問投稿</a></li>
-					<li><a class="bg-primary" href="/questions/users/1135">マイ質問
-					
-					</a>
-					</li>
-				</ul>
-			</li>
-				<li class="dropdown">
-				<a class="lead bg-primary" href="/userSearch" >
-					<span aria-hidden="true" class="glyphicon glyphicon-search"></span>
-					<span> ユーザー検索</span>
-				</a>
-			</li>
-			</ul>
-			<ul class="nav nav-pills nav-stacked dropup" style="margin-top: 40px;">
-				<li class="dropdown" >
-					<a aria-expanded="false" class="lead bg-primary dropdown-toggle" data-toggle="dropdown">
-						<span aria-hidden="true" class="glyphicon glyphicon-user"></span>
-						
-						<span>ログインユーザー名</span>
-					</a>
-					<ul class="dropdown-menu">
-						<li></li>
-						<li><a href="/user_profiles/1135">プロフィール</a></li>
-						<li><a data-confirm="パスワードを変更しますか？一旦、ログアウトします。" href="/logout_password_resets">パスワード変更</a></li>
-						<li><a data-toggle="modal" data-target="#new_inquiry" href="#">お問い合わせ</a></li>
-						<li>
-							<form class="logout_link" action="/logout" name="logout1" method="post"><input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/>
-								<a class="logout_link" rel="nofollow" data-method="delete" href="javascript:logout1.submit()">ログアウト</a>
-                   			</form>
-						</li>	
-					</ul>
-				</li>
-			</ul>
-		</div>
-	</div>
-			</header>
-			<div class="visible-xs-block">
-		<nav class="navbar navbar-default" role="navigation">
-			<div class="navbar-header">
-				<button class="navbar-toggle collapsed" data-target="#navHeader" data-toggle="collapse" type="button">
-					<span class="sr-only">メニュー</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand navbar-brand-center" href="/">Dash</a>
-			</div>
-			<div class="collapse navbar-collapse" id="navHeader">
-				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown">
-				<a aria-expanded="false" class="lead bg-primary dropdown-toggle" data-toggle="dropdown">
-					<span aria-hidden="true" class="glyphicon glyphicon-th-list"></span>
-					<span> 月報</span>
-				</a>
-				<ul class="dropdown-menu">
-					<li><a href="/monthly_reports">トップ</a></li>
-					<li>
-						
-						<a href="/monthly_reports/edit">月報登録</a>
-					</li>
-					<li><a href="/monthly_reports/users/1135">マイ月報</a></li>
-				</ul>
-			</li>
-					<li class="dropdown">
-				<a aria-expanded="false" class="lead bg-primary dropdown-toggle" data-toggle="dropdown">
-					<span aria-hidden="true" class="glyphicon glyphicon-th-list"></span>
-					<span> ブログ</span>
-				</a>
-				<ul class="dropdown-menu">
-					<li><a href="/articles">トップ</a></li>
-					<li><a href="/articles/new">新規投稿</a></li>
-					<li><a href="/articles/users/1135">マイブログ</a></li>
-					<li><a href="/articles/users-favorite/1135">お気に入りブログ</a></li>		
-				</ul>
-			</li>
-					<li class="dropdown">
-				<a aria-expanded="false" class="lead bg-primary dropdown-toggle" data-toggle="dropdown">
-					<span aria-hidden="true" class="glyphicon glyphicon-th-list"></span>
-					<span> Q&A</span>
-				</a>
-				<ul class="dropdown-menu">
-					<li><a href="/questions">トップ</a></li>
-					<li><a href="/questions/new">質問投稿</a></li>
-					<li><a href="/questions/users/1135">マイ質問
-					
-					</a></li>		
-				</ul>
-			</li>
-					<li class="dropdown">
-				<a class="lead bg-primary" href="/userSearch">
-					<span aria-hidden="true" class="glyphicon glyphicon-search"> ユーザー検索</span>
-				</a>
-			</li>
-					<li class="dropdown">
-						<a aria-expanded="false" class="lead bg-primary dropdown-toggle" data-toggle="dropdown">
-							<span aria-hidden="true" class="glyphicon glyphicon-user"></span>
-							
-							<span>ログインユーザー名</span>
-						</a>
-						<ul class="dropdown-menu">
-							<li></li>
-							<li><a href="/user_profiles/1135">プロフィール</a></li>
-							<li><a data-confirm="パスワードを変更しますか？一旦、ログアウトします。" href="/logout_password_resets">パスワード変更</a></li>
-							<li><a data-toggle="modal" data-target="#new_inquiry" href="#">お問い合わせ</a></li>
-							<li>
-								<form class="logout_link" action="/logout" name="logout2" method="post"><input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/>
-									<a class="logout_link" rel="nofollow" data-method="delete" href="javascript:logout2.submit()">ログアウト</a>
-        		           		</form>
-							</li>	
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</nav>
-	</div>
-			<!-- 		menuここまで  -->
-			
-			<!-- 		問い合わせフォームmodal -->
-			<form class="modal fade new-inquiry" id="new_inquiry" name="new_inquiry" action="/inquiries" accept-charset="UTF-8" data-remote="true" method="post"><input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/>
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h3>お問い合わせフォーム</h3>
-					<p>お問い合わせや不具合に関する報告、要望等を投稿してください。(1000文字以内)</p>
-				</div>
-				<div class="modal-body">
-					<textarea rows="8" name="inquiry[body]" id="inquiry_body"></textarea>
-					<div id="inquiry-error">
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-default" data-dismiss="modal" id="inquiry_form_close">閉じる</button>
-					<button name="button" type="submit" class="btn btn-success" data-disable-with="投稿中..." id="inquiry_send">投稿</button>
-				</div>
-			</div>
-		</div>
-	</form>
-			<!-- 		問い合わせフォームmodalここまで -->
-			
-			<!-- 			編集フォーム -->
-			<div class="col-sm-8 col-sm-offset-3">
-				<div class="page-header">
-					
-					
-					
-				</div>
-				
-				<!-- 		エラー文ここから -->
-				<div>
-					
-					
-					
-					
-					
-					
-					
-					
-				</div>
-				
-				
-				<!-- 		エラー文 ここまで--> --}}
 				
 				<div class="page-body">
+					<x-input-error class="mb-4" :messages="$errors->all()"/>
 					<div class="text-right">※セッションの有効期限は60分です。</div>
 					<div class="page-content well">
 						<div id="prev_month_report_copy">
@@ -288,6 +88,7 @@
 								<label class="control-label col-sm-3" for="target_month">対象月</label>
 								<div class="col-sm-9">
 									<select name="target_month" class="form-control" id="target_month">
+										<option value="2023-06-01">2023年06月</option>
 										<option value="2023-05-01">2023年05月</option>
 										<option value="2023-04-01">2023年04月</option>
 										<option value="2023-03-01">2023年03月</option>
@@ -372,7 +173,7 @@
 									<label class="control-label col-sm-3">担当した工程</label>
 									<div class="col-sm-9 btn-group" data-toggle="buttons">
 										<label class="btn btn-default">
-											<input type="checkbox" name="workingProcess[]" id="working_process_" value="definition" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
+											<input type="checkbox" name="workingProcess[]" id="working_process_" value="definition" autocomplete="off" checked="checked"/><input type="hidden" name="_workingProcess" value="on" checked="checked"/>
 											<span>要件定義</span>
 										</label>
 										<label class="btn btn-default">
@@ -515,7 +316,7 @@
 		newForm.setAttribute('name','tags[]');
 
 		const newLabel = document.createElement('label');
-		newLabel.textContent = 'タグ：';
+		newLabel.textContent = '使用した技術：';
 
 		const newSpan = document.createElement('span');
 		newSpan.classList.add('close-icon', 'text-white', 'rounded-full', 'bg-red-600', 'hover:bg-red-500', 'px-2', 'py-1');
