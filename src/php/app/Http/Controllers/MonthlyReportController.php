@@ -13,19 +13,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MonthlyReportComments;
-
+use App\Services\RankingService;
+use App\Services\SearchService;
 
 class MonthlyReportController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
 
-        $reports = MonthlyReport::with(['user', 'tags'])
-                            ->whereNotNull('shipped_at')
-                            ->where('is_deleted', false)
-                            ->orderBy('shipped_at', 'desc')
-                            ->paginate(10);
+        $monthlyReportRanking = RankingService::MonthlyReportRanking();
 
-        return view('monthlyReport.top', compact('reports'));
+        $reports = SearchService::searchMonthlyReports($request);
+
+        return view('monthlyReport.top', compact('reports','monthlyReportRanking'));
     }
 
     public function create() {
@@ -213,7 +212,7 @@ class MonthlyReportController extends Controller
 
         // $colums = $workingProcess->getColums();
         // dd($colums);
-        
+
 
         // 下書き保存の更新処理
         if (isset($request->saveAsDraft)) {
@@ -365,7 +364,7 @@ class MonthlyReportController extends Controller
                             ->where('user_id', '=', $user->id)
                             ->orderBy('target_month', 'desc')
                             ->paginate(5);
-        
+
         return view('monthlyReport.myReports', compact('reports', 'user'));
     }
 

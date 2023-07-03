@@ -1,539 +1,264 @@
 <x-app-layout>
-<!DOCTYPE html>
-<html lang="ja">
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            月報トップ
+        </h2>
+    </x-slot>
 
-<head>
-    <meta charset="utf-8" />
-    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
-    <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <title>Dash</title>
-    <link rel="stylesheet" media="all" href="{{ asset('/assets/css/side_header.css') }}" />
-    <link rel="stylesheet" media="all" href="{{ asset('/assets/css/template.css') }}" />
-    <link rel="stylesheet" media="all" href="{{ asset('/assets/css/monthly_report/monthly-report-list.css') }}" />
-    <link rel="stylesheet" media="all" href="{{ asset('/assets/css/monthly_report/user-list.css') }}" />
-    <link rel="stylesheet" href="{{ asset('/css/header-profile.css') }}" />
-    <script src="{{ asset('/js/template.js') }}"></script>
-    <script src="{{ asset('/js/common/inquiry.js') }}"></script>
-    <script src="{{ asset('/js/monthly_report/list.js') }}"></script>
-    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" href="/img/favicon/favicon-32x32.png"
-        sizes="32x32">
-    <link rel="icon" type="image/png" href="/img/favicon/favicon-16x16.png"
-        sizes="16x16">
-    <link rel="manifest" href="/img/favicon/manifest.json">
-    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg"
-        color="#dd4814">
-    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
-    <meta name="apple-mobile-web-app-title" content="Dash">
-    <meta name="application-name" content="Dash">
-    <meta name="msapplication-config" content="../../static/img/favicon/browserconfig.xml">
-    <meta name="theme-color" content="#ffffff">
-    <script>
-        $(function () {
-            var refresh_tags_input = function (self) {
-                var input = $('#monthly_report_tags_input');
-                (typeof (input) == undefined) ? null : input.val(self.getTags());
-            }
+    <section class="text-gray-600 body-font overflow-hidden">
+        @if (session('status'))
+        <div class="w-2/3 mx-auto container mt-6 text-center bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
+            <p class="font-bold">{{ session('status') }}</p>
+        </div>
+        @endif
 
-            var selectedTags = [  ];
-        var tagNames = [ "C","C++","C#","Bash","Java","Ruby","PHP","Scala","Swift","Objective-C","Android","Perl","Python","Haskell","Coldfusion","Brainfuck","Whitespace","JavaScript","jQuery","AngularJS","CoffeeScript","TypeScript","Node.js","MySQL","PostgreSQL","Oracle","SQLite","PL/SQL","Git","Subversion","Struts","Seasar2","Spring","Ruby on Rails","Sinatra","Laravel","CakePHP","FuelPHP","Zend Framework","Symfony","CodeIgniter","Play","Scalatra","Skinny Framework","Express","Meteor","Django","Mojolicious","GitHub","GitLab","GitBucket","BitBucket","VirtualBox","VMware","KVM","Docker","Heroku","Windows","Mac","Linux","CentOS","Ubuntu","RedHat","VB.NET","SQL Server","IIS","PowerShell","Jenkins","webpack","Slack","React","AWS","Mithril","JUnit","Redis","SourceTree","Apex","SOQL","Aura","Visualforce","Spring Boot","MongoDB","JSP","Servlet","Thymeleaf","Backbone.js","Highcharts","CSS","LESS","HTML","SQL","Bootstrap","DBFlute","JasperReports","Redmine","Talend","ShellScript","shell","astah","Poderosa","サクラエディタ","JIRA","Confluence","ZK","Nginx","Eclipse","SVF","Postman","LINQPad","Atom","Ethna","Backlog","Skype","kintone","TestRail","Velocity","Mako","Solr" ];
+        {{-- 検索フォーム --}}
+        <div class="border my-12 mx-auto w-2/3 border-gray-300 p-6 grid grid-cols-1 gap-6 bg-white shadow-lg rounded-lg mb-10">
+            <form action="{{route('monthlyReport.index')}}" method="GET">
 
-        var tagger = $('#monthly_report_tags').tags({
-            tagData: selectedTags,
-            suggestions: tagNames,
-            suggestOnClick: true,
-            caseInsensitive: true,
-            tagClass: 'btn-success',
-            afterAddingTag: function () {
-                refresh_tags_input(this);
-            },
-            afterDeletingTag: function () {
-                refresh_tags_input(this);
-            },
-            promptText: "例） Java + \u003cEnter\u003e"
-        });
-        refresh_tags_input(tagger);
-
-        $('#monthly_report_tags').focusout(function () { this.value = ''; });
-    });
-
-        // ---------------アコーディオンフォーム実装-----------------------
-        // 要素を非表示にする関数
-        const slideUp = function (content) {
-            content.classList.remove("is-open");
-
-        };
-        // 要素表示する関数
-        const slideDown = function (content) {
-            content.classList.add("is-open");
-        };
-
-        // 要素を交互に表示/非表示にする関数
-        const slideToggle = function (content) {
-            if (window.getComputedStyle(content).display === "none") {
-                var openStatusDic = "開く";
-                sessionStorage.setItem('openStatusDic',
-                    JSON.stringify(openStatusDic));
-                return slideDown(content);
-            } else {
-                var openStatusDic = "閉じる";
-                sessionStorage.setItem('openStatusDic',
-                    JSON.stringify(openStatusDic));
-                return slideUp(content);
-            }
-        };
-
-        function formClick() {
-            const accordion = document.querySelector(".form-horizontal");
-            // 'accordion-icon'クラスを付与or削除
-            accordion.classList.toggle("accordion-icon");
-            // 開閉させる要素を取得
-            const content = accordion.querySelector(".accordion_form");
-
-            content.display = (content.display === 'none') ? 'block' : 'none';
-            // 要素を展開or閉じる
-            slideToggle(content);
-        }
-
-        // ロード時に検索フォーム開閉のsessionがあるか確認
-        document.addEventListener("DOMContentLoaded", function (event) {
-
-            var itemValue = sessionStorage.getItem('openStatusDic');
-            if (itemValue !== null) {
-                openStatusDic = JSON.parse(itemValue);
-                // デフォルトは開いているため、session＝閉じるのときだけ関数実行
-                if (openStatusDic === "閉じる") {
-                    formClick();
-                }
-            };
-        }, false);
-    // ---------------アコーディオンフォーム実装ここまで-----------------------
-    </script>
-</head>
-
-<body>
-    <div class="site-body container-fluid">
-        <div class="site-container row">
-
-            <div class="flex-body">
-                <div class="ml-par20 col-sm-6">
-                    <div class="page-header">
-                        <h1>月報トップ</h1>
+            <div class="border border-gray-200 p-2 rounded mb-4">
+                <div class="flex border rounded items-center p-2 my-1">
+                    <svg class="fill-current text-gray-800 mr-2 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path class="heroicon-ui"
+                            d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2z"/>
+                    </svg>
+                    <input type="text" placeholder="氏名" name="name"
+                        class="w-full focus:outline-none text-gray-700"/>
+                </div>
+                <div class="flex border rounded items-center p-2 my-1">
+                    <svg  class="fill-current text-gray-800 mr-2 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path class="heroicon-ui"
+                            d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zM5.68 7.1A7.96 7.96 0 0 0 4.06 11H5a1 1 0 0 1 0 2h-.94a7.95 7.95 0 0 0 1.32 3.5A9.96 9.96 0 0 1 11 14.05V9a1 1 0 0 1 2 0v5.05a9.96 9.96 0 0 1 5.62 2.45 7.95 7.95 0 0 0 1.32-3.5H19a1 1 0 0 1 0-2h.94a7.96 7.96 0 0 0-1.62-3.9l-.66.66a1 1 0 1 1-1.42-1.42l.67-.66A7.96 7.96 0 0 0 13 4.06V5a1 1 0 0 1-2 0v-.94c-1.46.18-2.8.76-3.9 1.62l.66.66a1 1 0 0 1-1.42 1.42l-.66-.67zM6.71 18a7.97 7.97 0 0 0 10.58 0 7.97 7.97 0 0 0-10.58 0z"/>
+                    </svg>
+                    <input type="month" placeholder="入社日" name="hireMonth"
+                        class="w-full focus:outline-none text-gray-700"/>
+                </div>
+                <div class="flex border rounded items-center p-2 my-1">
+                    <svg class="fill-current text-gray-800 mr-2 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path class="heroicon-ui"
+                            d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/>
+                    </svg>
+                    <select type="text" placeholder="所属" name="department" class="w-full focus:outline-none text-gray-700">
+                        <option value="">---</option>
+                        @foreach ($departments as $department )
+                        <option value="{{$department->id}}">{{$department->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="flex border rounded items-center p-2 my-1">
+                    <svg  class="fill-current text-gray-800 mr-2 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path class="heroicon-ui"
+                            d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zM5.68 7.1A7.96 7.96 0 0 0 4.06 11H5a1 1 0 0 1 0 2h-.94a7.95 7.95 0 0 0 1.32 3.5A9.96 9.96 0 0 1 11 14.05V9a1 1 0 0 1 2 0v5.05a9.96 9.96 0 0 1 5.62 2.45 7.95 7.95 0 0 0 1.32-3.5H19a1 1 0 0 1 0-2h.94a7.96 7.96 0 0 0-1.62-3.9l-.66.66a1 1 0 1 1-1.42-1.42l.67-.66A7.96 7.96 0 0 0 13 4.06V5a1 1 0 0 1-2 0v-.94c-1.46.18-2.8.76-3.9 1.62l.66.66a1 1 0 0 1-1.42 1.42l-.66-.67zM6.71 18a7.97 7.97 0 0 0 10.58 0 7.97 7.97 0 0 0-10.58 0z"/>
+                    </svg>対象月～
+                    <input type="month" placeholder="対象月" name="fromMonth"
+                        class="w-full focus:outline-none text-gray-700"/>
+                </div>
+                <div class="flex border rounded items-center p-2 my-1">
+                    <svg  class="fill-current text-gray-800 mr-2 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path class="heroicon-ui"
+                        d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zM5.68 7.1A7.96 7.96 0 0 0 4.06 11H5a1 1 0 0 1 0 2h-.94a7.95 7.95 0 0 0 1.32 3.5A9.96 9.96 0 0 1 11 14.05V9a1 1 0 0 1 2 0v5.05a9.96 9.96 0 0 1 5.62 2.45 7.95 7.95 0 0 0 1.32-3.5H19a1 1 0 0 1 0-2h.94a7.96 7.96 0 0 0-1.62-3.9l-.66.66a1 1 0 1 1-1.42-1.42l.67-.66A7.96 7.96 0 0 0 13 4.06V5a1 1 0 0 1-2 0v-.94c-1.46.18-2.8.76-3.9 1.62l.66.66a1 1 0 0 1-1.42 1.42l-.66-.67zM6.71 18a7.97 7.97 0 0 0 10.58 0 7.97 7.97 0 0 0-10.58 0z"/>
+                    </svg>対象月
+                    <input type="month" placeholder="対象月" name="toMonth"
+                    class="w-full focus:outline-none text-gray-700"/>
+                </div>
+                <!-- 投稿月の状況 -->
+                <div class="flex border rounded items-center p-2 my-1">
+                    <label>
+                    <input type="radio" name="assign" value="2" id="assign"
+                        class=""/><span>アサイン中</span>
+                    </label>
+                    <label>
+                    <input type="radio" name="assign" value="1" id="assign"
+                        class=""/><span>待機中</span>
+                    </label>
+                    <label>
+                    <input type="radio" name="assign" value="" id="assign"
+                        class=""/><span>指定なし</span>
+                    </label>
+                </div>
+                <!-- 担当した行程 -->
+                <div class="flex border rounded items-center p-2 my-1">
+                    <label>
+                    <input type="checkbox" name="workingProcess" value="definition"
+                        class=""/><span>要件定義</span>
+                    </label>
+                    <label>
+                    <input type="checkbox" name="workingProcess" value="design"
+                        class=""/><span>設計</span>
+                    </label>
+                    <label>
+                    <input type="checkbox" name="workingProcess" value="implementation"
+                        class=""/><span>実装</span>
+                    </label>
+                    <label>
+                    <input type="checkbox" name="workingProcess" value="test"
+                        class=""/><span>テスト</span>
+                    </label>
+                    <label>
+                    <input type="checkbox" name="workingProcess" value="operation"
+                        class=""/><span>運用保守</span>
+                    </label>
+                    <label>
+                    <input type="checkbox" name="workingProcess" value="analysis"
+                        class=""/><span>分析</span>
+                    </label>
+                    <label>
+                    <input type="checkbox" name="workingProcess" value="training"
+                        class=""/><span>研修</span>
+                    </label>
+                    <label>
+                    <input type="checkbox" name="workingProcess" value="structure"
+                        class=""/><span>構築</span>
+                    </label>
+                    <label>
+                    <input type="checkbox" name="workingProcess" value="trouble"
+                        class=""/><span>障害対応</span>
+                    </label>
+                    <label>
+                    <input type="checkbox" name="workingProcess" value="definition"
+                        class=""/><span>要件定義</span>
+                    </label>
+                </div>
+                <!-- タグ -->
+                <div class="flex border rounded items-center p-2 my-1" id="tagForm">
+                    <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">タグ</label>
+                    <div class="flex flex-wrap relative mb-6 flex justify-center" data-te-input-wrapper-init>
+                        <!--$tagsがあればcheckboxを表示-->
+                        @if (isset( $tags ))
+                            @foreach ($tags as $tag )
+                            <div class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]">
+                                <input
+                                class="relative float-left -ml-[1.5rem] mr-[6px] mt-[0.15rem] h-[1.125rem] w-[1.125rem] appearance-none rounded-[0.25rem] border-[0.125rem] border-solid border-neutral-300 outline-none before:pointer-events-none before:absolute before:h-[0.875rem] before:w-[0.875rem] before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] checked:border-primary checked:bg-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:-mt-px checked:after:ml-[0.25rem] checked:after:block checked:after:h-[0.8125rem] checked:after:w-[0.375rem] checked:after:rotate-45 checked:after:border-[0.125rem] checked:after:border-l-0 checked:after:border-t-0 checked:after:border-solid checked:after:border-white checked:after:bg-transparent checked:after:content-[''] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:transition-[border-color_0.2s] focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-[0.875rem] focus:after:w-[0.875rem] focus:after:rounded-[0.125rem] focus:after:content-[''] checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:after:-mt-px checked:focus:after:ml-[0.25rem] checked:focus:after:h-[0.8125rem] checked:focus:after:w-[0.375rem] checked:focus:after:rotate-45 checked:focus:after:rounded-none checked:focus:after:border-[0.125rem] checked:focus:after:border-l-0 checked:focus:after:border-t-0 checked:focus:after:border-solid checked:focus:after:border-white checked:focus:after:bg-transparent dark:border-neutral-600 dark:checked:border-primary dark:checked:bg-primary dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
+                                name="tags[]"
+                                type="checkbox"
+                                id="inlineCheckbox1"
+                                value="{{$tag->name}}"
+                                checked/>
+                                <label
+                                class="inline-block pl-[0.15rem] hover:cursor-pointer"
+                                for=""
+                                >{{$tag->name}}</label
+                                >
+                            </div>
+                            @endforeach
+                        @endif
                     </div>
 
-                    <div class="page-content">
-                        <div class="jumbotron report-searchform">
-                            <div class="container">
-                                <!--        検索フォームここから -->
-                                <form class="form-horizontal accordion-icon" id="monthly_report_search"
-                                    action="/monthly_reports" accept-charset="UTF-8" method="GET">
-                                    <div class="accordion_title" onclick="formClick()">月報検索</div>
-                                    <div class="accordion_form is-open">
-                                        <div class="form-group">
-                                            <label class="control-label col-xs-2" for="q_user_name_cont">氏名</label>
-                                            <div class="col-xs-10">
-                                                <input class="form-control" type="search" name="name"
-                                                    id="q_user_name_cont" value="" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-xs-2" for="q_target_month_eq">所属</label>
-                                            <div class="col-xs-10">
-                                                <select class="form-control" name="departmentId" id="q_target_month_eq">
-                                                    <option value=""></option>
-                                                    
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-xs-2" for="entry">入社年月</label>
-                                            <div class="col-xs-10">
-                                                <input class="form-control" type="month" name="entryMonth" id="entry" value="">
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label class="control-label col-xs-2" for="target_month">対象月</label>
-                                            <div class="col-xs-4">
-                                                <select class="form-control" name="startTargetMonth" id="start_target_month">
-                                                    <option value=""></option>
-                                                    <option value="2023-05-01">2023年05月</option>
-                                                    <option value="2023-04-01">2023年04月</option>
-                                                    <option value="2023-03-01">2023年03月</option>
-                                                    <option value="2023-02-01">2023年02月</option>
-                                                    <option value="2023-01-01">2023年01月</option>
-                                                    <option value="2022-12-01">2022年12月</option>
-                                                    <option value="2022-11-01">2022年11月</option>
-                                                    <option value="2022-10-01">2022年10月</option>
-                                                    <option value="2022-09-01">2022年09月</option>
-                                                    <option value="2022-08-01">2022年08月</option>
-                                                    <option value="2022-07-01">2022年07月</option>
-                                                    <option value="2022-06-01">2022年06月</option>
-                                                    <option value="2022-05-01">2022年05月</option>
-                                                    <option value="2022-04-01">2022年04月</option>
-                                                    <option value="2022-03-01">2022年03月</option>
-                                                    <option value="2022-02-01">2022年02月</option>
-                                                    <option value="2022-01-01">2022年01月</option>
-                                                    <option value="2021-12-01">2021年12月</option>
-                                                    <option value="2021-11-01">2021年11月</option>
-                                                    <option value="2021-10-01">2021年10月</option>
-                                                    <option value="2021-09-01">2021年09月</option>
-                                                    <option value="2021-08-01">2021年08月</option>
-                                                    <option value="2021-07-01">2021年07月</option>
-                                                    <option value="2021-06-01">2021年06月</option>
-                                                    <option value="2021-05-01">2021年05月</option>
-                                                    <option value="2021-04-01">2021年04月</option>
-                                                    <option value="2021-03-01">2021年03月</option>
-                                                    <option value="2021-02-01">2021年02月</option>
-                                                    <option value="2021-01-01">2021年01月</option>
-                                                    <option value="2020-12-01">2020年12月</option>
-                                                    <option value="2020-11-01">2020年11月</option>
-                                                    <option value="2020-10-01">2020年10月</option>
-                                                    <option value="2020-09-01">2020年09月</option>
-                                                    <option value="2020-08-01">2020年08月</option>
-                                                    <option value="2020-07-01">2020年07月</option>
-                                                    <option value="2020-06-01">2020年06月</option>
-                                                    <option value="2020-05-01">2020年05月</option>
-                                                    <option value="2020-04-01">2020年04月</option>
-                                                    <option value="2020-03-01">2020年03月</option>
-                                                    <option value="2020-02-01">2020年02月</option>
-                                                    <option value="2020-01-01">2020年01月</option>
-                                                    <option value="2019-12-01">2019年12月</option>
-                                                    <option value="2019-11-01">2019年11月</option>
-                                                    <option value="2019-10-01">2019年10月</option>
-                                                    <option value="2019-09-01">2019年09月</option>
-                                                    <option value="2019-08-01">2019年08月</option>
-                                                    <option value="2019-07-01">2019年07月</option>
-                                                    <option value="2019-06-01">2019年06月</option>
-                                                    <option value="2019-05-01">2019年05月</option>
-                                                    <option value="2019-04-01">2019年04月</option>
-                                                    <option value="2019-03-01">2019年03月</option>
-                                                    <option value="2019-02-01">2019年02月</option>
-                                                    <option value="2019-01-01">2019年01月</option>
-                                                    <option value="2018-12-01">2018年12月</option>
-                                                    <option value="2018-11-01">2018年11月</option>
-                                                    <option value="2018-10-01">2018年10月</option>
-                                                    <option value="2018-09-01">2018年09月</option>
-                                                    <option value="2018-08-01">2018年08月</option>
-                                                    <option value="2018-07-01">2018年07月</option>
-                                                    <option value="2018-06-01">2018年06月</option>
-                                                    <option value="2018-05-01">2018年05月</option>
-                                                    <option value="2018-04-01">2018年04月</option>
-                                                    <option value="2018-03-01">2018年03月</option>
-                                                    <option value="2018-02-01">2018年02月</option>
-                                                    <option value="2018-01-01">2018年01月</option>
-                                                    <option value="2017-12-01">2017年12月</option>
-                                                    <option value="2017-11-01">2017年11月</option>
-                                                    <option value="2017-10-01">2017年10月</option>
-                                                    <option value="2017-09-01">2017年09月</option>
-                                                    <option value="2017-08-01">2017年08月</option>
-                                                    <option value="2017-07-01">2017年07月</option>
-                                                    <option value="2017-06-01">2017年06月</option>
-                                                    <option value="2017-05-01">2017年05月</option>
-                                                    <option value="2017-04-01">2017年04月</option>
-                                                    <option value="2017-03-01">2017年03月</option>
-                                                    <option value="2017-02-01">2017年02月</option>
-                                                    <option value="2017-01-01">2017年01月</option>
-                                                    <option value="2016-12-01">2016年12月</option>
-                                                    <option value="2016-11-01">2016年11月</option>
-                                                    <option value="2016-10-01">2016年10月</option>
-                                                    <option value="2016-09-01">2016年09月</option>
-                                                </select>
-                                            </div>
-                                            <span class="col-xs-1">~</span>
-                                            <div class="col-xs-4">
-                                                <select class="form-control" name="endTargetMonth" id="end_target_month">
-                                                    <option value=""></option>
-                                                    <option value="2023-05-01">2023年05月</option>
-                                                    <option value="2023-04-01">2023年04月</option>
-                                                    <option value="2023-03-01">2023年03月</option>
-                                                    <option value="2023-02-01">2023年02月</option>
-                                                    <option value="2023-01-01">2023年01月</option>
-                                                    <option value="2022-12-01">2022年12月</option>
-                                                    <option value="2022-11-01">2022年11月</option>
-                                                    <option value="2022-10-01">2022年10月</option>
-                                                    <option value="2022-09-01">2022年09月</option>
-                                                    <option value="2022-08-01">2022年08月</option>
-                                                    <option value="2022-07-01">2022年07月</option>
-                                                    <option value="2022-06-01">2022年06月</option>
-                                                    <option value="2022-05-01">2022年05月</option>
-                                                    <option value="2022-04-01">2022年04月</option>
-                                                    <option value="2022-03-01">2022年03月</option>
-                                                    <option value="2022-02-01">2022年02月</option>
-                                                    <option value="2022-01-01">2022年01月</option>
-                                                    <option value="2021-12-01">2021年12月</option>
-                                                    <option value="2021-11-01">2021年11月</option>
-                                                    <option value="2021-10-01">2021年10月</option>
-                                                    <option value="2021-09-01">2021年09月</option>
-                                                    <option value="2021-08-01">2021年08月</option>
-                                                    <option value="2021-07-01">2021年07月</option>
-                                                    <option value="2021-06-01">2021年06月</option>
-                                                    <option value="2021-05-01">2021年05月</option>
-                                                    <option value="2021-04-01">2021年04月</option>
-                                                    <option value="2021-03-01">2021年03月</option>
-                                                    <option value="2021-02-01">2021年02月</option>
-                                                    <option value="2021-01-01">2021年01月</option>
-                                                    <option value="2020-12-01">2020年12月</option>
-                                                    <option value="2020-11-01">2020年11月</option>
-                                                    <option value="2020-10-01">2020年10月</option>
-                                                    <option value="2020-09-01">2020年09月</option>
-                                                    <option value="2020-08-01">2020年08月</option>
-                                                    <option value="2020-07-01">2020年07月</option>
-                                                    <option value="2020-06-01">2020年06月</option>
-                                                    <option value="2020-05-01">2020年05月</option>
-                                                    <option value="2020-04-01">2020年04月</option>
-                                                    <option value="2020-03-01">2020年03月</option>
-                                                    <option value="2020-02-01">2020年02月</option>
-                                                    <option value="2020-01-01">2020年01月</option>
-                                                    <option value="2019-12-01">2019年12月</option>
-                                                    <option value="2019-11-01">2019年11月</option>
-                                                    <option value="2019-10-01">2019年10月</option>
-                                                    <option value="2019-09-01">2019年09月</option>
-                                                    <option value="2019-08-01">2019年08月</option>
-                                                    <option value="2019-07-01">2019年07月</option>
-                                                    <option value="2019-06-01">2019年06月</option>
-                                                    <option value="2019-05-01">2019年05月</option>
-                                                    <option value="2019-04-01">2019年04月</option>
-                                                    <option value="2019-03-01">2019年03月</option>
-                                                    <option value="2019-02-01">2019年02月</option>
-                                                    <option value="2019-01-01">2019年01月</option>
-                                                    <option value="2018-12-01">2018年12月</option>
-                                                    <option value="2018-11-01">2018年11月</option>
-                                                    <option value="2018-10-01">2018年10月</option>
-                                                    <option value="2018-09-01">2018年09月</option>
-                                                    <option value="2018-08-01">2018年08月</option>
-                                                    <option value="2018-07-01">2018年07月</option>
-                                                    <option value="2018-06-01">2018年06月</option>
-                                                    <option value="2018-05-01">2018年05月</option>
-                                                    <option value="2018-04-01">2018年04月</option>
-                                                    <option value="2018-03-01">2018年03月</option>
-                                                    <option value="2018-02-01">2018年02月</option>
-                                                    <option value="2018-01-01">2018年01月</option>
-                                                    <option value="2017-12-01">2017年12月</option>
-                                                    <option value="2017-11-01">2017年11月</option>
-                                                    <option value="2017-10-01">2017年10月</option>
-                                                    <option value="2017-09-01">2017年09月</option>
-                                                    <option value="2017-08-01">2017年08月</option>
-                                                    <option value="2017-07-01">2017年07月</option>
-                                                    <option value="2017-06-01">2017年06月</option>
-                                                    <option value="2017-05-01">2017年05月</option>
-                                                    <option value="2017-04-01">2017年04月</option>
-                                                    <option value="2017-03-01">2017年03月</option>
-                                                    <option value="2017-02-01">2017年02月</option>
-                                                    <option value="2017-01-01">2017年01月</option>
-                                                    <option value="2016-12-01">2016年12月</option>
-                                                    <option value="2016-11-01">2016年11月</option>
-                                                    <option value="2016-10-01">2016年10月</option>
-                                                    <option value="2016-09-01">2016年09月</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-xs-2">使用した技術</label>
-                                            <div class="col-xs-10">
-                                                <input id="monthly_report_tags_input" type="hidden" name="tags" />
-                                                <div id="monthly_report_tags" class="tag-list"></div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-xs-2">投稿月の状況</label>
-                                            <div class="col-xs-10 btn-group btn-group-sm" data-toggle="buttons">
-                                                <label class="btn btn-default">
-                                                    <input type="radio" name="assign" value="2" id="assign1">
-                                                    <span>アサイン中</span>
-                                                </label>
-                                                <label class="btn btn-default">
-                                                    <input type="radio" name="assign" value="1" id="assign2">
-                                                    <span>待機中</span>
-                                                </label>
-                                                <label class="btn btn-default">
-                                                    <input type="radio" name="assign" value="" id="assign3">
-                                                    <span>指定なし</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-xs-2"
-                                                for="q_monthly_working_process">担当した工程</label>
-                                            <div class="col-xs-10 btn-group btn-group-sm" data-toggle="buttons">
-                                                <label class="btn btn-default">
-                                                    <input type="checkbox" name="workingProcess" id="working_process_" value="definition"
-                                                        autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
-                                                    <span>要件定義</span>
-                                                </label>
-                                                <label class="btn btn-default">
-                                                    <input type="checkbox" name="workingProcess" id="working_process_" value="design"
-                                                        autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
-                                                    <span>設計</span>
-                                                </label>
-                                                <label class="btn btn-default">
-                                                    <input type="checkbox" name="workingProcess" id="working_process_"
-                                                        value="implementation" autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
-                                                    <span>実装</span>
-                                                </label>
-                                                <label class="btn btn-default">
-                                                    <input type="checkbox" name="workingProcess" id="working_process_" value="test"
-                                                        autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
-                                                    <span>テスト</span>
-                                                </label>
-                                                <label class="btn btn-default">
-                                                    <input type="checkbox" name="workingProcess" id="working_process_" value="operation"
-                                                        autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
-                                                    <span>運用保守</span>
-                                                </label>
-                                                <label class="btn btn-default">
-                                                    <input type="checkbox" name="workingProcess" id="working_process_" value="analysis"
-                                                        autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
-                                                    <span>分析</span>
-                                                </label>
-                                                <label class="btn btn-default">
-                                                    <input type="checkbox" name="workingProcess" id="working_process_" value="training"
-                                                        autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
-                                                    <span>研修</span>
-                                                </label>
-                                                <label class="btn btn-default">
-                                                    <input type="checkbox" name="workingProcess" id="working_process_" value="structure"
-                                                        autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
-                                                    <span>構築</span>
-                                                </label>
-                                                <label class="btn btn-default">
-                                                    <input type="checkbox" name="workingProcess" id="working_process_" value="trouble"
-                                                        autocomplete="off" /><input type="hidden" name="_workingProcess" value="on"/>
-                                                    <span>障害対応</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-xs-10 col-xs-offset-2">
-                                                <button name="searching" value="true" type="submit"
-                                                    class="btn btn-default">検索</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                                <!--        検索フォームここまで -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="page-content">
-                        <h3>最新の月報一覧</h3>
-                        
-                        
-                        
-                        <div id="report_index">
-                            <div class="list-group monthly-report-index">
-
-                                    @foreach ($reports as $report)
-                                    <a class="list-group-item" href="{{ route('monthlyReport.show', $report)}}">
-                                        <span>【</span>
-                                        <span class="tag label label-success">{{ $report->user->department->name }}</span>
-                                        <span>{{ \Carbon\Carbon::parse($report->user->entry_date)->format('Y年m月') }}入社</span>
-                                        <span>】</span>
-                                        <span class="glyphicon glyphicon-user"></span>
-                                        
-                                        <span>{{ $report->user->name }}</span>
-                                        <span> - {{ $report->target_month->format('Y')}}年{{ $report->target_month->format('m')}}月分</span>
-                                        <br class="visible-xs-block" />
-                                        <div class="visible-xs-inline">　</div>
-                                        <small class="monthly-report-shipped-at text-muted hidden-xs">投稿日: {{ $report->shipped_at->format('Y-m-d') }}</small>
-                                        <div class="pull-right">
-                                            
-                                            @foreach($report->tags as $tag)
-                                            <span class="tag label label-success">{{ $tag->name }}</span>
-                                            @endforeach
-                                            
-                                            {{-- <span class="comments_count">
-                                                <span aria-hidden="true" class="glyphicon glyphicon-comment"></span>
-                                                <span>1</span>
-                                            </span>
-                                            <span class="likes_count">    
-                                                <span aria-hidden="true" class="glyphicon glyphicon-thumbs-up"></span>
-                                                <span>5</span>
-                                            </span> --}}
-                                        </div>
-                                        <!-- プロジェクト概要 10文字以上の場合、9文字目まで表示させて、それ以降は「...」と表示 -->
-                                        <h4>{{ Str::limit($report->project_summary, 30, '...') }}</h4>
-                                            <!-- それ以外は普通に表示 -->
-                                            @endforeach            
-                            </div>
-                            {{ $reports->links() }}
-                        
-                        <div class="page-footer"></div>
+                    <button type="button" id="addTagBtn" class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg text-white" style="background-color:rgba(107, 159, 29, 0.89)">タグを増やす</button><br>
+                    <div class="tag-item">
+                        <label>タグ：
+                        <input type="text" name="tags[]" id="tag" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        </label>
                     </div>
                 </div>
-                <!-- side content -->
-                {{-- <div id="sideContent" class="col-sm-3">
-                    <div class="m-search sticky">
-                        <h4>いいね！獲得ランキング</h4>
-                        <h5>対象月：2022年12月～2023年5月</h5>
-                        <br>
-                        
-                    <div>
-                            <p>
-                                <span>1.</span>
-                                <span> 👤</span>
-                                <span><a class="likeRankUserName" href="/monthly_reports/search/660/吉村智矢">吉村智矢</a></span>
-                                <span> 👍76</span>
-                            </p>
-                            <p>
-                                <span>2.</span>
-                                <span> 👤</span>
-                                <span><a class="likeRankUserName" href="/monthly_reports/search/1160/瀧量子">瀧量子</a></span>
-                                <span> 👍60</span>
-                            </p>
-                            <p>
-                                <span>3.</span>
-                                <span> 👤</span>
-                                <span><a class="likeRankUserName" href="/monthly_reports/search/884/鹿野活弥">鹿野活弥</a></span>
-                                <span> 👍54</span>
-                            </p>
-                            <p>
-                                <span>4.</span>
-                                <span> 👤</span>
-                                <span><a class="likeRankUserName" href="/monthly_reports/search/887/児玉桃子">児玉桃子</a></span>
-                                <span> 👍51</span>
-                            </p>
-                            <p>
-                                <span>5.</span>
-                                <span> 👤</span>
-                                <span><a class="likeRankUserName" href="/monthly_reports/search/1391/貝原将星">貝原将星</a></span>
-                                <span> 👍50</span>
-                            </p>
-                            <p>
-                                <span>6.</span>
-                                <span> 👤</span>
-                                <span><a class="likeRankUserName" href="/monthly_reports/search/926/光永皓香">光永皓香</a></span>
-                                <span> 👍49</span>
-                            </p>
-                            <p>
-                                <span>7.</span>
-                                <span> 👤</span>
-                                <span><a class="likeRankUserName" href="/monthly_reports/search/704/水谷公陽">水谷公陽</a></span>
-                                <span> 👍48</span>
-                            </p>
-                            <p>
-                                <span>8.</span>
-                                <span> 👤</span>
-                                <span><a class="likeRankUserName" href="/monthly_reports/search/1481/横山翔一">横山翔一</a></span>
-                                <span> 👍47</span>
-                            </p>
-                            <p>
-                                <span>9.</span>
-                                <span> 👤</span>
-                                <span><a class="likeRankUserName" href="/monthly_reports/search/1059/鳥羽椋也">鳥羽椋也</a></span>
-                                <span> 👍46</span>
-                            </p>
-                            <p>
-                                <span>10.</span>
-                                <span> 👤</span>
-                                <span><a class="likeRankUserName" href="/monthly_reports/search/1091/石上紗己">石上紗己</a></span>
-                                <span> 👍45</span>
-                            </p>
-                            <br>
-                    </div>
-                    </div>
-                </div> --}}
             </div>
+            <div class="flex justify-around">
+                <button class="p-2 border w-1/4 rounded-md bg-sky-400 text-white" type="submit">検索</button>
+                <button class="p-2 border w-1/4 rounded-md bg-sky-400 text-white">リセット</button>
+            </div>
+            </form>
         </div>
-</body>
+
+
+
+
+
+
+
+
+        {{-- 月報一覧 --}}
+        <div class="container px-5 py-24 mx-auto flex">
+          <div class="w-3/4">
+
+            @foreach ( $reports as $report )
+            <div class=" items-start">
+                <a class="inline-flex items-center">
+                <img alt="blog" src="https://dummyimage.com/104x104" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
+                <span class="flex-grow flex flex-col pl-4">
+                    <span class="title-font font-medium text-gray-900">{{ $report->user->name }}</span>
+                    <span class="title-font font-medium text-gray-900">{{ $report->target_month->format('Y')}}年{{ $report->target_month->format('m')}}月分</span>
+                    <button type="submit" form="searchForm" name="department" value="{{$report->user->department->id}}">【{{$report->user->department->name}}】</button>
+                    <button type="submit" form="searchForm" name="hireMonth" value="{{$report->created_at->format('Y-m') }}" class="text-gray-400 text-xs tracking-widest mt-0.5">{{ \Carbon\Carbon::parse($report->user->entry_date)->format('Y年m月')}}入社</button>
+                </span>
+                </a>
+                @foreach ($report->tags as $tag )
+                <span class="inline-block py-1 px-2 rounded bg-indigo-50 text-indigo-500 text-xs font-medium tracking-widest">{{ $tag->name }}</span>
+                @endforeach
+              <div class="flex items-center flex-wrap pb-4 mb-4 border-b-2 border-gray-100 w-full">
+                <a class="text-indigo-500 inline-flex items-center">Learn More
+                  <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"></path>
+                    <path d="M12 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+                <span class="text-gray-400 mr-3 inline-flex items-center ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
+                  <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>1.2K
+                </span>
+                <span class="text-gray-400 inline-flex items-center leading-none text-sm">
+                  <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
+                  </svg>
+                </span>
+              </div>
+              <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4"><a href="{{route('questions.show',['question' => $report->id])}}">{{$report->title}}</a></h2>
+            </div>
+            @endforeach
+
+            {{$reports->appends(request()->query())->links()}}
+          </div>
+
+
+
+
+    {{-- タグ機能のjs --}}
+    <script>
+        const addTagBtn = document.getElementById('addTagBtn');
+        const form = document.getElementById('tagForm');
+        const closeIcons = document.querySelectorAll('.close-icon');
+        const tagItems = document.querySelectorAll('.tag-item');
+
+        function createNewForm(){
+            const newDiv = document.createElement('div');
+            newDiv.classList.add('tag-item');
+
+            const newForm = document.createElement('input');
+            newForm.type = 'text';
+            newForm.className = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
+            newForm.setAttribute('name','tags[]');
+            newForm.required = true;
+
+            const newLabel = document.createElement('label');
+            newLabel.textContent = 'タグ：';
+
+            const newSpan = document.createElement('span');
+            newSpan.classList.add('close-icon', 'text-white', 'rounded-full', 'bg-red-600', 'hover:bg-red-500', 'px-2', 'py-1');
+            newSpan.textContent = '✖';
+
+            newLabel.appendChild(newForm);
+            newDiv.appendChild(newLabel);
+            newDiv.appendChild(newSpan);
+
+            // 「✖」をクリックしたときの処理を追加
+            newSpan.addEventListener('click', () => {
+                newDiv.remove();
+            });
+
+            return newDiv;
+        }
+
+        // 「✖」をクリックしたときの処理
+        for (let j = 0; j < closeIcons.length; j++) {
+        closeIcons[j].addEventListener('click', () => {
+            tagItems[j].remove();
+        });
+        }
+
+        // ボタンをクリックしたときの処理
+        addTagBtn.addEventListener('click', () => {
+        form.appendChild(createNewForm());
+        });
+    </script>
 </x-app-layout>
