@@ -19,7 +19,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserRole;
 use App\Services\SearchService;
-use App\Http\Requests\InquiryRequest;
 
 class ProfileController extends Controller
 {
@@ -145,8 +144,12 @@ class ProfileController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function submitInquiry(InquiryRequest $request)
+    public function submitInquiry(Request $request)
     {
+        $rules = [
+            'body' => ['max:1000','required'],
+        ];
+
         $user_name = User::find($request->user_id)->name;
         $toUser = User::whereHas('role', function ($query) {
             $query->where('inquiry_send', 1);
@@ -156,7 +159,8 @@ class ProfileController extends Controller
         })->select('email')->get()->toArray();
 
         DB::beginTransaction();
-        try {
+        try{
+            $this->validate($request,$rules);
             $inquiry = Inquiry::create([
                 'user_id' => $request->user_id,
                 'body' => $request->inquiry,
