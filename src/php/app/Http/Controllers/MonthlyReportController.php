@@ -149,13 +149,17 @@ class MonthlyReportController extends Controller
         
         $workingProcess->save();
 
-        return redirect()->route('monthlyReport.index');
+        return redirect()->route('monthlyReport.show');
     }
 
     public function show(MonthlyReport $monthlyReport) {
 
         $report = MonthlyReport::find($monthlyReport->id);
         $userId = $monthlyReport->user_id;
+
+        if ($report->is_deleted == true) {
+            abort(404);
+        }
 
         // 1. 月報情報を取得
         // 2. target_monthカラムのデータをもとにCarbon::parseでdatetime型に整形。月初を取得後、文字列に
