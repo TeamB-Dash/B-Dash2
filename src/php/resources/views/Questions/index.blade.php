@@ -88,7 +88,7 @@
                       </button>
                     </div>
                     @foreach ($departments as $department )
-                    <button type="submit" name="department" value="{{$department->id}}">{{$department->name}}</button>
+                    <button type="submit" name="department" value="{{$department->id}}">【{{$department->name}}】</button>
                     @endforeach
                   </div>
             </form>
