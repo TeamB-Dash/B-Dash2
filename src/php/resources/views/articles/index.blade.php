@@ -82,7 +82,7 @@
                             </span><span>
                                 <a class="text-info side-dep" href="/articles?department_id=8">【 PHP 】</a>
                             </span>
-                        </div>
+                            </div>
                             <div class="text-center" style="padding-bottom:1.5rem">
                             <span>
                                 <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=1">備忘録</a>
@@ -93,10 +93,16 @@
                             </span><span>
                                 <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=4">その他</a>
                             </span>
-                        </div>
+                            </div>
                         </form>
-                        </div>
+                    </div>
                 </div>
+             {{-- いいね獲得ランキング（ブログ） --}}
+            <x-ranking-of-article-likes :articleRanking="$articleRanking">
+            </x-ranking-of-article-likes>
+            {{-- タグ別投稿数ランキング --}}
+            <x-ranking-of-count-by-tags :rankingByNumberOfArticlesPerTag="$rankingByNumberOfArticlesPerTag">
+            </x-ranking-of-count-by-tags>
             </div>
         </div>
     </section>
