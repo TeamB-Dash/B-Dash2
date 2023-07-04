@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Tag;
 use App\Models\ArticleFavorites;
 use App\Models\ArticleComments;
+use App\Services\RankingService;
 use Ramsey\Uuid\Type\Integer;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +24,9 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
+        $articleRanking = RankingService::ArticleRanking();
+        $rankingByNumberOfArticlesPerTag = RankingService::TagRanking();
+
         $articlesQuery = Article::query()
             ->orderByDesc('created_at')
             ->whereNotNull('shipped_at')
@@ -73,11 +77,11 @@ class ArticleController extends Controller
             $q->whereRaw('to_char(entry_date, \'YYYY-MM\') = ?', [$entryDate]);
         });
         }
-    
+
 
         $articles = $articlesQuery->paginate(20);
 
-        return view('articles.index', compact('articles', 'keyword', 'article_category_id', 'department_id'));
+        return view('articles.index', compact('articles', 'keyword', 'article_category_id', 'department_id','articleRanking','rankingByNumberOfArticlesPerTag'));
     }
 
     /**
@@ -333,5 +337,5 @@ public function commentDestroy(Article $article, ArticleComments $comment)
 
     return redirect()->route('articles.show', ['article' => $article->id]);
 }
-    
+
 }

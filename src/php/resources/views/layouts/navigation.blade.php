@@ -17,7 +17,7 @@
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                        <x-nav-link :active="request()->routeIs('dashboard')">
+                                        <x-nav-link :active="request()->routeIs('monthlyReport.*')">
                                             <div>月報</div>
                                         </x-nav-link>
 
@@ -39,7 +39,7 @@
                                         月報登録
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('monthlyReport.showMyReports')">
+                                    <x-dropdown-link :href="route('monthlyReport.showMyReports',Auth::id())">
                                         マイ月報
                                     </x-dropdown-link>
                                 </x-slot>
@@ -52,7 +52,7 @@
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                        <x-nav-link :active="request()->routeIs('dashboard')">
+                                        <x-nav-link :active="request()->routeIs('articles.*')">
                                             <div>ブログ</div>
                                         </x-nav-link>
 

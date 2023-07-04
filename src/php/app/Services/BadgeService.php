@@ -97,4 +97,11 @@ class BadgeService
         session()->flash('message',$comment);
     }
 
+    // ユーザーが保持するバッジを検索して返す処理
+    public static function checkBadges($id){
+        $badges = UserBadge::where('is_deleted',false)->where('user_id',$id)->get();
+        dd($badges);
+        return ($badges);
+    }
+
 }
