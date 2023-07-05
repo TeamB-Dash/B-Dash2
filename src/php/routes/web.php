@@ -22,13 +22,13 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/',[UserController::class,'index'])->name('top');
-Route::get('/announcements',[UserController::class,'showAnnouncementPage'])->name('announcements');
+Route::get('/',[UserController::class,'index'])->middleware('auth')->name('top');
+Route::get('/announcements',[UserController::class,'showAnnouncementPage'])->middleware('auth')->name('announcements');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/questions/users/{user}', [QuestionController::class, 'showMyQuestions'])->name('questions.showMyQuestions');
