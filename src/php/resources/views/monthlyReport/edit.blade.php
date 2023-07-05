@@ -89,18 +89,18 @@
                                     <label class="control-label col-sm-3" for="target_month">対象月</label>
                                     <div class="col-sm-9">
                                         <select name="target_month" class="form-control" id="target_month">
-                                            <option value="2023-06-01" @if( old('target_month') == '2023-06-01') selected @endif>2023年06月</option>
-                                            <option value="2023-05-01">2023年05月</option>
-                                            <option value="2023-04-01" @if( old('target_month') == '2023-04-01') selected @endif>2023年04月</option>
-                                            <option value="2023-03-01">2023年03月</option>
-                                            <option value="2023-02-01">2023年02月</option>
-                                            <option value="2023-01-01">2023年01月</option>
-                                            <option value="2022-12-01">2022年12月</option>
-                                            <option value="2022-11-01">2022年11月</option>
-                                            <option value="2022-10-01">2022年10月</option>
-                                            <option value="2022-09-01">2022年09月</option>
-                                            <option value="2022-08-01">2022年08月</option>
-                                            <option value="2022-07-01">2022年07月</option>
+                                            <option value="2023-06-01" @if( old('target_month', $report->target_month) == '2023-06-01') selected @endif>2023年06月</option>
+                                            <option value="2023-05-01" @if( old('target_month', $report->target_month) == '2023-05-01') selected @endif>2023年05月</option>
+                                            <option value="2023-04-01" @if( old('target_month', $report->target_month) == '2023-04-01') selected @endif>2023年04月</option>
+                                            <option value="2023-03-01" @if( old('target_month', $report->target_month) == '2023-03-01') selected @endif>2023年03月</option>
+                                            <option value="2023-02-01" @if( old('target_month', $report->target_month) == '2023-02-01') selected @endif>2023年02月</option>
+                                            <option value="2023-01-01" @if( old('target_month', $report->target_month) == '2023-01-01') selected @endif>2023年01月</option>
+                                            <option value="2022-12-01" @if( old('target_month', $report->target_month) == '2022-12-01') selected @endif>2022年12月</option>
+                                            <option value="2022-11-01" @if( old('target_month', $report->target_month) == '2022-11-01') selected @endif>2022年11月</option>
+                                            <option value="2022-10-01" @if( old('target_month', $report->target_month) == '2022-10-01') selected @endif>2022年10月</option>
+                                            <option value="2022-09-01" @if( old('target_month', $report->target_month) == '2022-09-01') selected @endif>2022年09月</option>
+                                            <option value="2022-08-01" @if( old('target_month', $report->target_month) == '2022-08-01') selected @endif>2022年08月</option>
+                                            <option value="2022-07-01" @if( old('target_month', $report->target_month) == '2022-07-01') selected @endif>2022年07月</option>
                                         </select>
                                     </div>
                                 </div>
@@ -111,10 +111,10 @@
                                         <label class="control-label col-sm-3" for="assign">今月のアサイン状況</label>
                                         <div class="col-sm-9 btn-group" data-toggle="buttons">
                                               <label class="btn btn-default">
-                                                <input type="radio" name="assign" id="assigned" autocomplete="off" value="2">アサイン中
+                                                <input type="radio" name="assign" id="assigned" autocomplete="off" value="2" @if (old('assign', $report->assign) == '2') checked @endif>アサイン中
                                              </label>
                                             <label class="btn btn-default">
-                                                    <input type="radio" name="assign" id="waiting" autocomplete="off" value="1"> 待機中
+                                                    <input type="radio" name="assign" id="waiting" autocomplete="off" value="1" @if (old('assign', $report->assign) == '1') checked @endif>待機中
                                              </label>
                                         </div>
                                     </div>
@@ -126,7 +126,7 @@
                                             <div class="markdown-editor">
                                                 <div class="tab-content markdown-content">
                                                     <div class="tab-pane active" id="project_summary-write">
-                                                        <textarea rows="15" class="form-control" placeholder="例）# 英語学習アプリ開発" name="project_summary" id="project_summary">{{$report->project_summary}}</textarea>
+                                                        <textarea rows="15" class="form-control" placeholder="例）# 英語学習アプリ開発" name="project_summary" id="project_summary">{{ old('project_summary', $report->project_summary) }}</textarea>
                                                         {{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
                                                     </div>
                                                     <div class="tab-pane content-md-preview markdown-body" id="project_summary-preview"></div>
@@ -224,7 +224,7 @@
     #### API仕様を整理する
     既に利用しているAPIに関するドキュメントが散らばっている＆欠けている状態だったので、GithubのIssuesに整理したドキュメントを書いた。
     進捗 100%" 
-                                                            name="business_content" id="business_content">{{$report->business_content}}</textarea>
+                                                            name="business_content" id="business_content">{{ old('business_content', $report->business_content) }}</textarea>
                                                         {{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
                                                     </div>
                                                     <div class="tab-pane content-md-preview markdown-body" id="business_content-preview"></div>
@@ -258,7 +258,7 @@
     1. ・・・・のでできた。
     2. ・・・・なのであまりできなかった。
     3. ・・・・のでできなかった。"
-                                                             name="looking_back" id="looking_back">{{$report->looking_back}}</textarea>
+                                                             name="looking_back" id="looking_back">{{ old('looking_back', $report->looking_back) }}</textarea>
                                                         {{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
                                                     </div>
                                                     <div class="tab-pane content-md-preview markdown-body" id="looking_back-preview"></div>
@@ -279,7 +279,7 @@
     1. 
     2. 
     3."
-                                                         name="next_month_goals" id="next_month_goals">{{$report->next_month_goals}}</textarea>
+                                                         name="next_month_goals" id="next_month_goals">{{ old('next_month_goals', $report->next_month_goals) }}</textarea>
                                                     {{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
                                                 </div>
                                                 <div class="tab-pane content-md-preview markdown-body" id="next_month_goals-preview"></div>

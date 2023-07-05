@@ -179,7 +179,7 @@ class MonthlyReportController extends Controller
 
         $report = MonthlyReport::with(['tags'])->find($monthlyReport->id);
         $tags = $report->tags;
-        // dd($tags);
+        // dd($report->target_month);
 
         return view('monthlyReport.edit', compact('report', 'tags'));
     }
