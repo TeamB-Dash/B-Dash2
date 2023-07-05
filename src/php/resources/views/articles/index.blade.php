@@ -1,29 +1,4 @@
-<body>
-	<div class="site-body container-fluid">
-		<div class="site-container row">
-
-			<!-- 		menuここから  -->
-			<header class="site-header bg-primary col-sm-2 hidden-xs side_scroll">
-				<div class="header-menu center-block">
-		<div class="header-menu-title">
-			<a href="/"><h1 class="bg-primary">Dash</h1></a>
-			<br>
-				<li class="dropdown">
-				<a class="lead bg-primary" href="/articles">
-					<span class="glyphicon glyphicon-th-list"></span>
-					<span> ブログ</span>
-				</a>
-				<ul class="nav nav-pills nav-stacked" style="padding-inline-start:10px;margin-bottom:10px;">
-					<li style="margin-bottom:3px"><a class="bg-primary" href="/articles/create">新規投稿</a></li>
-					<li><a class="bg-primary" href="{{ route('articles.myblog',Auth::user()->id) }}">マイブログ</a></li>
-					<li><a class="bg-primary" href="{{ route('articles.favorites',['id' => Auth::user()->id]) }}">お気に入りブログ</a></li>
-
-				</ul>
-			</li>
-				
-		</div>
-	</div>
-	<x-app-layout>
+<x-app-layout>
 		<x-slot name="header">
 			<h2 class="font-semibold text-xl text-gray-800 leading-tight">
 			ブログ一覧
@@ -45,12 +20,20 @@
 					<img alt="blog" src="https://dummyimage.com/104x104" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
 					<span class="flex-grow flex flex-col pl-4">
 						<a class="text-info" href="/articles?articleEntryDate={{ \Carbon\Carbon::parse($article->user->entry_date)->format('Y-m') }}">{{ $article->user->entry_date }}</a>
-						<span class="title-font font-medium text-gray-900">{{ $article->user->name }}</span>
-						<span class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $article->created_at->format('Y-m-d')  }}</span><span>【{{$article->user->department->name}}】</span>
+						<span class="title-font font-medium text-gray-900">
+							<a class="text-info"  href="profile" >{{ $article->user->name }}</a> 
+							</span>
+						<span class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $article->created_at->format('Y-m-d')  }}</span>
+						<span>
+							<a class="text-info" href="/articles?department_id={{ $article->user->department->id }}">【{{$article->user->department->name}}】</a>
+						</span>
 					</span>
 					</a>
 					@foreach ($article->tags as $tag )
-					<span class="inline-block py-1 px-2 rounded bg-indigo-50 text-indigo-500 text-xs font-medium tracking-widest">{{ $tag->name }}</span>
+					<span class="inline-block py-1 px-2 rounded bg-indigo-50 text-indigo-500 text-xs font-medium tracking-widest">
+						{{-- <a class="text-info" href="/articles?tag_id={{ $article->tag->id }}">{{ $tag->name }}</a> --}}
+						{{ $tag->name }}
+					</span>
 					@endforeach
 				  <div class="flex items-center flex-wrap pb-4 mb-4 border-b-2 border-gray-100 w-full">
 					<a class="text-indigo-500 inline-flex items-center">Learn More
