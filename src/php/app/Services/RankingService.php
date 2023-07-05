@@ -43,7 +43,11 @@ class RankingService
 
         $collection = collect();
         foreach($articleRankings as $articleRanking){
-            $user = array('name'=>User::find($articleRanking->user_id)->name,'number_of_article_likes'=>$articleRanking->number_of_article_likes);
+            $user = array(
+            'name'=>User::find($articleRanking->user_id)->name,
+            'number_of_article_likes'=>$articleRanking->number_of_article_likes,
+            'id' => $articleRanking->user_id,
+        );
             $collection->push($user);
         }
 

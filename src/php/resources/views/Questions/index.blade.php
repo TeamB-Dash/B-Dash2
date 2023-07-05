@@ -23,7 +23,7 @@
                 <img alt="blog" src="https://dummyimage.com/104x104" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
                 <span class="flex-grow flex flex-col pl-4">
                     <span class="title-font font-medium text-gray-900">{{ $question->user->name }}</span>
-                    <button type="submit" form="searchForm" name="hireMonth" value="{{$question->created_at->format('Y-m') }}" class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $question->created_at->format('Y-m-d')  }}</button>
+                    <button type="submit" form="Fsearchorm" name="hireMonth" value="{{$question->created_at->format('Y-m') }}" class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $question->created_at->format('Y-m-d')  }}</button>
                     <button type="submit" form="searchForm" name="department" value="{{$question->user->department->id}}">【{{$question->user->department->name}}】</button>
                 </span>
                 </a>
@@ -56,7 +56,7 @@
             {{$questions->appends(request()->query())->links()}}
           </div>
 
-          <div class="w-1/5 ml-auto ">
+          <div class="w-1/5 ml-auto">
             <form id="searchForm" action="{{route('questions.index')}}" method="GET">
                 <div class="mb-3">
                     <div class="relative mb-4 flex w-full flex-wrap items-stretch">
@@ -88,7 +88,7 @@
                       </button>
                     </div>
                     @foreach ($departments as $department )
-                    <button type="submit" name="department" value="{{$department->id}}">{{$department->name}}</button>
+                    <button type="submit" name="department" value="{{$department->id}}">【{{$department->name}}】</button>
                     @endforeach
                   </div>
             </form>

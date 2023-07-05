@@ -68,29 +68,30 @@
 			<!-- side content -->
 			<div id="sideContent" class="col-sm-3" style="height: 2492px;">
 				<div class="m-search sticky">
+
                     <div>
                         <form action="{{ route('articles.index') }}" method="GET">
-                          <input type="text" name="keyword" value="{{ $keyword }}">
-                          <input type="submit" value="検索">
-						  <br>
-						  <div class="text-center" style="margin-bottom:1.5rem">
-							<span>
-								<a class="text-info side-dep" href="/articles?department_id=1">【 WEB 】</a>
-							</span><span>
-								<a class="text-info side-dep" href="/articles?department_id=2">【 CL 】</a>
-							</span><span>
-								<a class="text-info side-dep" href="/articles?department_id=3">【 ML 】</a>
-							</span><span>
-								<a class="text-info side-dep" href="/articles?department_id=4">【 内勤 】</a>
-							</span><span>
-								<a class="text-info side-dep" href="/articles?department_id=6">【 FR 】</a>
-							</span><span>
-								<a class="text-info side-dep" href="/articles?department_id=7">【 QA 】</a>
-							</span><span>
-								<a class="text-info side-dep" href="/articles?department_id=8">【 PHP 】</a>
-							</span>
-						</div>
-                          <div class="text-center" style="padding-bottom:1.5rem">
+                            <input type="text" name="keyword" value="{{ $keyword }}">
+                            <input type="submit" value="検索" class="text-white bg-blue-400 p-1 rounded">
+                            <br>
+                            <div class="text-center" style="margin-bottom:1.5rem">
+                            <span>
+                                <a class="text-info side-dep" href="/articles?department_id=1">【 WEB 】</a>
+                            </span><span>
+                                <a class="text-info side-dep" href="/articles?department_id=2">【 CL 】</a>
+                            </span><span>
+                                <a class="text-info side-dep" href="/articles?department_id=3">【 ML 】</a>
+                            </span><span>
+                                <a class="text-info side-dep" href="/articles?department_id=4">【 内勤 】</a>
+                            </span><span>
+                                <a class="text-info side-dep" href="/articles?department_id=6">【 FR 】</a>
+                            </span><span>
+                                <a class="text-info side-dep" href="/articles?department_id=7">【 QA 】</a>
+                            </span><span>
+                                <a class="text-info side-dep" href="/articles?department_id=8">【 PHP 】</a>
+                            </span>
+                            </div>
+                            <div class="text-center" style="padding-bottom:1.5rem">
                             <span>
                                 <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=1">備忘録</a>
                             </span><span>
@@ -100,13 +101,17 @@
                             </span><span>
                                 <a class="btn btn-sm btn-outline-primary btn-primary side-category" href="/articles?article_category_id=4">その他</a>
                             </span>
-                        </div>
+                            </div>
                         </form>
-                      </div>
+                    </div>
                 </div>
+             {{-- いいね獲得ランキング（ブログ） --}}
+            <x-ranking-of-article-likes :articleRanking="$articleRanking">
+            </x-ranking-of-article-likes>
+            {{-- タグ別投稿数ランキング --}}
+            <x-ranking-of-count-by-tags :rankingByNumberOfArticlesPerTag="$rankingByNumberOfArticlesPerTag">
+            </x-ranking-of-count-by-tags>
             </div>
-			
-			</div>
-		  </section>
-	</x-app-layout>
-	
+        </div>
+    </section>
+</x-app-layout>

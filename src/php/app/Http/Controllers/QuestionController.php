@@ -32,8 +32,8 @@ class QuestionController extends Controller
         $rankingByNumberOfArticlesPerTag = RankingService::TagRanking();
 
         list($questions,$filteredBy) = SearchService::searchQuestions($request);
-
-        return view('questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag','filteredBy'));
+        
+        return view('questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag'));
     }
 
     /**
@@ -244,7 +244,7 @@ class QuestionController extends Controller
 
     ]);
 
-    
+
 
     return redirect()->route('questions.show', ['question' => $question->id]);
 

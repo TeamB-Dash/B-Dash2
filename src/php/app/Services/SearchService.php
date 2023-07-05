@@ -116,8 +116,6 @@ class SearchService
 
             foreach( $wordArraySearched as $word){
                 $subQuery = $subQuery
-                ->where('title','LIKE','%'.$word.'%')
-                ->orWhere('body','LIKE','%'.$word.'%')
                 ->orWhereHas('user',function($query) use ($word){
                     $query->where('name','LIKE','%'.$word.'%');
                 });
@@ -149,7 +147,7 @@ class SearchService
         }
 
 
-        $monthlyReports = $subQuery->whereNotNull('shipped_at')->orderBy('shipped_at', 'desc')->paginate(10);
+        $monthlyReports = $subQuery->where('is_deleted',false)->whereNotNull('shipped_at')->orderBy('shipped_at', 'desc')->paginate(10);
         return $monthlyReports;
     }
 }
