@@ -57,6 +57,7 @@ class ProfileController extends Controller
         $departments = Department::all();
         $followings = $user->followings()->orderBy('user_id')->get();
         $followers = $user->followers()->orderBy('followed_user_id')->get();
+        $badges = BadgeService::checkBadges($user->id);
 
         return view('profile.edit', [
             'user' => $user,
@@ -64,6 +65,7 @@ class ProfileController extends Controller
             'departments' => $departments,
             'followings' => $followings,
             'followers' => $followers,
+            'badges' => $badges,
         ]);
     }
 
