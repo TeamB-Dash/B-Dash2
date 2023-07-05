@@ -13,20 +13,20 @@
         <div class="container px-5 py-24 mx-auto">
           <div class="flex flex-wrap -m-12">
 
-            <div class="w-2/3 py-2 sm:px-2 lg:px-2 mx-auto">
+            <div class="w-3/4 py-2 sm:px-2 lg:px-2 mx-auto">
                 <div class="overflow-hidden">
                     @if ($inquiries->isEmpty())
                     <p class="text-center">登録されているお知らせはありません。</p>
                     @endif
                     <table class="min-w-full text-left text-sm">
-                    <tbody>
+                    <tbody class="border-2">
                         @foreach ($inquiries as $inquiry )
                         <tr
-                        class="border-b">
-                        <td class="whitespace-nowrap px-2 py-2 font-medium">
-                            <span class="px-2 text-xs">{{$inquiry->created_at->format('Y-m-d')}}</span>
-                            <span class="px-2 text-xs">{{$inquiry->user->name}}</span>
-                            <div class="px-2 text-base">{{$inquiry->body}}</div>
+                        class="border-b-2">
+                        <td class="whitespace-normal px-2 py-2">
+                            <span class="px-2 text-sm">{{$inquiry->user->name}}</span>
+                            <span class="px-2 text-xs text-gray-400">{{$inquiry->created_at->format('Y-m-d')}}</span>
+                            <div class="px-2 text-base font-medium">{{$inquiry->body}}</div>
                         </td>
                         @endforeach
                         </tr>
