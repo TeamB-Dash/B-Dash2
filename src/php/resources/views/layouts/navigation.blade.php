@@ -245,7 +245,7 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
-                    <x-responsive-nav-link :href="route('dashboard')"
+                    <x-responsive-nav-link :href="route('top')"
                     onclick="event.preventDefault();
                                         this.closest('form').submit();">
                         パスワード変更
