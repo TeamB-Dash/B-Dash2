@@ -2,18 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Builder;
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Article;
 use App\Models\Department;
 use App\Models\ArticleFavorites;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\MonthlyReport;
 use App\Models\Question;
 use App\Models\UserRole;
@@ -34,6 +29,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'department_id',
+        'beginner_flg',
+        'entry_date',
+        'gender',
+        'deleted_at'
     ];
 
     /**
@@ -57,8 +57,8 @@ class User extends Authenticatable
 
     public function articles(): HasMany
     {
-    return $this->hasMany('App\Models\Article');
-    // return $this->belongsTo('App\Models\Article');
+        return $this->hasMany('App\Models\Article');
+        // return $this->belongsTo('App\Models\Article');
     }
 
     public function articleComments(): HasMany
@@ -143,8 +143,8 @@ class User extends Authenticatable
     }
 
     // Badgeへの関連を定義
-    public function badge(){
-        return $this->belongsToMany(Badge::class,'user_badges');
+    public function badge()
+    {
+        return $this->belongsToMany(Badge::class, 'user_badges');
     }
-
 }
