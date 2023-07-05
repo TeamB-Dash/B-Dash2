@@ -80,11 +80,10 @@ Route::prefix('profile')
         Route::post('/follow{id}', 'follow')->name('follow');
         Route::post('/unfollow{id}', 'unfollow')->name('unfollow');
         Route::post('/submitInquiry', 'submitInquiry')->name('submitInquiry');
-        // Route::delete('/', 'destroy')->name('destroy');
     });
 
 // 月報関連のルート
-Route::middleware('auth')->group(function() {
+Route::middleware('auth')->group(function () {
 
     Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name('monthlyReport.index');
     Route::get('/monthly_reports/create', [MonthlyReportController::class, 'create'])->name('monthlyReport.create');
@@ -97,10 +96,10 @@ Route::middleware('auth')->group(function() {
     Route::get('/monthly_reports/users/{id}/drafts', [MonthlyReportController::class, 'showMyDraftReports'])->name('monthlyReport.showMyDraftReports');
 });
 
- //コメント関連
- Route::post('/monthly_reports/{monthlyReport}/comments', [MonthlyReportController::class, 'commentStore'])->name('monthlyReport.commentStore');
- Route::patch('/monthly_reports/{monthlyReport}/comments/{comment}', [MonthlyReportController::class, 'commentUpdate'])->name('monthlyReport.commentUpdate');
- Route::delete('/monthly_reports/{monthlyReport}/{comment}', [MonthlyReportController::class, 'commentDestroy'])->name('monthlyReport.commentDestroy');
+//コメント関連
+Route::post('/monthly_reports/{monthlyReport}/comments', [MonthlyReportController::class, 'commentStore'])->name('monthlyReport.commentStore');
+Route::patch('/monthly_reports/{monthlyReport}/comments/{comment}', [MonthlyReportController::class, 'commentUpdate'])->name('monthlyReport.commentUpdate');
+Route::delete('/monthly_reports/{monthlyReport}/{comment}', [MonthlyReportController::class, 'commentDestroy'])->name('monthlyReport.commentDestroy');
 
 // 管理者関連のルート
 Route::prefix('/admin')->middleware('judgeAdmin')->group(function () {
@@ -113,7 +112,7 @@ Route::prefix('/admin')->middleware('judgeAdmin')->group(function () {
         Route::get('/edit/{id}', [AdminController::class, 'edit'])->name('admin.users.edit');
         Route::get('/showDeletePage/{id}', [AdminController::class, 'showDeletePage'])->name('admin.users.showDeletePage');
         Route::patch('/update/{id}', [AdminController::class, 'update'])->name('admin.users.update');
-        Route::delete('/destroy/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
+        Route::patch('/destroy/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
 
         Route::get('/roles', [AdminController::class, 'roles'])->name('admin.users.role');
         Route::get('/roles/new', [AdminController::class, 'registerNewRole'])->name('admin.users.registerNewRole');
