@@ -89,12 +89,17 @@ class SearchService
                 $query->where('entry_date', 'LIKE', $hiredMonth.'%');
             });
             $filteredBy = '入社日：'.$hiredMonth;
+        } else if(isset($request->tag)){
+            $tag = $request->tag;
+            $subQuery = $subQuery->whereHas('tags',function($query) use ($tag) {
+                $query->where('name', $tag);
+            });
+            $filteredBy = 'タグ：「'.$tag.'」';
         } else {
-            $questions = $subQuery->whereNotNull('shipped_at');
             $filteredBy = null;
         }
 
-        $questions = $subQuery->where('is_deleted',false)->orderBy('created_at','desc')->paginate(4);
+        $questions = $subQuery->where('is_deleted',false)->whereNotNull('shipped_at')->orderBy('created_at','desc')->paginate(4);
 
         return [$questions,$filteredBy];
     }
