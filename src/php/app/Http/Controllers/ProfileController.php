@@ -152,7 +152,7 @@ class ProfileController extends Controller
     public function submitInquiry(Request $request)
     {
         $rules = [
-            'body' => ['max:1000','required'],
+            'inquiry' => ['max:1000','required'],
         ];
 
         $user_name = User::find($request->user_id)->name;
