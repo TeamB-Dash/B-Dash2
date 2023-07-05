@@ -18,7 +18,7 @@
 							<div class="form-group">
 								<label class="control-label col-sm-3" for="target_month">対象月</label>
                                 <input type="month" placeholder="対象月" name="target_month"
-                                class="w-full focus:outline-none text-gray-700"/>
+                                class="w-full focus:outline-none text-gray-700" value="{{ old('target_month') }}"/>
 							</div>
 						{{-- </form> --}}
 						{{-- <form class="form-horizontal" id="new_monthly_report" action="{{ route('monthlyReport.store') }}" accept-charset="UTF-8" method="post"><input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/> --}}

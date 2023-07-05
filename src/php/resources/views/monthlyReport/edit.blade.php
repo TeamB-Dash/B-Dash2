@@ -18,7 +18,7 @@
 							<div class="mb-4">
 								<label class="control-label col-sm-3" for="target_month">対象月</label>
                                 <input type="month" placeholder="対象月" name="target_month"
-                                class="w-full focus:outline-none text-gray-700"/>
+                                class="w-full focus:outline-none text-gray-700" value="{{ old('target_month', $report->target_month) }}"/>
 							</div>
 								<div class="mb-4">
 									<label class="control-label col-sm-3" for="assign">今月のアサイン状況</label>
