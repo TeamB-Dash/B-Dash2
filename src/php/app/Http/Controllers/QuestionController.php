@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 use App\Services\RankingService;
 use App\Services\SearchService;
 use Cron\MonthField;
-use App\Http\Requests\QuestionRequest;
+
 
 class QuestionController extends Controller
 {
@@ -32,8 +32,7 @@ class QuestionController extends Controller
         $rankingByNumberOfArticlesPerTag = RankingService::TagRanking();
 
         list($questions,$filteredBy) = SearchService::searchQuestions($request);
-
-        return view('questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag'));
+        return view('questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag','filteredBy'));
     }
 
     /**
@@ -52,12 +51,18 @@ class QuestionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(QuestionRequest $request)
+    public function store(Request $request)
     {
+        $rules = [
+            'title' => ['string', 'max:255','required'],
+            'body' => ['string', 'max:255','required'],
+            'tags' => ['array','required'],
+        ];
+
         DB::beginTransaction();
         try{
             $user = Auth::user();
-            // 下書き保存か公開かで分岐
+            // 下書き保存処理
             if(isset($request->saveAsDraft)){
                 $question = Question::create([
                     'user_id' => $user->id,
@@ -67,7 +72,9 @@ class QuestionController extends Controller
                     'answer_count' => 0,
                     'shipped_at' => null,
                 ]);
+            // 保存して公開処理
             }else if(isset($request->create)){
+                $this->validate($request,$rules);
                 $question = Question::create([
                     'user_id' => $user->id,
                     'title' => $request->title,
@@ -79,7 +86,6 @@ class QuestionController extends Controller
             };
 
             $tags = [];
-
             foreach($request->tags as $tag){
                 $tagInstance = Tag::firstOrCreate(['name' => $tag]);
                 $tags[] = $tagInstance->id;
@@ -90,7 +96,8 @@ class QuestionController extends Controller
             return to_route('questions.index')->with('status','投稿を作成しました。');
         }catch(\Exception $e){
             DB::rollBack();
-            return route('dashboard');
+            return to_route('questions.index')->with('status','エラー：更新処理に失敗しました。');
+
         }
     }
 
@@ -129,8 +136,13 @@ class QuestionController extends Controller
      * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function update(QuestionRequest $request, Question $question)
+    public function update(Request $request, Question $question)
     {
+        $rules = [
+            'title' => ['string', 'max:255','required'],
+            'body' => ['string', 'max:255','required'],
+            'tags' => ['array','required'],
+        ];
 
         DB::beginTransaction();
         try {
@@ -141,10 +153,12 @@ class QuestionController extends Controller
                 $question->shipped_at = null;
             // 公開した質問の更新処理
             }else if(isset($request->update)){
+                $this->validate($request,$rules);
                 $question->title = $request->title;
                 $question->body = $request->body;
-                // 下書きを公開する処理
+            // 下書きを公開する処理
             }else if(isset($request->saveAsPublicQuestion)){
+                $this->validate($request,$rules);
                 $question->title = $request->title;
                 $question->body = $request->body;
                 $question->shipped_at = Carbon::now()->format('Y/m/d H:i:s');
@@ -158,12 +172,11 @@ class QuestionController extends Controller
                 $tags[] = $tagInstance->id;
             }
             $question->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
-
-            return to_route('questions.show',$request->id)->with('status','情報を更新しました。');
             DB::commit();
+            return to_route('questions.show',$request->id)->with('status','情報を更新しました。');
         } catch (\Exception $e) {
             DB::rollBack();
-            return route('dashboard');
+            return to_route('questions.show',$request->id)->with('status','エラー：更新処理に失敗しました。');
         }
     }
 
@@ -230,7 +243,7 @@ class QuestionController extends Controller
 
     ]);
 
-    
+
 
     return redirect()->route('questions.show', ['question' => $question->id]);
 

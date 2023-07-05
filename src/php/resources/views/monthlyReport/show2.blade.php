@@ -1,396 +1,274 @@
 <x-app-layout>
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-	<meta charset="utf-8" />
-	<meta content="IE=edge" http-equiv="X-UA-Compatible" />
-	<meta content="width=device-width, initial-scale=1" name="viewport" />
-	<title>Dash</title>
-	<link rel="stylesheet" media="all" href="{{ asset('/css/side_header.css') }}" />
-	<link rel="stylesheet" media="all" href="{{ asset('/css/template.css') }}"/>
-	<link rel="stylesheet" media="all" href="{{ asset('/css/monthly_report/detail.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/css/header-profile.css') }}" />
-	<script src="{{ asset('/js/template.js') }}"></script>
-	<script src="{{ asset('/js/common/inquiry.js') }}"></script>
-	<script src="{{ asset('/js/monthly_report/detail-like-count.js') }}"></script>
-	<script src="{{ asset('/js/monthly_report/detail-comment-edit.js') }}"></script>
-	<link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
-	<link rel="icon" type="image/png" href="/img/favicon/favicon-32x32.png" sizes="32x32">
-	<link rel="icon" type="image/png" href="/img/favicon/favicon-16x16.png" sizes="16x16">
-	<link rel="manifest" href="/img/favicon/manifest.json">
-	<link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#dd4814">
-	<link rel="shortcut icon" href="/img/favicon/favicon.ico">
-	<meta name="apple-mobile-web-app-title" content="Dash">
-	<meta name="application-name" content="Dash">
-	<meta name="msapplication-config" content="../../static/img/favicon/browserconfig.xml">
-	<meta name="theme-color" content="#ffffff">
-	<script>
-	$(function(){
-  		var target = $('#report-tag-list');
-  		var tagNames = {{ $report->tags }};
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        月報詳細画面
+        </h2>
+    </x-slot>
 
-		  target.tags({
-    		readOnly: true,
-    		tagData: tagNames,
-    		tagClass: 'btn-success',
-  		});
-	
-  	target.find('.tags').css('position', 'relative');
-  	target.css('pointer-events', 'none');
-	});
-	</script>
-</head>
-<body>
-	<div class="site-body container-fluid">
-		<div class="site-container row">
-		
-				
-			<div class="col-sm-8 col-sm-offset-3">
-				<div class="page-header">
-					<h1>
-					    <span class="glyphicon glyphicon-user"></span>
-                        
-						<a href="/user_profiles/1373" class="text-profile-link">{{ $report->user->name }}</a>
-					</h1>
-				</div>
-				
-				<div class="panel-group">
-					<div class="panel panel-default">
-						<div class="panel-heading monthly-report-panel-header">
-							<div class="panel-title row">
-								<div class="col-xs-2">
-									
-								</div>
-								<div class="col-xs-8 monthly-report-panel-date">
-									<span class="label label-success monthly-report-status">登録済</span>
-									
-									<span>{{ $report->target_month->format('Y')}}年{{ $report->target_month->format('m')}}月の月報</span>
-								</div>
-								<div class="col-xs-2">
-									
-								</div>
-							</div>
-						</div>
-						<div class="panel-body">
-							<form class="form-horizontal">
-								<div class="form-group">
-									<label class="col-sm-3 control-label">今月のアサイン状況</label>
-									<div class="col-sm-9 form-control-static btn-group">
-										
-										<a class="btn btn-default none-pointer">
-                                            @if ($report->assign == 1)
-                                                待機中
-                                            @elseif ($report->assign == 2)
-                                                アサイン中
-                                            @endif
-                                        </a>
-										
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">プロジェクト概要</label>
-									<div class="col-sm-9 form-control-static">
-										<div class="markdown-view">
-											<textarea class="hidden">{{ $report->project_summary }}</textarea>
-											<div class="markdown-body"></div>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">使用した技術</label>
-									<div class="col-sm-9 form-control-static">
-										<div id="report-tag-list" class="tag-list">
-                                            @foreach ($report->tags as $tag)
-                                                {{ $tag->name }}
-                                            @endforeach
-                                        </div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">担当した工程</label>
-									<div class="col-sm-9 form-control-static btn-group">
-                                        @if ($report->monthlyWorkingProcesses->process_definition == true)
-										<a class="btn btn-default none-pointer">要件定義</a>
-                                        @endif
-                                        @if ($report->monthlyWorkingProcesses->process_design == true)
-                                        <a class="btn btn-default none-pointer">設計</a>
-                                        @endif
-                                        @if ($report->monthlyWorkingProcesses->process_implementation == true)
-                                        <a class="btn btn-default none-pointer">実装</a>
-                                        @endif
-                                        @if ($report->monthlyWorkingProcesses->process_test == true)
-                                        <a class="btn btn-default none-pointer">テスト</a>
-                                        @endif
-                                        @if ($report->monthlyWorkingProcesses->process_operation == true)
-                                        <a class="btn btn-default none-pointer">運用保守</a>
-                                        @endif
-                                        @if ($report->monthlyWorkingProcesses->process_analysis == true)
-                                        <a class="btn btn-default none-pointer">分析</a>
-                                        @endif
-                                        @if ($report->monthlyWorkingProcesses->process_training == true)
-                                        <a class="btn btn-default none-pointer">研修</a>
-                                        @endif
-                                        @if ($report->monthlyWorkingProcesses->process_structure == true)
-                                        <a class="btn btn-default none-pointer">構築</a>
-                                        @endif
-                                        @if ($report->monthlyWorkingProcesses->process_trouble == true)
-                                        <a class="btn btn-default none-pointer">障害対応</a>
-                                        @endif
-										
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">業務内容</label>
-									<div class="col-sm-9 form-control-static">
-										<div class="markdown-view">
-											<textarea class="hidden">{{ $report->business_content }}</textarea>
-											<div class="markdown-body"></div>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">今月の目標</label>
-									<div class="col-sm-9 form-control-static">
-										<div class="markdown-view">
-											<textarea class="hidden">
-												@if(is_null($previousMonthlyReport))
-												前月の月報が入力されていません。前月の月報の「来月の目標」が表示されます。
-												@else
-												{{ $previousMonthlyReport->next_month_goals }}
-												@endif
-											</textarea>
-											<div class="markdown-body"></div>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">今月の振り返り</label>
-									<div class="col-sm-9 form-control-static">
-										<div class="markdown-view">
-											<textarea class="hidden">{{ $report->looking_back }}</textarea>
-											<div class="markdown-body"></div>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">来月の目標</label>
-									<div class="col-sm-9 form-control-static">
-									<div class="markdown-view">
-											<textarea class="hidden">{{ $report->next_month_goals }}</textarea>
-											<div class="markdown-body"></div>
-										</div>
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-				<div id="monthly-report-like-btn">
-					<div class="like-btn">
-						<span class="hidden" id="login-user-name">ログインユーザー</span>
-						<span role="button" id="like-button">いいね！</span>
-					</div>
-					<div class="like-count">
-						<strong><a id="count-current-like1" class="text-info" data-toggle="modal" data-target="#like-user-modal" href="">2</a></strong>
-					</div>
-					<div class="modal fade" id="like-user-modal" tabindex="-1">
-						<div class="modal-dialog modal-sm">
-							<div class="modal-content">
-								<div class="modal-header-like">
-									<h4 class="modal-title text-center">
-										<span id="count-current-like2">2</span>人がいいね！と言っています
-									</h4>
-								</div>
-								<div class="modal-body">
-									<div class="list-group" id="like-users-list">
-										<div>
-											
-											<a  class="list-group-item"
-											href="/user_profiles/387">梶田美妃</a>
-										</div>
-										<div>
-											
-											<a  class="list-group-item"
-											href="/user_profiles/1366">内井祐作</a>
-										</div>
-									</div>
-								</div>
-								<div class="modal-footer">
-									<button class="btn btn-success" data-dismiss="modal">閉じる</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				
-				
-				<div id="comment"></div>
-				<h2>コメント</h2>
-				<!-- 		直前の処理の完了通知-->
-				
+    @if (session('status'))
+    <div class="w-2/3 mx-auto container mt-6 text-center bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
+        <p class="font-bold">{{ session('status') }}</p>
+    </div>
+    @endif
 
-				  {{-- ブログ流用のコメント機能 --}}
-				  <div class="py-12">
-                    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div class="bg-white pt-2 pl-3 overflow-hidden shadow-sm sm:rounded-lg">
-                            <!-- コメントフォーム -->
-                            <form action="{{ route('monthlyReport.commentStore', ['monthlyReport' => $monthlyReport->id]) }}" method="POST">
-								{{-- <form action="{{ route('monthlyReport.commentStore', ['monthlyReport' => $monthlyReport]) }}" method="POST"> --}}
+
+    <div class="py-12">
+		<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+
+                @if(isset($report->shipped_at))
+                <div class="rounded mb-2 rounded px-6 py-2.5 text-s text-center font-medium uppercase text-white" style="background-color:rgb(11, 146, 51)">登録済み</div>
+                @else
+                <div class="rounded mb-2 rounded px-6 py-2.5 text-s text-center font-medium uppercase text-white" style="background-color:rgb(142, 11, 146)">下書き</div>
+                @endif
+
+                <div class="mt-8 mx-auto w-2/3 block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+                    <div class="mx-auto w-full text-center text-lg font-bold mb-6">
+                        <label class="control-label col-sm-3" for="target_month">対象月</label>
+                        <span>{{ $report->target_month->format('Y')}}年{{ $report->target_month->format('m')}}月の月報</span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="control-label col-sm-3" for="assign">今月のアサイン状況</label>
+                        <a class="btn btn-default none-pointer">
+                            @if ($report->assign == 1)
+                            <button type="button" class="text-white bg-amber-400 p-1">待機中</button>
+                            @elseif ($report->assign == 2)
+                            <button type="button" class="text-white bg-amber-400 p-1">アサイン中</button>
+                            @endif
+                        </a>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="control-label col-sm-3" >
+                            <label for="project_summary">プロジェクト概要</label>
+                        </div>
+                        <div class="tab-pane active" id="project_summary-write">
+                            <textarea rows="15" cols="30" class=" w-full" placeholder="{{ $report->project_summary }}" name="project_summary" id="project_summary" readonly></textarea>
+                        </div>
+                    </div>
+
+                    <!--Tag input-->
+                    <div class="mb-4">
+                        <div class="tag-item">
+                            <label for="title" class="block">使用した技術</label>
+                            @if (isset( $report->tags ))
+                            <div id="report-tag-list" class="tag-list">
+                                @foreach ($report->tags as $tag )
+                                <span class="bg-cyan-400 text-white p-1">{{$tag->name}}</span>
+                                @endforeach
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="control-label col-sm-3">担当した工程</label>
+                        <div class="col-sm-9 form-control-static btn-group">
+                            @if ($report->monthlyWorkingProcesses->process_definition == true)
+                            <button type="button" class="text-white bg-amber-400 p-1">要件定義</button>
+                            @endif
+                            @if ($report->monthlyWorkingProcesses->process_design == true)
+                            <button type="button" class="text-white bg-amber-400 p-1">設計</button>
+                            @endif
+                            @if ($report->monthlyWorkingProcesses->process_implementation == true)
+                            <button type="button" class="text-white bg-amber-400 p-1">実装</button>
+                            @endif
+                            @if ($report->monthlyWorkingProcesses->process_test == true)
+                            <button type="button" class="text-white bg-amber-400 p-1">テスト</button>
+                            @endif
+                            @if ($report->monthlyWorkingProcesses->process_operation == true)
+                            <button type="button" class="text-white bg-amber-400 p-1">運用保守</button>
+                            @endif
+                            @if ($report->monthlyWorkingProcesses->process_analysis == true)
+                            <button type="button" class="text-white bg-amber-400 p-1">分析</button>
+                            @endif
+                            @if ($report->monthlyWorkingProcesses->process_training == true)
+                            <button type="button" class="text-white bg-amber-400 p-1">研修</button>
+                            @endif
+                            @if ($report->monthlyWorkingProcesses->process_structure == true)
+                            <button type="button" class="text-white bg-amber-400 p-1">構築</button>
+                            @endif
+                            @if ($report->monthlyWorkingProcesses->process_trouble == true)
+                            <button type="button" class="text-white bg-amber-400 p-1">障害対応</button>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="control-label col-sm-3" >
+                            <label for="business_content">業務内容</label>
+                        </div>
+                        <div class="tab-pane active" id="business_content-write">
+                            <textarea rows="15" cols="30" class=" w-full" placeholder={{ $report->business_content }}
+                                name="business_content" id="business_content" readonly>
+                            </textarea>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="control-label col-sm-3" for="this_month_goals">今月の目標</label>
+                        <div class="col-sm-9">
+                            @if(is_null($previousMonthlyReport))
+                            <span class="text-red-500 font-base">前月の月報が入力されていません。前月の月報の「来月の目標」が表示されます。</span>
+                            @else
+                            <textarea rows="15" cols="30" class=" w-full" placeholder={{ $report->business_content }} readonly>
+                            {{ $previousMonthlyReport->next_month_goals }}
+                            @endif
+                            </textarea>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="control-label col-sm-3" >
+                            <label for="looking_back">今月の振り返り</label>
+                        </div>
+                        <div class="tab-pane active" id="looking_back-write">
+                            <textarea rows="15" cols="30" class=" w-full" placeholder={{ $report->looking_back }}
+                                name="looking_back" id="looking_back" readonly></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="control-label col-sm-3">
+                            <label for="next_month_goals">来月の目標</label>
+                        </div>
+                        <div class="tab-pane active" id="next_month_goals-write">
+                            <textarea rows="15" cols="30" class=" w-full" placeholder={{ $report->next_month_goals }}
+                                    name="next_month_goals" id="next_month_goals" readonly></textarea>
+                        </div>
+                    </div>
+
+                    {{-- 自分の質問だったら編集ができる --}}
+                    <div>
+                        @if ($report->user->id === Auth::id())
+                        <button
+                        type="button"
+                        onclick="location.href='{{ route('monthlyReport.edit',$report->id) }}' "
+                        class="inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                        style="background-color:rgb(11, 146, 51)"
+                        data-te-ripple-init
+                        data-te-ripple-color="light">
+                        編集する
+                        </button>
+                        <form action="{{ route('monthlyReport.destroy',$report->id) }}" method="POST" class="inline-block " >
+                        @csrf
+                        @method('DELETE')
+                        <button
+                        type="submit"
+                        class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                        style="background-color:rgb(241, 45, 45)"
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        onclick="return confirm('本当に削除しますか?')"
+                        >
+                        削除する
+                        </button>
+                        </form>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="w-2/3 mx-auto my-6">
+                    <div id="comment" class="w-full"></div>
+                    <h3>コメント</h3>
+                    <!-- 		直前の処理の完了通知-->
+
+                    {{-- ブログ流用のコメント機能 --}}
+                    <!-- コメントフォーム -->
+                    <form action="{{ route('monthlyReport.commentStore', ['monthlyReport' => $monthlyReport->id]) }}" method="POST">
+                        {{-- <form action="{{ route('monthlyReport.commentStore', ['monthlyReport' => $monthlyReport]) }}" method="POST"> --}}
+                        @csrf
+                        <textarea name="comment" rows="3" cols="50"></textarea>
+                        <button type="submit" class="bg-green-400 text-white p-1 rounded">コメントする</button>
+                    </form>
+
+                    <!-- コメント一覧 -->
+                    <h3>コメント一覧</h3>
+                    <hr>
+                    <div>
+                        <ul>
+                        @forelse ($monthlyReport->monthlyReportComments as $comment)
+                            <li>
+                            <p id="comment-{{ $comment->id }}">{{ $comment->comment }}</p>
+                            @if (Auth::check() && Auth::user()->id === $comment->user->id)
+                                <!-- コメント編集フォーム -->
+                                <form id="edit-comment-form-{{ $comment->id }}" class="edit-comment-form" action="{{ route('monthlyReport.commentUpdate', ['comment' => $comment->id, 'monthlyReport' => $monthlyReport->id]) }}" method="POST">
+                                    @csrf
+                                    @method('POST')
+                                    <input type="hidden" name="_method" value="PATCH">
+                                    <textarea id="edit-comment-{{ $comment->id }}" name="comment" rows="2" cols="40"></textarea>
+                                    <button type="button" class="update-comment-button inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg" data-comment-id="{{ $comment->id }}" style="background-color: rgb(11, 146, 51)" data-te-ripple-init data-te-ripple-color="light">
+                                        更新
+                                    </button>
+                                </form>
+                                <button type="button" class="edit-comment-button inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg" data-comment-id="{{ $comment->id }}" style="background-color: rgb(11, 146, 51)" data-te-ripple-init data-te-ripple-color="light">
+                                    編集する
+                                </button>
+                                <form action="{{ route('monthlyReport.commentDestroy', ['monthlyReport' => $monthlyReport->id, 'comment' => $comment->id]) }}" method="POST" class="inline-block">
                                 @csrf
-                                <textarea name="comment" rows="3" cols="50"></textarea>
-                                <button type="submit">コメントする</button>
-                            </form>
-                
-                <!-- コメント一覧 -->
-                <h2>コメント一覧</h2>
-                <hr>
-                            <div>
-                                <ul>
-                                @forelse ($monthlyReport->monthlyReportComments as $comment)
-                                    <li>
-                                        <p id="comment-{{ $comment->id }}">{{ $comment->comment }}</p>
-                                        @if (Auth::check() && Auth::user()->id === $comment->user->id)
-                                            <!-- コメント編集フォーム -->
-                                            <form id="edit-comment-form-{{ $comment->id }}" class="edit-comment-form" action="{{ route('monthlyReport.commentUpdate', ['comment' => $comment->id, 'monthlyReport' => $monthlyReport->id]) }}" method="POST">
-                                                @csrf
-                                                @method('POST')
-                                                <input type="hidden" name="_method" value="PATCH">
-                                                <textarea id="edit-comment-{{ $comment->id }}" name="comment" rows="2" cols="40"></textarea>
-                                                <button type="button" class="update-comment-button inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg" data-comment-id="{{ $comment->id }}" style="background-color: rgb(11, 146, 51)" data-te-ripple-init data-te-ripple-color="light">
-                                                    更新
-                                                </button>
-                                            </form>
-                                            <button type="button" class="edit-comment-button inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg" data-comment-id="{{ $comment->id }}" style="background-color: rgb(11, 146, 51)" data-te-ripple-init data-te-ripple-color="light">
-                                                編集する
-                                            </button>
-                                            {{-- <form action="{{ route('articles.commentDestroy',$article->id) }}" method="POST" class="inline-block"> --}}
-                                                {{-- <form action="{{ route('articles.commentDestroy', ['article' => $article->id]) }}" method="POST" class="inline-block"> --}}
-                                                <form action="{{ route('monthlyReport.commentDestroy', ['monthlyReport' => $monthlyReport->id, 'comment' => $comment->id]) }}" method="POST" class="inline-block">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
-                                                    style="background-color:rgb(241, 45, 45)"
-                                                    data-te-ripple-init
-                                                    data-te-ripple-color="light"
-                                                    onclick="return confirm('本当に削除しますか?')">
-                                                    削除する
-                                                </button>
-                                            </form>
-                                        @endif
-                                    </li>
-                                @empty
-                                    <li>コメントはありません</li>
-                                @endforelse
-                                </ul>
-                            </div> 
-                            
-                            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                            <script>
-                                $(document).ready(function() {
-                                    $('.edit-comment-form').hide();
-                            
-                                    // 編集ボタンのクリックイベント
-                                    $('.edit-comment-button').click(function() {
-                                        var commentId = $(this).data('comment-id');
-                                        var commentText = $('#comment-' + commentId).text().trim();
-                            
-                                        // 編集フォームを表示してコメントテキストをセット
-                                        $('#comment-' + commentId).hide();
-                                        $('#edit-comment-' + commentId).val(commentText);
-                                        $('#edit-comment-form-' + commentId).show();
-                                    });
-                            
-                                    // 更新ボタンのクリックイベント
-                                    $('.update-comment-button').click(function() {
-                                        var commentId = $(this).data('comment-id');
-                                        var updatedComment = $('#edit-comment-' + commentId).val();
-                            
-                                        // Ajaxリクエストを送信
-                                        $.ajax({
-                                            url: '/monthly_reports/{{ $monthlyReport->id }}/comments/' + commentId,
-                                            type: 'POST', // POSTメソッドに変更
-                                            data: {
-                                                _method: 'PATCH', // _methodフィールドを追加
-                                                comment: updatedComment,
-                                                _token: '{{ csrf_token() }}'
-                                            },
-                                            success: function(response) {
-                                                // ページをリロードして更新したコメントを表示
-                                                location.reload();
-                                            },
-                                            error: function(xhr) {
-                                                console.log(xhr.responseText);
-                                            }
-                                        });
-                                    });
-                                });
-                            </script>
+                                @method('DELETE')
+                                <button type="submit"
+                                    class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                                    style="background-color:rgb(241, 45, 45)"
+                                    data-te-ripple-init
+                                    data-te-ripple-color="light"
+                                    onclick="return confirm('本当に削除しますか?')">
+                                    削除する
+                                </button>
+                                </form>
+                            @endif
+                        </li>
+                        @empty
+                        <li>コメントはありません</li>
+                        @endforelse
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                            {{-- ブログ流用のコメント機能　ここまで --}}
-				
-				
-				<!-- コメント投稿フォームここから -->
-				{{-- <div class="markdown-editor">
-					<form class="new_monthly_report_comment" action="/monthly_report_comments" accept-charset="UTF-8" method="post"><input type="hidden" name="_csrf" value="0fb384a8-429e-4bb7-9de1-974b3d647fcd"/>
-						<input type="hidden" value="3773" name="reportId" />
-						<input type="hidden" value="1373" name="reportAuthorId"/>
-						<input type="hidden" value="2023-05-01" name="reportTargetMonth"/>
-						<ul class="nav nav-tabs">
-							<li class="tab-md-write active">
-								<a data-toggle="tab" class="text-info" href="#new-comment-write">Write</a>
-							</li>
-							<li class="tab-md-preview">
-								<a data-toggle="tab" class="text-info" href="#new-comment-preview">Preview</a>
-							</li>
-							<li class="pull-right">
-								<button id="commentBtn" name="button" type="submit" class="btn btn-success" data-disable-with="投稿中..." >Comment</button>
-							</li>
-						</ul>
-						<div class="tab-content markdown-content">
-							<div class="tab-pane active" id="new-comment-write">
-							<!--3000文字以上文字数アラート-->
-								<textarea id="commentCheck" rows="5" class="form-control" name="comment" ></textarea>
-								<p>
-									<a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span>
-								</p>
-							</div>
-							<div class="tab-pane content-md-preview markdown-body" id="new-comment-preview"></div>
-						</div>
-					</form>
-				</div> --}}
-				<!-- コメント投稿フォームここまで -->
-				<br><br>
-				@if (Auth::user()->id == $report->user_id)
-				<button
-				type="button"
-				onclick="location.href='{{ route('monthlyReport.edit',$report->id) }}' "
-				class="inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
-				style="background-color:rgb(11, 146, 51)"
-				data-te-ripple-init
-				data-te-ripple-color="light">
-				編集する
-				</button>
-				<form action="{{ route('monthlyReport.destroy',$report->id) }}" method="POST" class="inline-block " >
-                @csrf
-                @method('DELETE')
-                <button
-                type="submit"
-                class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
-                style="background-color:rgb(241, 45, 45)"
-                data-te-ripple-init
-                data-te-ripple-color="light"
-                onclick="return confirm('本当に削除しますか?')"
-                >
-                削除する
-                </button>
-				@endif
-                </form>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.edit-comment-form').hide();
 
-			</div>
-			<div class="page-footer"></div>
-		</div>
-	</div>
-</body>
-</html>
+            // 編集ボタンのクリックイベント
+            $('.edit-comment-button').click(function() {
+                var commentId = $(this).data('comment-id');
+                var commentText = $('#comment-' + commentId).text().trim();
+
+                // 編集フォームを表示してコメントテキストをセット
+                $('#comment-' + commentId).hide();
+                $('#edit-comment-' + commentId).val(commentText);
+                $('#edit-comment-form-' + commentId).show();
+            });
+
+            // 更新ボタンのクリックイベント
+            $('.update-comment-button').click(function() {
+                var commentId = $(this).data('comment-id');
+                var updatedComment = $('#edit-comment-' + commentId).val();
+
+                // Ajaxリクエストを送信
+                $.ajax({
+                    url: '/monthly_reports/{{ $monthlyReport->id }}/comments/' + commentId,
+                    type: 'POST', // POSTメソッドに変更
+                    data: {
+                        _method: 'PATCH', // _methodフィールドを追加
+                        comment: updatedComment,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        // ページをリロードして更新したコメントを表示
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        console.log(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
 </x-app-layout>
+

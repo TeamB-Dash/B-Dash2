@@ -1,29 +1,13 @@
 @csrf
-<div class="md-form">
-  <label>タイトル</label>
-  <input type="text" name="title" class="form-control" required value="{{ $article->title ?? old('title') }}">
+<div class="grid grid-cols-1 gap-4">
+<!--Title input-->
+<div class="mb-6">
+    <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">タイトル</label>
+    <input type="text" name="title" id="title" value="{{ $article->title ?? old('title') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
 </div>
-<div class="col-sm-10" data-toggle="buttons">
-    <span>
-        <label class="btn article-category">
-            <input type="radio" name="article_category_id" value="1" id="article_category_id1" {{ (isset($article) && $article->article_category_id == 1) ? 'checked' : '' }}>備忘録
-        </label>
-    </span><span>
-        <label class="btn article-category">
-            <input type="radio" name="article_category_id" value="2" id="article_category_id2" {{ (isset($article) && $article->article_category_id == 2) ? 'checked' : '' }}>技術共有
-        </label>
-    </span><span>
-        <label class="btn article-category">
-            <input type="radio" name="article_category_id" value="3" id="article_category_id3" {{ (isset($article) && $article->article_category_id == 3) ? 'checked' : '' }}>体験共有
-        </label>
-    </span><span>
-        <label class="btn article-category">
-            <input type="radio" name="article_category_id" value="4" id="article_category_id4" {{ (isset($article) && $article->article_category_id == 4) ? 'checked' : '' }}>その他
-        </label>
-    </span>
-</div>
- <!--Tag input-->
- <div id="tagForm" class="mb-6">
+
+<!--Tag input-->
+<div id="tagForm" class="mb-6">
     <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">tag</label>
     <div class="flex flex-wrap relative mb-6 flex justify-center" data-te-input-wrapper-init>
         <!--$tagsがあればcheckboxを表示-->
@@ -50,15 +34,27 @@
     <button type="button" id="addTagBtn" class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg text-white" style="background-color:rgba(107, 159, 29, 0.89)">タグを増やす</button><br>
     <div class="tag-item">
         <label>タグ：
-        <input type="text" name="tags[]" id="tag" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+        <input type="text" name="tags[]" id="tag" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
         </label>
     </div>
 </div>
 
-<div class="form-group">
-  <label></label>
-  <textarea name="body" required class="form-control" rows="16" placeholder="本文">{{ $article->body ?? old('body') }}</textarea>
+<!--Category-->
+<div class="mb-6 min-h-[1.5rem] items-center justify-center">
+    <label for="article-category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">カテゴリー</label>
+    <input type="radio" name="article_category_id" value="1" id="article_category_id1" {{ (isset($article) && $article->article_category_id == 1) ? 'checked' : '' }}>備忘録
+    <input type="radio" name="article_category_id" value="2" id="article_category_id2" {{ (isset($article) && $article->article_category_id == 2) ? 'checked' : '' }}>技術共有
+    <input type="radio" name="article_category_id" value="3" id="article_category_id3" {{ (isset($article) && $article->article_category_id == 3) ? 'checked' : '' }}>体験共有
+    <input type="radio" name="article_category_id" value="4" id="article_category_id4" {{ (isset($article) && $article->article_category_id == 4) ? 'checked' : '' }}>その他
 </div>
+
+<!--Body-->
+<div
+    class="mb-6 min-h-[1.5rem] items-center justify-center">
+    <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">質問内容</label>
+    <textarea id="message" name="body" rows="30" required value="{{ $article->body ?? old('body') }}" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
+</div>
+
 
  {{-- タグ機能のjs --}}
  <script>
