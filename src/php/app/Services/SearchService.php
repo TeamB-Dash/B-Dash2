@@ -39,8 +39,8 @@ class SearchService
             }
         }
 
-        if(isset($request->hireMonth)){
-            $subQuery = $subQuery->where('entry_date','LIKE',$request->hireMonth.'%');
+        if(isset($request->hiredMonth)){
+            $subQuery = $subQuery->where('entry_date','LIKE',$request->hiredMonth.'%');
         }
 
         if(isset($request->department)){
