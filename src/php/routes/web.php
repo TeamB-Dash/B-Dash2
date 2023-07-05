@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminInquiryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MonthlyReportController;
 use App\Models\MonthlyReport;
@@ -22,9 +23,8 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/',[UserController::class,'index'])->name('top');
+Route::get('/announcements',[UserController::class,'showAnnouncementPage'])->name('announcements');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

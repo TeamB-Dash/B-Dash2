@@ -151,8 +151,21 @@ class SearchService
             }
         }
 
-
         $monthlyReports = $subQuery->where('is_deleted',false)->whereNotNull('shipped_at')->orderBy('shipped_at', 'desc')->paginate(10);
+        return $monthlyReports;
+    }
+
+    public static function recentMonthlyReports($request){
+        $subQuery = MonthlyReport::with(['user', 'tags']);
+
+        $monthlyReports = $subQuery->where('is_deleted',false)->whereNotNull('shipped_at')->orderBy('shipped_at', 'desc')->take(3)->get();
+        return $monthlyReports;
+    }
+
+    public static function reportsOfFollowingUser($request){
+        $subQuery = MonthlyReport::with(['user', 'tags']);
+
+        $monthlyReports = $subQuery->where('is_deleted',false)->whereNotNull('shipped_at')->orderBy('shipped_at', 'desc')->take(3)->get();
         return $monthlyReports;
     }
 }
