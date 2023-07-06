@@ -267,6 +267,7 @@
                                         <div>
                                             <ul>
                                             @forelse ($question->questionAnswers as $comment)
+                                            @if (!$comment->is_deleted)
                                                 <li>
                                                         <strong><h3 id="comment-{{ $comment->id }}-name">{{ $comment->user->name }}</h3></strong>
                                                         <p id="comment-{{ $comment->id }}-answer">{{ $comment->answer }}</p>
@@ -301,6 +302,7 @@
                                                         </form>
                                                     @endif
                                                 </li>
+                                                @endif
                                             @empty
                                                 <li>コメントはありません</li>
                                             @endforelse

@@ -244,8 +244,6 @@ class QuestionController extends Controller
 
     ]);
 
-
-
     return redirect()->route('questions.show', ['question' => $question->id]);
 
 }
@@ -270,7 +268,10 @@ public function commentUpdate(Request $request, $question, $comment)
 
 public function commentDestroy(Question $question, QuestionAnswers $comment)
 {
-    $comment->delete();
+    // $comment->delete();
+
+     // コメントの論理削除
+     $comment->update(['is_deleted' => true]);
 
     return redirect()->route('questions.show', ['question' => $question->id]);
 }
