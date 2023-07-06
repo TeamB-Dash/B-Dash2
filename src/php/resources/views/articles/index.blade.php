@@ -11,6 +11,7 @@
             <p class="font-bold">{{ session('status') }}</p>
         </div>
         @endif
+        <x-messagebar></x-messagebar>
 
         <div class="container px-5 py-24 mx-auto flex">
             <div class="w-3/4">

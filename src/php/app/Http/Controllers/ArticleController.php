@@ -10,6 +10,7 @@ use App\Models\Tag;
 use App\Models\ArticleFavorites;
 use App\Models\ArticleComments;
 use App\Services\RankingService;
+use App\Services\BadgeService;
 use Ramsey\Uuid\Type\Integer;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -140,6 +141,7 @@ class ArticleController extends Controller
         }
 
         $article->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
+        BadgeService::upGradeBadgeStatus($request);
         DB::commit();
         return to_route('articles.index')->with('status','投稿を作成しました。');
     }catch(\Exception $e){
@@ -223,6 +225,7 @@ class ArticleController extends Controller
             $tags[] = $tagInstance->id;
         }
         $article->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
+        BadgeService::upGradeBadgeStatus($request);
 
         return to_route('articles.showMyDraftArticles',Auth::id())->with('status','情報を更新しました。');
     }
@@ -236,7 +239,7 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         $article->delete();
-
+        BadgeService::downGradeBadgeStatus($article->user->id);
         return redirect()->route('articles.index');
     }
 
