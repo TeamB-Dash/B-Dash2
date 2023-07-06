@@ -1,7 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        マイブログ一覧
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        @if (Auth::check() && $articles->first()->user_id === Auth::user()->id)
+            マイブログ一覧
+        @else
+            {{ $articles->first()->user->name }}さんのブログ一覧
+        @endif
         </h2>
     </x-slot>
 
@@ -14,15 +18,16 @@
         <div class="container px-5 py-24 mx-auto">
             <div class="flex flex-wrap -m-12">
                 <div class="w-full">
-                    <button
-                    type="button"
-                    onclick="location.href='{{ route('articles.showMyDraftArticles', Auth::user()->id) }}' "
-                    class="inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
-                    style="background-color:rgb(178, 106, 245)"
-                    data-te-ripple-init
-                    data-te-ripple-color="light">
-                    下書き中のブログ一覧へ
-                    </button>
+                    @if (Auth::check() && $articles->first()->user_id === Auth::user()->id)
+                        <button type="button" 
+                        onclick="location.href='{{ route('articles.showMyDraftArticles', Auth::user()->id) }}'" 
+                          class="inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg" 
+                          style="background-color:rgb(178, 106, 245)" 
+                          data-te-ripple-init 
+                          data-te-ripple-color="light">
+                            下書き中のブログ一覧へ
+                        </button>
+                    @endif
                 </div>
 
                 @if ($articles->count() === 0)
@@ -60,8 +65,8 @@
                             </svg>
                             </span>
                             </div>
-                            <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4"><a href="{{ route('articles.show', ['article' => $article]) }}">{{$article->title}}</a></h2>
-                            <p class="leading-relaxed mb-8">{{$article->body}}</p>
+                            <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4"><a href="{{ route('articles.show', ['article' => $article]) }}">{{Str::limit($article->title, 35, '...')}}</a></h2>
+                            <p class="leading-relaxed mb-8"> {{ Str::limit($article->body, 150, '...') }}</p>
                             </div>
                             @endforeach
 

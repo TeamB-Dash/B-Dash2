@@ -24,8 +24,8 @@ class ArticleComments extends Model
         return $this->belongsTo('App\Models\Article');
     }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo('App\Models\User');
-    }
+    public function user()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
 }

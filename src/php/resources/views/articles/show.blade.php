@@ -158,6 +158,7 @@
 			<div>
 				<ul>
 				@forelse ($article->articleComments as $comment)
+				@if (!$comment->is_deleted)
 					<li>
 						<p id="comment-{{ $comment->id }}">{{ $comment->comment }}</p>
 						@if (Auth::check() && Auth::user()->id === $comment->user->id)
@@ -190,9 +191,10 @@
 							</form>
 						@endif
 					</li>
+					@endif
 				@empty
 					<li>コメントはありません</li>
-				@endforelse
+					@endforelse
 				</ul>
 			</div> 
 			

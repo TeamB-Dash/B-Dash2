@@ -31,6 +31,7 @@ class ArticleController extends Controller
         $rankingByNumberOfArticlesPerTag = RankingService::TagRanking();
 
         $articlesQuery = Article::query()
+            ->where('is_deleted', false)
             ->orderByDesc('created_at')
             ->whereNotNull('shipped_at')
             ->orderByDesc('created_at');
@@ -231,8 +232,18 @@ class ArticleController extends Controller
      */
     public function show(Article $article, User $user, ArticleFavorites $articleFavorites, ArticleComments $comments, ArticleCategories $articleCategories)
 {
+    if ($article->is_deleted) {
+        abort(404); // 論理削除された記事の場合は404エラーを返す
+    }
+
     $article->load('articleComments.user');
     $category = $articleCategories->find($article->article_category_id);
+
+    // $article->load(['articleComments.user' => function ($query) {
+    //     $query->where('is_deleted', false); // 論理削除されていないコメントのみ取得する
+    // }]);
+    // $category = $articleCategories->find($article->article_category_id);
+    $comments = $comments->where('is_deleted', false)->get();
 
     return view('articles.show', [
         'article' => $article,
@@ -270,20 +281,25 @@ class ArticleController extends Controller
         // $article->fill($request->all())->save();
         // return redirect()->route('articles.index');
 
-        $article = Article::find($article)->first();
+        // $article = Article::find($article)->first();
+        $article->load('tags');
+
         // 下書き保存の更新処理
         if(isset($request->saveAsDraft)){
             $article->title = $request->title;
             $article->body = $request->body;
+            $article->article_category_id = $request->article_category_id;
             $article->shipped_at = null;
         // 公開した質問の更新処理
         }else if(isset($request->update)){
             $article->title = $request->title;
             $article->body = $request->body;
+            $article->article_category_id = $request->article_category_id;
         // 下書きを公開する処理
         }else if(isset($request->saveAsPublicArticle)){
             $article->title = $request->title;
             $article->body = $request->body;
+            $article->article_category_id = $request->article_category_id;
             $article->shipped_at = Carbon::now()->format('Y/m/d H:i:s');
         }
         $article->save();
@@ -305,18 +321,25 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Article $article)
-    {
-        $article->delete();
+    // public function destroy(Article $article)
+    // {
+    //     $article->delete();
 
-        return redirect()->route('articles.index');
-    }
+    //     return redirect()->route('articles.index');
+    // }
+        public function destroy(Article $article)
+        {
+    $article->is_deleted = true;
+    $article->save();
 
+    return redirect()->route('articles.index');
+}
     public function showArticles($id){
         $user = User::find($id);
         $articles =  Article::with(['user'])
         ->whereNotNull('shipped_at')
-        ->where('is_deleted','=',false)->where('user_id','=',$user->id)
+        ->where('is_deleted','=',false)
+        ->where('user_id','=',$user->id)
         ->orderBy('created_at','desc')
         ->paginate(10);
 
@@ -329,6 +352,9 @@ class ArticleController extends Controller
     // ユーザーのお気に入り記事を取得
     $user = User::find($id);
     $articleFavorites = $user->articleFavorites()->with('user')
+    ->whereHas('articles', function ($query) {
+        $query->where('is_deleted', false);
+    })
     ->orderBy('created_at', 'desc')
     ->paginate(10);
 
@@ -364,7 +390,9 @@ public function unfavorite(Article $article, Request $request)
 public function showMyDraftArticles($id){
     $user = User::find($id);
     $articles =  Article::with(['user','tags'])
-    ->whereNull('shipped_at')->where('user_id','=',$user->id)
+    ->whereNull('shipped_at')
+    ->where('is_deleted', false)
+    ->where('user_id','=',$user->id)
     ->orderBy('created_at','desc')
     ->paginate(2);
 
@@ -384,6 +412,8 @@ public function commentStore(Request $request, Article $article)
         'is_deleted' => false,
 
     ]);
+    // コメント保存後、記事のコメント数をインクリメント
+    $article->increment('comments_count');
 
     return redirect()->route('articles.show', ['article' => $article->id]);
 
@@ -406,7 +436,14 @@ public function commentUpdate(Request $request, $article, $comment)
 
 public function commentDestroy(Article $article, ArticleComments $comment)
 {
-    $comment->delete();
+    // $comment->delete();
+
+    // コメントの論理削除
+    $comment->update(['is_deleted' => true]);
+
+    // 記事のコメント数をデクリメント
+    $article->decrement('comments_count');
+
 
     return redirect()->route('articles.show', ['article' => $article->id]);
 }
