@@ -69,7 +69,7 @@
                 </div>
                 @endif
             {{-- 質問一覧 --}}
-            <x-answerpanel></x-answerpanel>
+            {{-- <x-answerpanel></x-answerpanel> --}}
             </div>
         </div>
     </section>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
+use App\Models\ArticleCategories;
 use App\Models\User;
 use App\Models\Tag;
 use App\Models\ArticleFavorites;
@@ -14,6 +15,8 @@ use Ramsey\Uuid\Type\Integer;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+
 
 class ArticleController extends Controller
 {
@@ -79,10 +82,22 @@ class ArticleController extends Controller
         }
 
 
-        $articles = $articlesQuery->paginate(20);
 
-        return view('articles.index', compact('articles', 'keyword', 'article_category_id', 'department_id','articleRanking','rankingByNumberOfArticlesPerTag'));
+        // タグ検索
+        $tagId = $request->input('tag_id');
+        if (!empty($tagId)) {
+            $articlesQuery->whereHas('tags', function ($q) use ($tagId) {
+                $q->where('tags.id', $tagId);
+            });
+        }
+
+
+
+        $articles = $articlesQuery->paginate(10);
+
+        return view('articles.index', compact('articles', 'keyword', 'article_category_id', 'department_id','articleRanking','rankingByNumberOfArticlesPerTag','entryDate','tagId'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -102,10 +117,6 @@ class ArticleController extends Controller
      */
     public function store(ArticleRequest $request, Article $article)
     {
-        // $article->fill($request->all());
-        // $article->user_id = $request->user()->id;
-        // $article->shipped_at = Carbon::now()->format('Y/m/d H:i:s');
-        // $article->save();
 
         DB::beginTransaction();
         try{
@@ -119,6 +130,7 @@ class ArticleController extends Controller
                     'is_deleted' =>false,
                     'comments_count' => 0,
                     'shipped_at' => null,
+                    'article_category_id' => $request->article_category_id,
                 ]);
             }else if(isset($request->create)){
                 $article = Article::create([
@@ -128,6 +140,8 @@ class ArticleController extends Controller
                     'is_deleted' =>false,
                     'comments_count' => 0,
                     'shipped_at' => Carbon::now()->format('Y/m/d H:i:s'),
+                    'article_category_id' => $request->article_category_id,
+
                 ]);
             };
 
@@ -143,11 +157,70 @@ class ArticleController extends Controller
         DB::commit();
         return to_route('articles.index')->with('status','投稿を作成しました。');
     }catch(\Exception $e){
-    DB::rollBack();
-    // return route('dashboard');
-        return to_route('articles.index');
+        DB::rollBack();
+        return to_route('articles.index')->with('status','エラー：更新処理に失敗しました。');
 }
 }
+
+// public function store(ArticleRequest $request)
+// {
+//     DB::beginTransaction();
+//     try {
+//         $user = Auth::user();
+//         // 下書き保存か公開かで分岐
+//         if (isset($request->saveAsDraft)) {
+//             $article = Article::create([
+//                 'user_id' => $user->id,
+//                 'title' => $request->title,
+//                 'body' => $request->body,
+//                 'is_deleted' => false,
+//                 'comments_count' => 0,
+//                 'shipped_at' => null,
+//                 'article_category_id' => $request->article_category_id,
+//             ]);
+
+//             $tags = [];
+//             foreach ($request->tags as $tag) {
+//                 $tagInstance = Tag::firstOrCreate(['name' => $tag]);
+//                 $tags[] = $tagInstance->id;
+//             }
+//             $article->tags()->syncWithPivotValues($tags, ['is_deleted' => false]);
+
+//             DB::commit();
+
+//             // 下書き保存の処理を行った後、下書き一覧ページにリダイレクトする
+//             return redirect()->route(route('articles.showMyDraftArticles', Auth::user()->id))->with('status', '下書きを保存しました。');
+
+//         } elseif (isset($request->create)) {
+//             $article = Article::create([
+//                 'user_id' => $user->id,
+//                 'title' => $request->title,
+//                 'body' => $request->body,
+//                 'is_deleted' => false,
+//                 'comments_count' => 0,
+//                 'shipped_at' => Carbon::now()->format('Y/m/d H:i:s'),
+//                 'article_category_id' => $request->article_category_id,
+//             ]);
+
+//             $tags = [];
+//             foreach ($request->tags as $tag) {
+//                 $tagInstance = Tag::firstOrCreate(['name' => $tag]);
+//                 $tags[] = $tagInstance->id;
+//             }
+//             $article->tags()->syncWithPivotValues($tags, ['is_deleted' => false]);
+
+//             DB::commit();
+
+//             // 公開保存の処理を行った後、一覧ページにリダイレクトする
+//             return redirect()->route('articles.index')->with('status', '投稿を作成しました。');
+//         }
+//     } catch (\Exception $e) {
+//         DB::rollBack();
+//         return redirect()->back()->withInput()->withErrors(['error' => '投稿の保存中にエラーが発生しました。']);
+//     }
+// }
+
+
 
 
     /**
@@ -156,20 +229,19 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Article $article, User $user, ArticleFavorites $articleFavorites, ArticleComments $comments)
-    {
+    public function show(Article $article, User $user, ArticleFavorites $articleFavorites, ArticleComments $comments, ArticleCategories $articleCategories)
+{
+    $article->load('articleComments.user');
+    $category = $articleCategories->find($article->article_category_id);
 
-        // $article = Article::with('articleComments')->find($article->id);
-        $article->load('articleComments.user');
-
-
-        return view('articles.show', [
-            'article' => $article,
-            'user' => $user,
-            'articleFavorites' => $articleFavorites,
-            'comments' => $comments,
-        ]);
-    }
+    return view('articles.show', [
+        'article' => $article,
+        'user' => $user,
+        'articleFavorites' => $articleFavorites,
+        'comments' => $comments,
+        'articleCategory' => $category, 
+    ]);
+}
 
     /**
      * Show the form for editing the specified resource.
@@ -224,7 +296,7 @@ class ArticleController extends Controller
         }
         $article->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
 
-        return to_route('articles.showMyDraftArticles',Auth::id())->with('status','情報を更新しました。');
+        return to_route('articles.myblog',Auth::id())->with('status','情報を更新しました。');
     }
 
     /**
@@ -288,6 +360,7 @@ public function unfavorite(Article $article, Request $request)
 // }
     return redirect()->route('articles.show', ['article' => $article->id]);
 }
+
 public function showMyDraftArticles($id){
     $user = User::find($id);
     $articles =  Article::with(['user','tags'])
