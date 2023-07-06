@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('admin.users.update', ['id' => $user->id]) }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
@@ -25,10 +25,10 @@
         </div>
 
         <div>
-            <label for="name">氏名</label>
-            <div id="name" name="name" type="text" class="mt-1 block w-full" required autofocus
-                autocomplete="name">{{ $user->name }}
-            </div class="mt-2" :messages="$errors - > get('name')">
+            <x-input-label for="name" :value="__('氏名')" />
+            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)"
+                required autofocus autocomplete="name" />
+            <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
         <div>
@@ -44,30 +44,52 @@
 
         <div>
             <label for="beginner_flg">アサイン状況</label>
-            <div id="beginner_flg" name="beginner_flg" type="text" class="mt-1 block w-full" required autofocus
-                autocomplete="beginner_flg">{{ $allocation }}
-            </div class="mt-2" :messages="$errors - > get('beginner_flg')">
+            <select id="beginner_flg" name="beginner_flg" type="boolean" class="mt-1 block w-full">
+                <option value="" @if ($user->beginner_flg === null) selected @endif>指定なし</option>
+                <option value="true" @if ($user->beginner_flg === true) selected @endif>アサイン中</option>
+                <option value="false" @if ($user->beginner_flg === false) selected @endif>待機中</option>
+            </select>
         </div>
 
         <div>
-            <label for="email">メールアドレス</label>
-            <div id="email" name="email" type="text" class="mt-1 block w-full" required autofocus
-                autocomplete="email">{{ $user->email }}
-            </div class="mt-2" :messages="$errors - > get('email')">
+            <x-input-label for="email" :value="__('メールアドレス')" />
+            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)"
+                required autocomplete="username" />
+            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+
+            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
+                <div>
+                    <p class="text-sm mt-2 text-gray-800">
+                        {{ __('Your email address is unverified.') }}
+
+                        <button form="send-verification"
+                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            {{ __('Click here to re-send the verification email.') }}
+                        </button>
+                    </p>
+
+                    @if (session('status') === 'verification-link-sent')
+                        <p class="mt-2 font-medium text-sm text-green-600">
+                            {{ __('A new verification link has been sent to your email address.') }}
+                        </p>
+                    @endif
+                </div>
+            @endif
         </div>
 
         <div>
-            <label for="entry_date">入社日</label>
-            <div id="entry_date" name="entry_date" type="text" class="mt-1 block w-full" required autofocus
-                autocomplete="entry_date">{{ $entry_date }}
-            </div class="mt-2" :messages="$errors - > get('entry_date')">
+            <x-input-label for="entry_date" :value="__('入社日')" />
+            <x-text-input id="entry_date" name="entry_date" type="date" class="mt-1 block w-full" :value="old('entry_date', $user->entry_date)"
+                required autofocus autocomplete="entry_date" />
+            <x-input-error class="mt-2" :messages="$errors->get('entry_date')" />
         </div>
 
         <div>
-            <label for="gender">性別</label>
-            <div id="gender" name="gender" type="text" class="mt-1 block w-full" required autofocus
-                autocomplete="gender">{{ $gender }}
-            </div class="mt-2" :messages="$errors - > get('gender')">
+            <label for="gender">性別</label><br>
+            <input id="gender" name="gender" type="radio" value="1"
+                @if ($user->gender == 1) checked @endif>男性<br>
+            <input id="gender" name="gender" type="radio" value="2"
+                @if ($user->gender == 2) checked @endif>女性
         </div>
 
         <div>
