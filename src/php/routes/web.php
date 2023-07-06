@@ -60,14 +60,13 @@ Route::middleware(['auth'])->group(function () {
 // プロフィール関連のルート
 Route::middleware('auth')
     ->controller(ProfileController::class)
-    ->name('profile.')
     ->group(function () {
-        Route::get('/profile/{id}', 'show')->name('show');
-        Route::get('/profile', 'edit')->name('edit');
-        Route::patch('/profile', 'update')->name('update');
-        Route::post('/profile/follow{id}', 'follow')->name('follow');
-        Route::post('/profile/unfollow{id}', 'unfollow')->name('unfollow');
-        Route::post('/profile/submitInquiry', 'submitInquiry')->name('submitInquiry');
+        Route::get('/profile/{id}', 'show')->name('profile.show');
+        Route::get('/profile', 'edit')->name('profile.edit');
+        Route::patch('/profile', 'update')->name('profile.update');
+        Route::post('/profile/follow{id}', 'follow')->name('profile.follow');
+        Route::post('/profile/unfollow{id}', 'unfollow')->name('profile.unfollow');
+        Route::post('/profile/submitInquiry', 'submitInquiry')->name('profile.submitInquiry');
         Route::get('/searchUser', 'searchUser')->name('searchUser');
     });
 
