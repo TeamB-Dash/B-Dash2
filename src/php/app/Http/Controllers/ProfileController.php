@@ -34,7 +34,7 @@ class ProfileController extends Controller
         $blood_type = CheckFormService::checkBloodType($user_profile);
         $entry_date = Carbon::parse($user->entry_date)->format('Y年m月d日');
         $birthday = Carbon::parse($user_profile->birthday)->format('Y年m月d日');
-        // $badges = BadgeService::checkBadges($id);
+        $badges = BadgeService::checkBadges($id);
 
         return view('profile.show', [
             'user' => $user,
@@ -45,7 +45,7 @@ class ProfileController extends Controller
             'blood_type' => $blood_type,
             'entry_date' => $entry_date,
             'birthday' => $birthday,
-            // 'badges' => $badges,
+            'badges' => $badges,
         ]);
     }
 
