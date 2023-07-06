@@ -168,7 +168,7 @@
                     <a class="inline-flex items-center">
                     <img alt="blog" src="https://dummyimage.com/104x104" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
                     <span class="flex-grow flex flex-col pl-4">
-                        <span class="title-font font-medium text-gray-900">{{ $report->user->name }}</span>
+                        <span class="title-font font-medium text-gray-900"><a href="{{ route('profile.show', [''])}}">{{ $report->user->name }}</a></span>
                         <span class="title-font font-medium text-gray-900">{{ $report->target_month->format('Y')}}年{{ $report->target_month->format('m')}}月分</span>
                         <button type="submit" form="searchForm" name="department" value="{{$report->user->department->id}}">【{{$report->user->department->name}}】</button>
                         <button type="submit" form="searchForm" name="hireMonth" value="{{$report->created_at->format('Y-m') }}" class="text-gray-400 text-xs tracking-widest mt-0.5">{{ \Carbon\Carbon::parse($report->user->entry_date)->format('Y年m月')}}入社</button>
@@ -197,7 +197,7 @@
                     </svg>
                     </span>
                 </div>
-                <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4"><a href="{{route('questions.show',['question' => $report->id])}}">{{$report->title}}</a></h2>
+                <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4"><a href="{{route('monthlyReport.show',['monthlyReport' => $report->id])}}">{{ $report->project_summary }}</a></h2>
                 @endforeach
 
                 {{$reports->appends(request()->query())->links()}}
