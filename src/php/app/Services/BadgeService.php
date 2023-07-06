@@ -99,7 +99,7 @@ class BadgeService
 
     // ユーザーが保持するバッジを検索して返す処理
     public static function checkBadges($id){
-        $badges = UserBadge::where('is_deleted',false)->where('shipped_at',true)->where('user_id',$id)->orderBy('badge_id','asc')->get();
+        $badges = UserBadge::where('is_deleted',false)->where('user_id',$id)->orderBy('badge_id','asc')->get();
         return ($badges);
     }
 

@@ -71,38 +71,37 @@ Route::middleware('auth')->group(function(){
     });
 
     // プロフィール関連のルート
-    Route::prefix('profile')
-        ->middleware('auth')
-        ->controller(ProfileController::class)
-        ->name('profile.')
-        ->group(function () {
-            Route::get('/{id}', 'show')->name('show');
-            Route::get('/', 'edit')->name('edit');
-            Route::patch('/', 'update')->name('update');
-            Route::post('/follow{id}', 'follow')->name('follow');
-            Route::post('/unfollow{id}', 'unfollow')->name('unfollow');
-            Route::post('/submitInquiry', 'submitInquiry')->name('submitInquiry');
-            // Route::delete('/', 'destroy')->name('destroy');
-        });
+    Route::middleware('auth')
+    ->controller(ProfileController::class)
+    ->group(function () {
+        Route::get('/profile/{id}', 'show')->name('profile.show');
+        Route::get('/profile', 'edit')->name('profile.edit');
+        Route::patch('/profile', 'update')->name('profile.update');
+        Route::post('/profile/follow{id}', 'follow')->name('profile.follow');
+        Route::post('/profile/unfollow{id}', 'unfollow')->name('profile.unfollow');
+        Route::post('/profile/submitInquiry', 'submitInquiry')->name('profile.submitInquiry');
+        Route::get('/searchUser', 'searchUser')->name('searchUser');
+    });
 
     // 月報関連のルート
-    Route::middleware('auth')->group(function() {
+    Route::middleware('auth')->group(function () {
 
-        Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name('monthlyReport.index');
-        Route::get('/monthly_reports/create', [MonthlyReportController::class, 'create'])->name('monthlyReport.create');
-        Route::post('/monthly_reports', [MonthlyReportController::class, 'store'])->name('monthlyReport.store');
-        Route::get('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'show'])->name('monthlyReport.show');
-        Route::get('/monthly_reports/{monthlyReport}/edit', [MonthlyReportController::class, 'edit'])->name('monthlyReport.edit');
-        Route::patch('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'update'])->name('monthlyReport.update');
-        Route::delete('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'destroy'])->name('monthlyReport.destroy');
-        Route::get('/monthly_reports/users/{id}', [MonthlyReportController::class, 'showMyReports'])->name('monthlyReport.showMyReports');
-        Route::get('/monthly_reports/users/{id}/drafts', [MonthlyReportController::class, 'showMyDraftReports'])->name('monthlyReport.showMyDraftReports');
+    Route::get('/monthly_reports', [MonthlyReportController::class, 'index'])->name('monthlyReport.index');
+    Route::get('/monthly_reports/create', [MonthlyReportController::class, 'create'])->name('monthlyReport.create');
+    Route::post('/monthly_reports', [MonthlyReportController::class, 'store'])->name('monthlyReport.store');
+    Route::get('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'show'])->name('monthlyReport.show');
+    Route::get('/monthly_reports/{monthlyReport}/edit', [MonthlyReportController::class, 'edit'])->name('monthlyReport.edit');
+    Route::patch('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'update'])->name('monthlyReport.update');
+    Route::delete('/monthly_reports/{monthlyReport}', [MonthlyReportController::class, 'destroy'])->name('monthlyReport.destroy');
+    Route::get('/monthly_reports/users/{id}', [MonthlyReportController::class, 'showMyReports'])->name('monthlyReport.showMyReports');
+    Route::get('/monthly_reports/users/{id}/drafts', [MonthlyReportController::class, 'showMyDraftReports'])->name('monthlyReport.showMyDraftReports');
     });
 
     //コメント関連
     Route::post('/monthly_reports/{monthlyReport}/comments', [MonthlyReportController::class, 'commentStore'])->name('monthlyReport.commentStore');
     Route::patch('/monthly_reports/{monthlyReport}/comments/{comment}', [MonthlyReportController::class, 'commentUpdate'])->name('monthlyReport.commentUpdate');
     Route::delete('/monthly_reports/{monthlyReport}/{comment}', [MonthlyReportController::class, 'commentDestroy'])->name('monthlyReport.commentDestroy');
+
 
     // 管理者関連のルート
     Route::prefix('/admin')->middleware('judgeAdmin')->group(function () {
@@ -115,7 +114,7 @@ Route::middleware('auth')->group(function(){
             Route::get('/edit/{id}', [AdminController::class, 'edit'])->name('admin.users.edit');
             Route::get('/showDeletePage/{id}', [AdminController::class, 'showDeletePage'])->name('admin.users.showDeletePage');
             Route::patch('/update/{id}', [AdminController::class, 'update'])->name('admin.users.update');
-            Route::delete('/destroy/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
+            Route::patch('/destroy/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
 
             Route::get('/roles', [AdminController::class, 'roles'])->name('admin.users.role');
             Route::get('/roles/new', [AdminController::class, 'registerNewRole'])->name('admin.users.registerNewRole');
@@ -130,9 +129,10 @@ Route::middleware('auth')->group(function(){
         Route::prefix('/inquiry')->group(function () {
             Route::get('/showAll', [AdminInquiryController::class, 'showAll'])->name('admin.inquiry.showAll');
             Route::get('/mailList', [AdminInquiryController::class, 'mailList'])->name('admin.inquiry.mailList');
-            Route::patch('/store', [AdminInquiryController::class, 'update'])->name('admin.inquiry.update');
+                Route::patch('/store', [AdminInquiryController::class, 'update'])->name('admin.inquiry.update');
         });
     });
+
     Route::fallback(function(){ //存在しないURLは自動的にTOPにリダイレクトさせる。
         return redirect(abort(404));
     });
