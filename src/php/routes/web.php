@@ -42,17 +42,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/questions/{question}/{comment}', [QuestionController::class, 'commentDestroy'])->name('questions.commentDestroy');
 });
 
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::post('/profile/following/destroy{id}', [ProfileController::class, 'followingUserDestroy'])->name('following.destroy');
-    Route::post('/profile/followed/destroy{id}', [ProfileController::class, 'followedUserDestroy'])->name('followed.destroy');
-    Route::post('/profile/submitInquiry', [ProfileController::class, 'submitInquiry'])->name('profile.submitInquiry');
-    Route::get('/searchUser', [ProfileController::class, 'searchUser'])->name('searchUser');
-});
-
 //ブログ関連のルーティング
 Route::middleware(['auth'])->group(function () {
     Route::resource('/articles', ArticleController::class)->except(['index', 'show']);
@@ -69,17 +58,17 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // プロフィール関連のルート
-Route::prefix('profile')
-    ->middleware('auth')
+Route::middleware('auth')
     ->controller(ProfileController::class)
     ->name('profile.')
     ->group(function () {
-        Route::get('/{id}', 'show')->name('show');
-        Route::get('/', 'edit')->name('edit');
-        Route::patch('/', 'update')->name('update');
-        Route::post('/follow{id}', 'follow')->name('follow');
-        Route::post('/unfollow{id}', 'unfollow')->name('unfollow');
-        Route::post('/submitInquiry', 'submitInquiry')->name('submitInquiry');
+        Route::get('/profile/{id}', 'show')->name('show');
+        Route::get('/profile', 'edit')->name('edit');
+        Route::patch('/profile', 'update')->name('update');
+        Route::post('/profile/follow{id}', 'follow')->name('follow');
+        Route::post('/profile/unfollow{id}', 'unfollow')->name('unfollow');
+        Route::post('/profile/submitInquiry', 'submitInquiry')->name('submitInquiry');
+        Route::get('/searchUser', 'searchUser')->name('searchUser');
     });
 
 // 月報関連のルート
