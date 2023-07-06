@@ -131,7 +131,7 @@ class SearchService
                 $query->where('department_id',$department);
             });
         } else if(isset($request->hiredMonth)){
-            $hiredMonth = $request->hireMonth;
+            $hiredMonth = $request->hiredMonth;
             $subQuery = $subQuery->whereHas('user',function($query) use ($hiredMonth) {
                 $query->where('entry_date', 'LIKE', $hiredMonth.'%');
             });
