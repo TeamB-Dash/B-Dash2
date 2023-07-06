@@ -44,17 +44,6 @@ Route::middleware('auth')->group(function(){
         Route::delete('/questions/{question}/{comment}', [QuestionController::class, 'commentDestroy'])->name('questions.commentDestroy');
     });
 
-
-    Route::middleware('auth')->group(function () {
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-        Route::post('/profile/following/destroy{id}', [ProfileController::class, 'followingUserDestroy'])->name('following.destroy');
-        Route::post('/profile/followed/destroy{id}', [ProfileController::class, 'followedUserDestroy'])->name('followed.destroy');
-        Route::post('/profile/submitInquiry', [ProfileController::class, 'submitInquiry'])->name('profile.submitInquiry');
-        Route::get('/searchUser', [ProfileController::class, 'searchUser'])->name('searchUser');
-    });
-
     //ブログ関連のルーティング
     Route::middleware(['auth'])->group(function () {
         Route::resource('/articles', ArticleController::class)->except(['index', 'show']);
