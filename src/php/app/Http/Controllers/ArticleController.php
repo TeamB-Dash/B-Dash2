@@ -162,68 +162,6 @@ class ArticleController extends Controller
         return to_route('articles.index')->with('status','エラー：更新処理に失敗しました。');
 }
 }
-
-// public function store(ArticleRequest $request)
-// {
-//     DB::beginTransaction();
-//     try {
-//         $user = Auth::user();
-//         // 下書き保存か公開かで分岐
-//         if (isset($request->saveAsDraft)) {
-//             $article = Article::create([
-//                 'user_id' => $user->id,
-//                 'title' => $request->title,
-//                 'body' => $request->body,
-//                 'is_deleted' => false,
-//                 'comments_count' => 0,
-//                 'shipped_at' => null,
-//                 'article_category_id' => $request->article_category_id,
-//             ]);
-
-//             $tags = [];
-//             foreach ($request->tags as $tag) {
-//                 $tagInstance = Tag::firstOrCreate(['name' => $tag]);
-//                 $tags[] = $tagInstance->id;
-//             }
-//             $article->tags()->syncWithPivotValues($tags, ['is_deleted' => false]);
-
-//             DB::commit();
-
-//             // 下書き保存の処理を行った後、下書き一覧ページにリダイレクトする
-//             return redirect()->route(route('articles.showMyDraftArticles', Auth::user()->id))->with('status', '下書きを保存しました。');
-
-//         } elseif (isset($request->create)) {
-//             $article = Article::create([
-//                 'user_id' => $user->id,
-//                 'title' => $request->title,
-//                 'body' => $request->body,
-//                 'is_deleted' => false,
-//                 'comments_count' => 0,
-//                 'shipped_at' => Carbon::now()->format('Y/m/d H:i:s'),
-//                 'article_category_id' => $request->article_category_id,
-//             ]);
-
-//             $tags = [];
-//             foreach ($request->tags as $tag) {
-//                 $tagInstance = Tag::firstOrCreate(['name' => $tag]);
-//                 $tags[] = $tagInstance->id;
-//             }
-//             $article->tags()->syncWithPivotValues($tags, ['is_deleted' => false]);
-
-//             DB::commit();
-
-//             // 公開保存の処理を行った後、一覧ページにリダイレクトする
-//             return redirect()->route('articles.index')->with('status', '投稿を作成しました。');
-//         }
-//     } catch (\Exception $e) {
-//         DB::rollBack();
-//         return redirect()->back()->withInput()->withErrors(['error' => '投稿の保存中にエラーが発生しました。']);
-//     }
-// }
-
-
-
-
     /**
      * Display the specified resource.
      *
@@ -238,11 +176,6 @@ class ArticleController extends Controller
 
     $article->load('articleComments.user');
     $category = $articleCategories->find($article->article_category_id);
-
-    // $article->load(['articleComments.user' => function ($query) {
-    //     $query->where('is_deleted', false); // 論理削除されていないコメントのみ取得する
-    // }]);
-    // $category = $articleCategories->find($article->article_category_id);
     $comments = $comments->where('is_deleted', false)->get();
 
     return view('articles.show', [
@@ -278,8 +211,6 @@ class ArticleController extends Controller
      */
     public function update(ArticleRequest $request, Article $article)
     {
-        // $article->fill($request->all())->save();
-        // return redirect()->route('articles.index');
 
         // $article = Article::find($article)->first();
         $article->load('tags');
@@ -321,12 +252,6 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    // public function destroy(Article $article)
-    // {
-    //     $article->delete();
-
-    //     return redirect()->route('articles.index');
-    // }
         public function destroy(Article $article)
         {
     $article->is_deleted = true;
@@ -365,11 +290,26 @@ public function favorite(Article $article, Request $request)
 {
     if (Auth::check()) {
         $user = Auth::user();
-        $articleFavorites = new ArticleFavorites;
-        $articleFavorites->user_id = $user->id;
-        $articleFavorites->article_id = $article->id;
-        $articleFavorites->is_deleted = false;
-        $articleFavorites->save();
+
+        $existingFavorite = ArticleFavorites::where('user_id', $user->id)
+            ->where('article_id', $article->id)
+            ->first();
+
+        if ($existingFavorite) {
+            // 既存のお気に入りレコードが存在する場合
+            if ($existingFavorite->is_deleted) {
+                // 削除されている場合は is_deleted を false に更新
+                $existingFavorite->is_deleted = false;
+                $existingFavorite->save();
+            }
+        } else {
+            // 新しいお気に入りレコードを作成
+            $articleFavorites = new ArticleFavorites;
+            $articleFavorites->user_id = $user->id;
+            $articleFavorites->article_id = $article->id;
+            $articleFavorites->is_deleted = false;
+            $articleFavorites->save();
+        }
     }
 
     return redirect()->route('articles.show', ['article' => $article->id]);
@@ -377,15 +317,19 @@ public function favorite(Article $article, Request $request)
 
 public function unfavorite(Article $article, Request $request)
 {
-// if (Auth::check()) {
-    $user = Auth::user();
+    if (Auth::check()) {
+        $user = Auth::user();
 
-    $article->articleFavorites()
-    ->where('article_id', $article->id)
-    ->update(['is_deleted' => true]);
-// }
+        $article->articleFavorites()
+            ->where('user_id', $user->id)
+            ->update(['is_deleted' => true]);
+    }
+
     return redirect()->route('articles.show', ['article' => $article->id]);
 }
+
+
+
 
 public function showMyDraftArticles($id){
     $user = User::find($id);
@@ -436,7 +380,6 @@ public function commentUpdate(Request $request, $article, $comment)
 
 public function commentDestroy(Article $article, ArticleComments $comment)
 {
-    // $comment->delete();
 
     // コメントの論理削除
     $comment->update(['is_deleted' => true]);
