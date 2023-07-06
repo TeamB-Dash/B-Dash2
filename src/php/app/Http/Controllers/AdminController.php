@@ -8,6 +8,23 @@ use App\Services\SearchService;
 use App\Models\User;
 use App\Models\UserRole;
 use App\Models\Department;
+use App\Http\Requests\ProfileUpdateRequest;
+use App\Mail\SendInquiryMail;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
+use App\Models\UserProfile;
+use App\Models\UserFollow;
+use App\Models\Inquiry;
+use App\Services\CheckFormService;
+use Carbon\Carbon;
+use App\Services\BadgeService;
+use App\Http\Controllers\Controller;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
 
 use function PHPUnit\Framework\isEmpty;
 use function PHPUnit\Framework\isNull;
@@ -30,7 +47,7 @@ class AdminController extends Controller
         $users = SearchService::searchUser($request);
         $departments = Department::all();
 
-        return view('admin/users/index',compact('users','departments'));
+        return view('admin/users/index', compact('users', 'departments'));
     }
 
     /**
@@ -40,7 +57,11 @@ class AdminController extends Controller
      */
     public function create()
     {
-        return view('admin/users/create');
+        $departments = Department::all();
+
+        return view('admin/users/create', [
+            'departments' => $departments
+        ]);
     }
 
     /**
@@ -51,6 +72,34 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'github_url' => ['string', 'max:255'],
+            'qiita_url' => ['string', 'max:255'],
+            'self_introduction' => ['string', 'max:255']
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'department_id' => $request->department_id,
+            'beginner_flg' => $request->beginner_flg,
+            'entry_date' => $request->entry_date,
+            'gender' => $request->gender
+        ]);
+
+        UserProfile::create([
+            'user_id' => $user->id,
+            'blood_type' => $request->blood_type,
+            'birthday' => $request->birthday,
+            'github_url' => $request->github_url,
+            'qiita_url' => $request->qiita_url,
+            'self_introduction' => $request->self_introduction
+        ]);
+
         return to_route('admin.top')->with('status', 'user created!');
     }
 
@@ -63,7 +112,7 @@ class AdminController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        return view('admin/users/show',compact('user'));
+        return view('admin/users/show', compact('user'));
     }
 
     /**
@@ -75,7 +124,18 @@ class AdminController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        return view('admin/users/edit',compact('user'));
+        $user_profile = UserProfile::where('user_id', $user->id)->first();
+        $departments = Department::all();
+        $followings = $user->followings()->orderBy('user_id')->get();
+        $followers = $user->followers()->orderBy('followed_user_id')->get();
+
+        return view('admin/users/edit', [
+            'user' => $user,
+            'user_profile' => $user_profile,
+            'departments' => $departments,
+            'followings' => $followings,
+            'followers' => $followers,
+        ]);
     }
 
     /**
@@ -85,15 +145,30 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProfileUpdateRequest $request, $id)
     {
-        return to_route('admin.top')->with('status', 'update completed!');
+        $user = User::find($id);
+        $user_profile = UserProfile::where('user_id', $user->id)->first();
+
+        $user->name = $request->name;
+        $user->department_id = $request->department_id;
+        $user->beginner_flg = $request->beginner_flg;
+        $user->email = $request->email;
+        $user->entry_date = $request->entry_date;
+        $user->gender = $request->gender;
+
+        $user_profile->blood_type = $request->blood_type;
+        $user_profile->birthday = $request->birthday;
+        $user_profile->github_url = $request->github_url;
+        $user_profile->qiita_url = $request->qiita_url;
+        $user_profile->self_introduction = $request->self_introduction;
+
+        $user->save();
+        $user_profile->save();
+
+        return redirect()->back()->with('status', '編集しました');
     }
 
-    public function showDeletePage($id){
-        $user = User::find($id);
-        return view('admin/users/deletePage',compact('user'));
-    }
     /**
      * Remove the specified resource from storage.
      *
@@ -102,40 +177,47 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
-        UserRole::where('user_id',$id)->delete();
-        return redirect()->back()->with('status', '削除しました');
+        $user = User::find($id);
+        $user->deleted_at = Carbon::now();
+
+        $user->save();
+
+        return to_route('admin.top')->with('status', '削除しました');
     }
 
-    public function roles(){
-        $users = User::whereHas('role',function($query){
-            $query->where('role','=','0');
+    public function roles()
+    {
+        $users = User::whereHas('role', function ($query) {
+            $query->where('role', '=', '0');
         })
-        ->get();
-        return view('admin/users/showRoles',compact('users'));
+            ->get();
+        return view('admin/users/showRoles', compact('users'));
     }
 
-    public function registerNewRole(Request $request){
+    public function registerNewRole(Request $request)
+    {
         $users = collect([]);
         $request->merge(['status' => 'working']);
-        if(isset($request->name)){
+        if (isset($request->name)) {
             $users = SearchService::searchUser($request);
         }
 
-        return view('admin/users/registerRolePage',compact('users'));
+        return view('admin/users/registerRolePage', compact('users'));
     }
 
-    public function storeNewRole($id){
+    public function storeNewRole($id)
+    {
         $user = User::with(['role'])->find($id);
-        if(!is_null($user->deleted_at) && is_null($user->role)){
+        if (!is_null($user->deleted_at) && is_null($user->role)) {
             $userRole = UserRole::create([
                 'user_id' => $id,
                 'role' => 0,
             ]);
-            return to_route('admin.users.role')->with('status','登録しました');
-        } else if($user->role->role === 0) {
-            return to_route('admin.users.role')->with('status','既に登録済みです');
+            return to_route('admin.users.role')->with('status', '登録しました');
+        } else if ($user->role->role === 0) {
+            return to_route('admin.users.role')->with('status', '既に登録済みです');
         } else {
-            return to_route('admin.users.role')->with('status','登録できないユーザーです');
+            return to_route('admin.users.role')->with('status', '登録できないユーザーです');
         }
     }
 }
