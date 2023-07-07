@@ -25,11 +25,9 @@ class AdminInquiryController extends Controller
     }
 
     public function update(Request $request){
-
         if(isset($request->deleteRole)){
-            $countOfToAdminUser = UserRole::where('role',1)->get()->count();
-            if($countOfToAdminUser === 1){
-                dd('test');
+            $toAdminUsers = UserRole::where('inquiry_send',1)->get();
+            if($toAdminUsers->count() == 1 && $toAdminUsers->first()->user_id == $request->deleteRole){
                 return redirect()->back()->with('status', 'To宛先は最低1人以上必要です');
             }
             $user = User::with(['role'])->find($request->deleteRole);

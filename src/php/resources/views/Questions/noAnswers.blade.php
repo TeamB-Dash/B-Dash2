@@ -15,17 +15,19 @@
 
             @foreach ( $questions as $question )
             <div class="p-12 md:w-1/2 flex flex-col items-start">
-                <a class="inline-flex items-center">
+                <div class="inline-flex items-center w-full">
                 <img alt="blog" src="https://dummyimage.com/104x104" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
-                <span class="flex-grow flex flex-col pl-4">
-                    <span class="title-font font-medium text-gray-900">{{ $question->user->name }}</span>
-                    <span class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $question->created_at->format('Y-m-d')  }}</span><span>【{{$question->user->department->name}}】</span>
-                </span>
-                </a>
-                @foreach ($question->tags as $tag )
-                <span class="inline-block py-1 px-2 rounded bg-indigo-50 text-indigo-500 text-xs font-medium tracking-widest">{{ $tag->name }}</span>
-                @endforeach
-              <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4"><a href="{{route('questions.show',['question' => $question->id])}}">{{$question->title}}</a></h2>
+                    <div class="">
+                        <span class="title-font font-medium text-gray-900">{{ $question->user->name }}</span>
+                        <span class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $question->created_at->format('Y-m-d')  }}</span><span>【{{$question->user->department->name}}】</span>
+                    </div>
+                </div>
+                <div class="flex">
+                    @foreach ($question->tags as $tag )
+                    <span class="inline-block py-1 px-2 rounded bg-indigo-50 text-indigo-500 text-xs font-medium tracking-widest">{{ $tag->name }}</span>
+                    @endforeach
+                </div>
+              <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4"><a href="{{route('questions.show',['question' => $question->id])}}" class="hover:text-blue-500 hover:border-blue-500 hover:border-b-2">{{$question->title}}</a></h2>
             </div>
             @endforeach
 

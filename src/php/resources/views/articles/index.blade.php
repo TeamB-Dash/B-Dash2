@@ -1,34 +1,41 @@
 <x-app-layout>
-		<x-slot name="header">
-			<h2 class="font-semibold text-xl text-gray-800 leading-tight">
-				ブログ一覧
-				@if (!empty($keyword))
-					: キーワード「{{ $keyword }}」に関する結果
-				@endif
-				@if (!empty($department_id))
-					: 所属「{{ App\Models\Department::find($department_id)->name }}」に関する結果
-				@endif
-				@if (!empty($tagId))
-					: タグ「{{ App\Models\Tag::find($tagId)->name }}」に関する結果
-				@endif
-				@if (!empty($article_category_id))
-					: カテゴリー「{{ App\Models\ArticleCategories::find($article_category_id)->name }}」に関する結果
-				@endif
-				@if (!empty($entryDate))
-					: 入社年月日「{{ $entryDate }}」に関する結果
-				@endif
-			</h2>
-			
-		</x-slot>
-		<section class="text-gray-600 body-font overflow-hidden">
-			@if (session('status'))
-			<div class="w-2/3 mx-auto container mt-6 text-center bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
-				<p class="font-bold">{{ session('status') }}</p>
-			</div>
-			@endif
-						
-			<div class="container px-5 py-24 mx-auto">
-				<!-- side content -->
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        ブログ一覧
+		@if (!empty($keyword))
+		: キーワード「{{ $keyword }}」に関する結果
+	@endif
+	@if (!empty($department_id))
+		: 所属「{{ App\Models\Department::find($department_id)->name }}」に関する結果
+	@endif
+	@if (!empty($tagId))
+		: タグ「{{ App\Models\Tag::find($tagId)->name }}」に関する結果
+	@endif
+	@if (!empty($article_category_id))
+		: カテゴリー「{{ App\Models\ArticleCategories::find($article_category_id)->name }}」に関する結果
+	@endif
+	@if (!empty($entryDate))
+		: 入社年月日「{{ $entryDate }}」に関する結果
+	@endif
+</h2>
+
+</x-slot>
+<section class="text-gray-600 body-font overflow-hidden">
+@if (session('status'))
+<div class="w-2/3 mx-auto container mt-6 text-center bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
+	<p class="font-bold">{{ session('status') }}</p>
+</div>
+@endif
+
+
+    <section class="text-gray-600 body-font overflow-hidden">
+        @if (session('status'))
+        <div class="w-2/3 mx-auto container mt-6 text-center bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
+            <p class="font-bold">{{ session('status') }}</p>
+        </div>
+        @endif
+
+        <div class="container px-5 py-24 mx-auto flex">
 				<div class="m-search sticky">
 					<div>
 						<div class="text-center" style="padding-bottom:1.5rem">
@@ -126,6 +133,7 @@
 			  </div>
 			
 			<!-- side content -->
+
              {{-- いいね獲得ランキング（ブログ） --}}
             <x-ranking-of-article-likes :articleRanking="$articleRanking">
             </x-ranking-of-article-likes>

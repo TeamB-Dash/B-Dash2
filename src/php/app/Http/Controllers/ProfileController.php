@@ -55,15 +55,23 @@ class ProfileController extends Controller
         $user = $request->user();
         $user_profile = UserProfile::where('user_id', $user->id)->first();
         $departments = Department::all();
+        $allocation = CheckFormService::checkAllocation($user);
+        $gender = CheckFormService::checkGender($user);
+        $entry_date = Carbon::parse($user->entry_date)->format('Y年m月d日');
         $followings = $user->followings()->orderBy('user_id')->get();
         $followers = $user->followers()->orderBy('followed_user_id')->get();
+        $badges = BadgeService::checkBadges($user->id);
 
         return view('profile.edit', [
             'user' => $user,
             'user_profile' => $user_profile,
             'departments' => $departments,
+            'allocation' => $allocation,
+            'gender' => $gender,
+            'entry_date' => $entry_date,
             'followings' => $followings,
             'followers' => $followers,
+            'badges' => $badges,
         ]);
     }
 
@@ -73,12 +81,7 @@ class ProfileController extends Controller
         $user = $request->user();
         $user_profile = UserProfile::where('user_id', $user->id)->first();
 
-        $user->name = $request->name;
         $user->department_id = $request->department_id;
-        $user->beginner_flg = $request->beginner_flg;
-        // $request->user()->id = $request->email;
-        $user->email = $request->email;
-        $user->entry_date = $request->entry_date;
         $user->gender = $request->gender;
         $user_profile->blood_type = $request->blood_type;
         $user_profile->birthday = $request->birthday;
@@ -150,7 +153,7 @@ class ProfileController extends Controller
     public function submitInquiry(Request $request)
     {
         $rules = [
-            'body' => ['max:1000','required'],
+            'inquiry' => ['max:1000','required'],
         ];
 
         $user_name = User::find($request->user_id)->name;
@@ -162,8 +165,8 @@ class ProfileController extends Controller
         })->select('email')->get()->toArray();
 
         DB::beginTransaction();
-        try{
-            $this->validate($request,$rules);
+        try {
+            $this->validate($request, $rules);
             $inquiry = Inquiry::create([
                 'user_id' => $request->user_id,
                 'body' => $request->inquiry,

@@ -195,25 +195,22 @@ class QuestionController extends Controller
         return to_route('questions.showMyQuestions',Auth::id())->with('status','削除しました。');
     }
 
-    public function showMyQuestions($id){
-        if(Auth::id() != $id){
-            abort(404);
-        }
+    public function showMyQuestions(User $user){
         $questions =  Question::with(['user','tags','questionAnswers'])
         ->whereNotNull('shipped_at')
-        ->where('is_deleted','=',false)->where('user_id','=',$id)
+        ->where('is_deleted','=',false)->where('user_id','=',$user->id)
         ->orderBy('created_at','desc')
         ->paginate(2);
 
-        return view('questions/myQuestions',compact('questions'));
+        return view('questions/myQuestions',compact('questions','user'));
     }
 
-    public function showMyDraftQuestions($id){
-        if(Auth::id() != $id){
+    public function showMyDraftQuestions(User $user){
+        if(Auth::id() != $user->id){
             abort(404);
         }
         $questions =  Question::with(['user','tags','questionAnswers'])
-        ->whereNull('shipped_at')->where('user_id','=',$id)
+        ->whereNull('shipped_at')->where('user_id','=',$user->id)
         ->orderBy('created_at','desc')
         ->paginate(2);
 

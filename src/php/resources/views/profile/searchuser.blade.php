@@ -63,11 +63,16 @@
                     <table class="min-w-full text-left text-sm">
                     <tbody>
                         @foreach ($users as $user )
-                        <tr
-                        class="border-b">
-                        <td class="whitespace-nowrap px-2 py-2 font-medium"><span class="px-2">{{$user->name}}</span><span class="text-gray-400 px-2 text-xs mt-0.5">入社日：{{ $user->entry_date  }}</span><span class="px-2">【{{$user->department->name}}】</span></td>
-                        @endforeach
+                        <tr class="border-b hover:bg-sky-200">
+                            <td class="whitespace-nowrap px-2 py-2 font-medium">
+                                <a href="{{route('profile.show',$user->id)}}">
+                                <span class="px-2">{{$user->name}}</span>
+                                <span class="text-gray-400 px-2 text-xs mt-0.5">入社日：{{ $user->entry_date  }}</span>
+                                <span class="px-2">【{{$user->department->name}}】</span>
+                                </a>
+                            </td>
                         </tr>
+                        @endforeach
                     </tbody>
                     </table>
                 </div>
