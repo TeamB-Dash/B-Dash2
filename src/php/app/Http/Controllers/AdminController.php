@@ -76,9 +76,10 @@ class AdminController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'github_url' => ['string', 'max:255'],
-            'qiita_url' => ['string', 'max:255'],
-            'self_introduction' => ['string', 'max:255']
+            'department_id' => ['required'],
+            'beginner_flg' => ['required'],
+            'entry_date' => ['required'],
+            'gender' => ['required']
         ]);
 
         $user = User::create([
@@ -93,14 +94,10 @@ class AdminController extends Controller
 
         UserProfile::create([
             'user_id' => $user->id,
-            'blood_type' => $request->blood_type,
-            'birthday' => $request->birthday,
-            'github_url' => $request->github_url,
-            'qiita_url' => $request->qiita_url,
-            'self_introduction' => $request->self_introduction
+            'blood_type' => 0
         ]);
 
-        return to_route('admin.top')->with('status', 'user created!');
+        return to_route('admin.top')->with('status', '登録しました');
     }
 
     /**
