@@ -136,6 +136,17 @@
                     @endif
                     <x-input-error class="mt-2" :messages="$errors->get('self_introduction')" />
                 </div>
+
+                <div class="flex flex-wrap">
+                    <p class="w-full text-lg font-medium text-gray-900">
+                        ブログバッジ
+                    </p>
+                    @foreach($badges as $badge)
+                    <div class="px-6 py-4 space-y-6 w-1/4">
+                        <img src="/storage/images/post{{$badge->badge_id}}.png" alt="">
+                    </div>
+                    @endforeach
+                </div>
             </div>
         </section>
 </x-app-layout>

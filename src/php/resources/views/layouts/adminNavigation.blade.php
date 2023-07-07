@@ -154,11 +154,20 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
-                            <x-dropdown-link :href="route('dashboard')"
+                            <x-dropdown-link :href="route('top')"
                                 onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                お問い合わせ
+                                パスワード変更
                             </x-dropdown-link>
+
+                            <x-dropdown-link>
+                                <button
+                                    class="w-full py-1 px-0.5 text-left rounded hover:bg-blue-300  focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                    type="button" data-modal-toggle="authentication-modal">
+                                    お問い合わせ
+                                </button>
+                            </x-dropdown-link>
+
                             <x-dropdown-link :href="route('logout')"
                                 onclick="event.preventDefault();
                                                 this.closest('form').submit();">
@@ -188,8 +197,8 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+            <x-responsive-nav-link :href="route('top')" :active="request()->routeIs('top')">
+                TOP
             </x-responsive-nav-link>
         </div>
 
@@ -235,7 +244,18 @@
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-
+                    <x-responsive-nav-link :href="route('top')"
+                        onclick="event.preventDefault();
+                                        this.closest('form').submit();">
+                        パスワード変更
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link>
+                        <button
+                            class="w-full py-1 px-0.5 text-left rounded hover:bg-blue-300  focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            type="button" data-modal-toggle="authentication-modal">
+                            お問い合わせ
+                        </button>
+                    </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('logout')"
                         onclick="event.preventDefault();
                                         this.closest('form').submit();">
@@ -246,3 +266,5 @@
         </div>
     </div>
 </nav>
+
+<x-modal-component :user="Auth::id()"></x-modal-component>

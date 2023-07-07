@@ -18,7 +18,7 @@
 							<div class="form-group">
 								<label class="control-label col-sm-3" for="target_month">対象月</label>
                                 <input type="month" placeholder="対象月" name="target_month"
-                                class="w-full focus:outline-none text-gray-700"/>
+                                class="w-full focus:outline-none text-gray-700" value="{{ old('target_month') }}"/>
 							</div>
 						{{-- </form> --}}
 						{{-- <form class="form-horizontal" id="new_monthly_report" action="{{ route('monthlyReport.store') }}" accept-charset="UTF-8" method="post"><input type="hidden" name="_csrf" value="521a7e6e-5be5-4f92-bbb0-ffab8c302449"/> --}}
@@ -27,10 +27,10 @@
 									<label class="control-label col-sm-3" for="assign">今月のアサイン状況</label>
 									<div class="col-sm-9 btn-group" data-toggle="buttons">
   										<label class="btn btn-default">
-    										<input type="radio" name="assign" id="assigned" autocomplete="off" value="2">アサイン中
+    										<input type="radio" name="assign" id="assigned" autocomplete="off" value="2" @if (old('assign') == '2') checked @endif>アサイン中
  										</label>
 										<label class="btn btn-default">
-   											 <input type="radio" name="assign" id="waiting" autocomplete="off" value="1"> 待機中
+   											 <input type="radio" name="assign" id="waiting" autocomplete="off" value="1" @if (old('assign') == '1') checked @endif> 待機中
  										</label>
 									</div>
 								</div>
@@ -42,7 +42,7 @@
 										<div class="markdown-editor">
 											<div class="tab-content markdown-content">
 												<div class="tab-pane active" id="project_summary-write">
-													<textarea rows="15" cols="30" class=" w-full" placeholder="例）# 英語学習アプリ開発" name="project_summary" id="project_summary"></textarea>
+													<textarea rows="15" cols="30" class=" w-full" placeholder="例）# 英語学習アプリ開発" name="project_summary" id="project_summary">{{ old('project_summary') }}</textarea>
 													{{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
 												</div>
 												<div class="tab-pane content-md-preview markdown-body" id="project_summary-preview"></div>
@@ -139,8 +139,8 @@
 "例）
 #### API仕様を整理する
 既に利用しているAPIに関するドキュメントが散らばっている＆欠けている状態だったので、GithubのIssuesに整理したドキュメントを書いた。
-進捗 100%"
-														name="business_content" id="business_content"></textarea>
+進捗 100%" 
+														name="business_content" id="business_content">{{ old('business_content') }}</textarea>
 													{{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
 												</div>
 												<div class="tab-pane content-md-preview markdown-body" id="business_content-preview"></div>
@@ -174,7 +174,7 @@
 1. ・・・・のでできた。
 2. ・・・・なのであまりできなかった。
 3. ・・・・のでできなかった。"
-													 	name="looking_back" id="looking_back"></textarea>
+													 	name="looking_back" id="looking_back">{{ old('looking_back') }}</textarea>
 													{{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
 												</div>
 												<div class="tab-pane content-md-preview markdown-body" id="looking_back-preview"></div>
@@ -195,7 +195,7 @@
 1.
 2.
 3."
-													 name="next_month_goals" id="next_month_goals"></textarea>
+													 name="next_month_goals" id="next_month_goals">{{ old('next_month_goals') }}</textarea>
 												{{-- <p><a class="text-info" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/" target="_blank">Markdown</a><span>記法が使えます。</span></p> --}}
 											</div>
 											<div class="tab-pane content-md-preview markdown-body" id="next_month_goals-preview"></div>

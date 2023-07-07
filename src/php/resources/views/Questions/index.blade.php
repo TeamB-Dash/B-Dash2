@@ -8,6 +8,7 @@
             @endif
         </h2>
     </x-slot>
+
     <section class="text-gray-600 body-font overflow-hidden">
         @if (session('status'))
             <div class="w-2/3 mx-auto container mt-6 text-center bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3"
@@ -19,31 +20,27 @@
             <div class="w-3/4">
 
                 @foreach ($questions as $question)
-                    <div class=" items-start">
-                        <a class="inline-flex items-center">
+                    <div class="mb-12 items-start">
+                        <div class="inline-flex items-center w-full">
                             <img alt="blog" src="https://dummyimage.com/104x104"
                                 class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
-                            <span class="flex-grow flex flex-col pl-4">
-                                <span class="title-font font-medium text-gray-900">{{ $question->user->name }}</span>
-                                <button type="submit" form="Fsearchorm" name="hireMonth"
-                                    value="{{ $question->created_at->format('Y-m') }}"
-                                    class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $question->created_at->format('Y-m-d') }}</button>
+                            <div class="">
+                                【<button type="submit" form="searchForm" name="hiredMonth"
+                                    value="{{ $question->user->entry_date }}"
+                                    class="inline-box text-blue-700 text-xs tracking-widest mt-0.5 hover:text-blue-500 hover:border-blue-500 hover:border-b-2">{{ \Carbon\Carbon::parse($question->user->entry_date)->format('Y-m') }}</button>
                                 <button type="submit" form="searchForm" name="department"
-                                    value="{{ $question->user->department->id }}">【{{ $question->user->department->name }}】</button>
-                            </span>
-                        </a>
+                                    value="{{ $question->user->department->id }}"
+                                    class="inline-box text-blue-700 text-xs tracking-widest mt-0.5 hover:text-blue-500 hover:border-blue-500 hover:border-b-2">{{ $question->user->department->name }}</button>】
+                                <a href="{{ route('profile.show', $question->user->id) }}"><span
+                                        class="title-font font-medium text-blue-700 hover:text-blue-500 hover:border-blue-500 hover:border-b-2">{{ $question->user->name }}</span></a>
+                                が{{ $question->created_at->format('Y-m-d') }}に投稿
+                            </div>
+                        </div>
                         @foreach ($question->tags as $tag)
-                            <span
-                                class="inline-block py-1 px-2 rounded bg-indigo-50 text-indigo-500 text-xs font-medium tracking-widest">{{ $tag->name }}</span>
+                            <button type="submit" form="searchForm" name="tag" value="{{ $tag->name }}"
+                                class="inline-block py-1 px-2 rounded bg-indigo-50 text-indigo-500 text-xs font-medium tracking-widest hover:bg-indigo-100">{{ $tag->name }}</button>
                         @endforeach
-                        <div class="flex items-center flex-wrap pb-4 mb-4 border-b-2 border-gray-100 w-full">
-                            <a class="text-indigo-500 inline-flex items-center">Learn More
-                                <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
-                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M5 12h14"></path>
-                                    <path d="M12 5l7 7-7 7"></path>
-                                </svg>
-                            </a>
+                        <div class="flex items-center flex-wrap border-b-2 border-gray-100 w-full">
                             <span
                                 class="text-gray-400 mr-3 inline-flex items-center ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
                                 <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none"
@@ -61,8 +58,9 @@
                                 </svg>{{ $question->questionAnswers->count() }}
                             </span>
                         </div>
-                        <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4"><a
-                                href="{{ route('questions.show', ['question' => $question->id]) }}">{{ $question->title }}</a>
+                        <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900"><a
+                                href="{{ route('questions.show', ['question' => $question->id]) }}"
+                                class="hover:text-blue-500 hover:border-blue-500 hover:border-b-2">{{ $question->title }}</a>
                         </h2>
                     </div>
                 @endforeach
@@ -91,13 +89,13 @@
                             </button>
                         </div>
                         @foreach ($departments as $department)
-                            <button type="submit" name="department"
-                                value="{{ $department->id }}">【{{ $department->name }}】</button>
+                            <button type="submit" name="department" value="{{ $department->id }}"
+                                class="text-blue-700 hover:text-blue-500 hover:border-blue-500 hover:border-b-2">【{{ $department->name }}】</button>
                         @endforeach
                     </div>
                 </form>
                 <a href="{{ route('questions.noAnswers') }}"
-                    class="text-lg text-rose-600 border-b border-rose-600 font-bold">回答募集中の質問一覧</a>
+                    class="text-lg text-rose-600 border-b border-rose-600 font-bold hover:text-blue-500 hover:border-blue-500 hover:border-b-2">回答募集中の質問一覧</a>
             </div>
 
         </div>

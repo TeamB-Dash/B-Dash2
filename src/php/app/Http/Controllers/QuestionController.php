@@ -29,7 +29,8 @@ class QuestionController extends Controller
     {
 
         list($questions, $filteredBy) = SearchService::searchQuestions($request);
-        return view('questions/index', compact('questions', 'filteredBy'));
+
+        return view('questions/index', compact('questions', 'monthlyReportRanking', 'articleRanking', 'rankingByNumberOfArticlesPerTag', 'filteredBy'));
     }
 
     /**
@@ -192,27 +193,24 @@ class QuestionController extends Controller
         return to_route('questions.showMyQuestions', Auth::id())->with('status', '削除しました。');
     }
 
-    public function showMyQuestions($id)
+    public function showMyQuestions(User $user)
     {
-        if (Auth::id() != $id) {
-            abort(404);
-        }
         $questions = Question::with(['user', 'tags', 'questionAnswers'])
             ->whereNotNull('shipped_at')
-            ->where('is_deleted', '=', false)->where('user_id', '=', $id)
+            ->where('is_deleted', '=', false)->where('user_id', '=', $user->id)
             ->orderBy('created_at', 'desc')
             ->paginate(2);
 
-        return view('questions/myQuestions', compact('questions'));
+        return view('questions/myQuestions', compact('questions', 'user'));
     }
 
-    public function showMyDraftQuestions($id)
+    public function showMyDraftQuestions(User $user)
     {
-        if (Auth::id() != $id) {
+        if (Auth::id() != $user->id) {
             abort(404);
         }
         $questions = Question::with(['user', 'tags', 'questionAnswers'])
-            ->whereNull('shipped_at')->where('user_id', '=', $id)
+            ->whereNull('shipped_at')->where('user_id', '=', $user->id)
             ->orderBy('created_at', 'desc')
             ->paginate(2);
 
@@ -244,8 +242,6 @@ class QuestionController extends Controller
 
         ]);
 
-
-
         return redirect()->route('questions.show', ['question' => $question->id]);
 
     }
@@ -270,7 +266,10 @@ class QuestionController extends Controller
 
     public function commentDestroy(Question $question, QuestionAnswers $comment)
     {
-        $comment->delete();
+        // $comment->delete();
+
+        // コメントの論理削除
+        $comment->update(['is_deleted' => true]);
 
         return redirect()->route('questions.show', ['question' => $question->id]);
     }

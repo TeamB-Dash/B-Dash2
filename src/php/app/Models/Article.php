@@ -52,9 +52,13 @@ class Article extends Model
         return $this->hasMany('App\Models\ArticleComments');
     }
 
+    // public function articleFavorites(): HasMany
+    // {
+    //     return $this->hasMany('App\Models\ArticleFavorites');
+    // }
     public function articleFavorites(): HasMany
     {
-        return $this->hasMany('App\Models\ArticleFavorites');
+        return $this->hasMany(ArticleFavorites::class, 'article_id');
     }
 
     public function isFavoritedByUser($user)
@@ -64,6 +68,13 @@ class Article extends Model
                     ->where('is_deleted', false)
                     ->exists();
     }
+
+    public function articleCategory(): BelongsTo
+{
+    return $this->belongsTo(ArticleCategories::class, 'article_category_id', 'id');
+}
+
+    
 
     
 
