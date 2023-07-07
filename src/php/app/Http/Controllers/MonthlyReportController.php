@@ -407,8 +407,10 @@ class MonthlyReportController extends Controller
         'comment' => $inputs['comment'],
         'user_id' => auth()->user()->id,
         'monthly_report_id' => $monthlyReport->id,
-
+        'is_deleted' => false,
     ]);
+    // コメント保存後、月報のコメント数をインクリメント
+    $monthlyReport->increment('comments_count');
 
     return redirect()->route('monthlyReport.show', ['monthlyReport' => $monthlyReport->id]);
 
@@ -424,6 +426,7 @@ public function commentUpdate(Request $request, $monthlyReport, $comment)
         'comment' => $request->input('comment'),
         'user_id' => auth()->user()->id,
         'monthly_report_id' => $monthlyReport->id,
+        'is_deleted' => false,
     ]);
 
     return redirect()->route('monthlyReport.show', ['monthlyReport' => $monthlyReport->id]);
@@ -431,7 +434,11 @@ public function commentUpdate(Request $request, $monthlyReport, $comment)
 
 public function commentDestroy(MonthlyReport $monthlyReport, MonthlyReportComments $comment)
 {
-    $comment->delete();
+    // コメントの論理削除
+    $comment->update(['is_deleted' => true]);
+
+    // 記事のコメント数をデクリメント
+    $monthlyReport->decrement('comments_count');
 
     return redirect()->route('monthlyReport.show', ['monthlyReport' => $monthlyReport->id]);
 }

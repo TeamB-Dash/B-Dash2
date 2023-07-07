@@ -32,7 +32,8 @@ class QuestionController extends Controller
         $rankingByNumberOfArticlesPerTag = RankingService::TagRanking();
 
         list($questions,$filteredBy) = SearchService::searchQuestions($request);
-        return view('questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag','filteredBy'));
+
+        return view('questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag', 'filteredBy'));
     }
 
     /**
@@ -240,8 +241,6 @@ class QuestionController extends Controller
 
     ]);
 
-
-
     return redirect()->route('questions.show', ['question' => $question->id]);
 
 }
@@ -266,7 +265,10 @@ public function commentUpdate(Request $request, $question, $comment)
 
 public function commentDestroy(Question $question, QuestionAnswers $comment)
 {
-    $comment->delete();
+    // $comment->delete();
+
+     // コメントの論理削除
+     $comment->update(['is_deleted' => true]);
 
     return redirect()->route('questions.show', ['question' => $question->id]);
 }
