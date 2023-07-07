@@ -2,32 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Services\SearchService;
 use App\Models\User;
 use App\Models\UserRole;
 use App\Models\Department;
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Mail\SendInquiryMail;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\View\View;
+use App\Http\Requests\AdminProfileUpdateRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\UserProfile;
-use App\Models\UserFollow;
-use App\Models\Inquiry;
-use App\Services\CheckFormService;
 use Carbon\Carbon;
-use App\Services\BadgeService;
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-
-use function PHPUnit\Framework\isEmpty;
-use function PHPUnit\Framework\isNull;
 
 class AdminController extends Controller
 {
@@ -70,18 +56,8 @@ class AdminController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RegisterRequest $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'department_id' => ['required'],
-            'beginner_flg' => ['required'],
-            'entry_date' => ['required'],
-            'gender' => ['required']
-        ]);
-
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -142,7 +118,7 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ProfileUpdateRequest $request, $id)
+    public function update(AdminProfileUpdateRequest $request, $id)
     {
         $user = User::find($id);
         $user_profile = UserProfile::where('user_id', $user->id)->first();
@@ -159,6 +135,7 @@ class AdminController extends Controller
         $user_profile->github_url = $request->github_url;
         $user_profile->qiita_url = $request->qiita_url;
         $user_profile->self_introduction = $request->self_introduction;
+
 
         $user->save();
         $user_profile->save();
