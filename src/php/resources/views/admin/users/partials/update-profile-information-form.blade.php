@@ -13,6 +13,8 @@
         @csrf
         @method('patch')
 
+        <input id="id" type="hidden" class="form-control" name="id" value="{{ $user->id }}">
+
         <div>
             <x-input-label for="name" :value="__('氏名')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)"

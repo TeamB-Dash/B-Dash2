@@ -152,7 +152,7 @@ class ProfileController extends Controller
     public function submitInquiry(Request $request)
     {
         $rules = [
-            'inquiry' => ['max:1000','required'],
+            'inquiry' => ['max:1000', 'required'],
         ];
 
         $user_name = User::find($request->user_id)->name;
@@ -173,11 +173,11 @@ class ProfileController extends Controller
             ]);
             DB::commit();
             $this->sendEmail($user_name, $inquiry->body, $toUser, $ccUser);
-            return to_route('questions.index')->with('status', 'お問い合わせを送信しました');
+            return to_route('top')->with('status', 'お問い合わせを送信しました');
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e->getMessage());
-            return to_route('questions.index')->with('status', 'お問い合わせの送信に失敗しました');
+            return to_route('top')->with('status', 'お問い合わせの送信に失敗しました');
         }
     }
 
