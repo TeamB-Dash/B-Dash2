@@ -36,14 +36,23 @@ class MonthlyReportController extends Controller
 
         $workingProcess = new MonthlyWorkingProcess();
         // バリデーション
-        $inputs = $request->validate([
+        $rules = [
             'target_month' => 'required',
-            'project_summary' => 'required',
-            'business_content' => 'required',
-            'looking_back' => 'required',
-            'next_month_goals' => 'required',
-            'assign' => 'required',
-        ]);
+            'project_summary' => ['string', 'max:255', 'required'],
+            'business_content' => ['string', 'max:1000', 'required'],
+            'looking_back' => ['string', 'max:500', 'required'],
+            'next_month_goals' => ['string', 'max:500', 'required'],
+            'assign' => 'required'
+        ];
+
+        // $inputs = $request->validate([
+        //     'target_month' => 'required',
+        //     'project_summary' => 'required',
+        //     'business_content' => 'required',
+        //     'looking_back' => 'required',
+        //     'next_month_goals' => 'required',
+        //     'assign' => 'required',
+        // ]);
 
         if(isset($request->saveAsDraft)) {
             $report = MonthlyReport::create([
@@ -91,6 +100,7 @@ class MonthlyReportController extends Controller
                 }
             }
         } else if(isset($request->create)) {
+            $this->validate($request, $rules);
             $report = MonthlyReport::create([
                 'user_id' => auth()->user()->id,
                 'target_month' => $request->target_month,
@@ -143,13 +153,12 @@ class MonthlyReportController extends Controller
                 $tagInstance = Tag::firstOrCreate(['name' => $tag]);
                 $tags[] = $tagInstance->id;
             }
-            // dd($tags);
 
             $report->tags()->sync($tags);
 
         $workingProcess->save();
 
-        return redirect()->route('monthlyReport.show',$report->id);
+        return redirect()->route('monthlyReport.show', $report->id);
     }
 
     public function show(MonthlyReport $monthlyReport, User $user, MonthlyReportComments $comments) {
@@ -177,7 +186,7 @@ class MonthlyReportController extends Controller
 
         $report = MonthlyReport::with(['tags'])->find($monthlyReport->id);
         $tags = $report->tags;
-        // dd($tags);
+        // dd($report->target_month);
 
         return view('monthlyReport.edit', compact('report', 'tags'));
     }
@@ -188,14 +197,23 @@ class MonthlyReportController extends Controller
         $workingProcess = MonthlyWorkingProcess::where('monthly_report_id', '=', $monthlyReport->id)->first();
 
          // バリデーション
-         $inputs = $request->validate([
+        $rules = [
             'target_month' => 'required',
-            'project_summary' => 'required',
-            'business_content' => 'required',
-            'looking_back' => 'required',
-            'next_month_goals' => 'required',
-            'assign' => 'required',
-        ]);
+            'project_summary' => ['string', 'max:255', 'required'],
+            'business_content' => ['string', 'max:1000', 'required'],
+            'looking_back' => ['string', 'max:500', 'required'],
+            'next_month_goals' => ['string', 'max:500', 'required'],
+            'assign' => 'required'
+        ];
+
+        //  $inputs = $request->validate([
+        //     'target_month' => 'required',
+        //     'project_summary' => 'required',
+        //     'business_content' => 'required',
+        //     'looking_back' => 'required',
+        //     'next_month_goals' => 'required',
+        //     'assign' => 'required',
+        // ]);
 
         // working_processテーブルの全てのカラムをfalseに設定する
         $workingProcess->process_definition = false;
@@ -255,6 +273,7 @@ class MonthlyReportController extends Controller
 
         // 公開した質問の更新処理
         } else if (isset($request->update)) {
+            $this->validate($request, $rules);
             $report->target_month = $request->target_month;
             $report->project_summary = $request->project_summary;
             $report->business_content = $request->business_content;
@@ -293,6 +312,7 @@ class MonthlyReportController extends Controller
             }
         // 下書きを公開する処理
         } else if (isset($request->saveAsPublicReport)) {
+            $this->validate($request, $rules);
             $report->target_month = $request->target_month;
             $report->project_summary = $request->project_summary;
             $report->business_content = $request->business_content;
@@ -336,7 +356,6 @@ class MonthlyReportController extends Controller
 
         // タグの保存
         $tags = [];
-        // dd($tags);
         foreach($request->tags as $tag){
             $tagInstance = Tag::firstOrCreate(['name' => $tag]);
             $tags[] = $tagInstance->id;
@@ -388,8 +407,10 @@ class MonthlyReportController extends Controller
         'comment' => $inputs['comment'],
         'user_id' => auth()->user()->id,
         'monthly_report_id' => $monthlyReport->id,
-
+        'is_deleted' => false,
     ]);
+    // コメント保存後、月報のコメント数をインクリメント
+    $monthlyReport->increment('comments_count');
 
     return redirect()->route('monthlyReport.show', ['monthlyReport' => $monthlyReport->id]);
 
@@ -405,6 +426,7 @@ public function commentUpdate(Request $request, $monthlyReport, $comment)
         'comment' => $request->input('comment'),
         'user_id' => auth()->user()->id,
         'monthly_report_id' => $monthlyReport->id,
+        'is_deleted' => false,
     ]);
 
     return redirect()->route('monthlyReport.show', ['monthlyReport' => $monthlyReport->id]);
@@ -412,7 +434,11 @@ public function commentUpdate(Request $request, $monthlyReport, $comment)
 
 public function commentDestroy(MonthlyReport $monthlyReport, MonthlyReportComments $comment)
 {
-    $comment->delete();
+    // コメントの論理削除
+    $comment->update(['is_deleted' => true]);
+
+    // 記事のコメント数をデクリメント
+    $monthlyReport->decrement('comments_count');
 
     return redirect()->route('monthlyReport.show', ['monthlyReport' => $monthlyReport->id]);
 }

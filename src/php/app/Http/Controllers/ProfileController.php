@@ -82,7 +82,6 @@ class ProfileController extends Controller
         $user_profile = UserProfile::where('user_id', $user->id)->first();
 
         $user->department_id = $request->department_id;
-        $user->gender = $request->gender;
         $user_profile->blood_type = $request->blood_type;
         $user_profile->birthday = $request->birthday;
         $user_profile->github_url = $request->github_url;

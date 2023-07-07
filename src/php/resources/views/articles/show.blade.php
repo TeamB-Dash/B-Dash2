@@ -42,14 +42,16 @@
                                         <img alt="blog" src="https://dummyimage.com/104x104"
                                             class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
                                         <span class="flex-grow flex flex-col pl-4">
+											<span class="title-font font-medium text-gray-900">
+												<a class="text-info" href="{{ $article->user->id === auth()->user()->id ? route('profile.edit') : route('profile.show', ['id' => $article->user->id]) }}">{{ $article->user->name }}</a>
+											</span><br>
+												<span>{{ $article->user->entry_date }}</span><span>【{{ $article->user->department->name }}】</span><br>
                                             <span
-                                                class="title-font font-medium text-gray-900">{{ $article->user->name }}</span>
-                                            <span
-                                                class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $article->created_at->format('Y-m-d') }}</span><span>【{{ $article->user->department->name }}】</span>
-                                        </span>
+                                                class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $article->created_at->format('Y-m-d') }}に作成</span>
                                     </a>
                                 </div>
                                 <h3 class="text-center font-semibold text-xl text-gray-800 leading-tight">
+									【{{$articleCategory->name}}】
                                     {{ $article->title }}
                                 </h3>
                                 <div
@@ -66,7 +68,7 @@
                                             d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z">
                                         </path>
                                     </svg>
-                                    {{-- {{ $article->articleComments->count() }} --}}
+                                    {{ $article->comments_count }}
                                 </span>
 
                         {{-- 自分以外のブログだったら表示のみ --}}
@@ -76,14 +78,17 @@
                                 <img alt="blog" src="https://dummyimage.com/104x104"
                                     class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
                                 <span class="flex-grow flex flex-col pl-4">
+                                    <span class="title-font font-medium text-gray-900">
+										<a class="text-info" href="{{ $article->user->id === auth()->user()->id ? route('profile.edit') : route('profile.show', ['id' => $article->user->id]) }}">{{ $article->user->name }}</a>
+									</span><br>
+										<span>{{ $article->user->entry_date }}</span><span>【{{ $article->user->department->name }}】</span><br>
                                     <span
-                                        class="title-font font-medium text-gray-900">{{ $article->user->name }}</span>
-                                    <span
-                                        class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $article->created_at->format('Y-m-d') }}</span><span>【{{ $article->user->department->name }}】</span>
+                                        class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $article->created_at->format('Y-m-d') }}に作成</span>
                                 </span>
                             </a>
                         </div>
                         <h3 class="text-center font-semibold text-xl text-gray-800 leading-tight">
+							【{{$articleCategory->name}}】
                             {{ $article->title }}</h3>
                         <div
                             class="mx-auto block max-w-lg rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
@@ -99,7 +104,7 @@
                                     d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z">
                                 </path>
                             </svg>
-                            {{-- {{ $article->articleComments->count() }} --}}
+                            {{ $article->comments_count }}
                         </span>
                     @endif
                 </div>
@@ -153,6 +158,7 @@
 			<div>
 				<ul>
 				@forelse ($article->articleComments as $comment)
+				@if (!$comment->is_deleted)
 					<li>
 						<p id="comment-{{ $comment->id }}">{{ $comment->comment }}</p>
 						@if (Auth::check() && Auth::user()->id === $comment->user->id)
@@ -169,8 +175,6 @@
 							<button type="button" class="edit-comment-button inline-block rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg" data-comment-id="{{ $comment->id }}" style="background-color: rgb(11, 146, 51)" data-te-ripple-init data-te-ripple-color="light">
 								編集する
 							</button>
-							{{-- <form action="{{ route('articles.commentDestroy',$article->id) }}" method="POST" class="inline-block"> --}}
-								{{-- <form action="{{ route('articles.commentDestroy', ['article' => $article->id]) }}" method="POST" class="inline-block"> --}}
 								<form action="{{ route('articles.commentDestroy', ['article' => $article->id, 'comment' => $comment->id]) }}" method="POST" class="inline-block">
 								@csrf
 								@method('DELETE')
@@ -185,9 +189,10 @@
 							</form>
 						@endif
 					</li>
+					@endif
 				@empty
 					<li>コメントはありません</li>
-				@endforelse
+					@endforelse
 				</ul>
 			</div> 
 			

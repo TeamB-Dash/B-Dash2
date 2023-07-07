@@ -1,12 +1,8 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Profile Information') }}
+            {{ __('基本情報') }}
         </h2>
-
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __("Update your account's profile information and email address.") }}
-        </p>
     </header>
 
     <form id="send-verification" method="post" action="{{ route('verification.send') }}">
@@ -16,13 +12,6 @@
     <form method="post" action="{{ route('admin.users.update', ['id' => $user->id]) }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
-
-        <div>
-            <x-input-label for="" :value="__('アイコン')" />
-            {{-- <x-text-input id="" name="" type="text" class="mt-1 block w-full" :value="old('', $user->)"
-                required autofocus autocomplete="" /> --}}
-            <x-input-error class="mt-2" :messages="$errors->get('')" />
-        </div>
 
         <div>
             <x-input-label for="name" :value="__('氏名')" />
@@ -132,7 +121,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <x-primary-button>{{ __('保存') }}</x-primary-button>
 
             @if (session('status') === 'profile-updated')
                 <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"

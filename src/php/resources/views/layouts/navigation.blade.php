@@ -16,33 +16,37 @@
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
-                                <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                        <x-nav-link :active="request()->routeIs('monthlyReport.*')">
-                                            <div>月報</div>
-                                        </x-nav-link>
+                                <button
+                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                    <x-nav-link :active="request()->routeIs('monthlyReport.*')">
+                                        <div>月報</div>
+                                    </x-nav-link>
 
-                                        <div class="ml-1">
-                                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                    </button>
-                                </x-slot>
+                                    <div class="ml-1">
+                                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </button>
+                            </x-slot>
 
-                                <x-slot name="content">
+                            <x-slot name="content">
 
-                                    <x-dropdown-link :href="route('monthlyReport.index')">
-                                        月報トップ
-                                    </x-dropdown-link>
+                                <x-dropdown-link :href="route('monthlyReport.index')">
+                                    月報トップ
+                                </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('monthlyReport.create')">
-                                        月報登録
-                                    </x-dropdown-link>
+                                <x-dropdown-link :href="route('monthlyReport.create')">
+                                    月報登録
+                                </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('monthlyReport.showMyReports',Auth::id())">
-                                        マイ月報
-                                    </x-dropdown-link>
-                                </x-slot>
+                                <x-dropdown-link :href="route('monthlyReport.showMyReports', Auth::id())">
+                                    マイ月報
+                                </x-dropdown-link>
+                            </x-slot>
                         </x-dropdown>
                     </div>
                 </div>
@@ -51,38 +55,42 @@
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
-                                <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                        <x-nav-link :active="request()->routeIs('articles.*')">
-                                            <div>ブログ</div>
-                                        </x-nav-link>
+                                <button
+                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                    <x-nav-link :active="request()->routeIs('articles.*')">
+                                        <div>ブログ</div>
+                                    </x-nav-link>
 
-                                        <div class="ml-1">
-                                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                    </button>
-                                </x-slot>
+                                    <div class="ml-1">
+                                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </button>
+                            </x-slot>
 
-                                <x-slot name="content">
+                            <x-slot name="content">
 
-                                    <x-dropdown-link :href="route('articles.index')">
-                                        ブログ一覧
-                                    </x-dropdown-link>
+                                <x-dropdown-link :href="route('articles.index')">
+                                    ブログ一覧
+                                </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('articles.create')">
-                                        ブログ新規投稿
-                                    </x-dropdown-link>
-                                    {{-- ToDOログインした場合のみ表示させた方がいい？ --}}
+                                <x-dropdown-link :href="route('articles.create')">
+                                    ブログ新規投稿
+                                </x-dropdown-link>
+                                {{-- ToDOログインした場合のみ表示させた方がいい？ --}}
 
-                                    <x-dropdown-link :href="route('articles.favorites',['id' => Auth::id()])">
-                                        お気に入りブログ
-                                    </x-dropdown-link>
+                                <x-dropdown-link :href="route('articles.favorites', ['id' => Auth::id()])">
+                                    お気に入りブログ
+                                </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('articles.myblog',Auth::id())">
-                                        マイブログ
-                                    </x-dropdown-link>
-                                </x-slot>
+                                <x-dropdown-link :href="route('articles.myblog', Auth::id())">
+                                    マイブログ
+                                </x-dropdown-link>
+                            </x-slot>
                         </x-dropdown>
                     </div>
                 </div>
@@ -91,18 +99,22 @@
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
-                                <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                        <x-nav-link :active="request()->routeIs('questions.*')">
-                                            <div>Q&A</div>
-                                        </x-nav-link>
+                                <button
+                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                    <x-nav-link :active="request()->routeIs('questions.*')">
+                                        <div>Q&A</div>
+                                    </x-nav-link>
 
-                                        <div class="ml-1">
-                                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                    </button>
-                                </x-slot>
+                                    <div class="ml-1">
+                                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </button>
+                            </x-slot>
 
                             <x-slot name="content">
 
@@ -114,7 +126,7 @@
                                     質問投稿
                                 </x-dropdown-link>
 
-                                <x-dropdown-link :href="route('questions.showMyQuestions',Auth::id())">
+                                <x-dropdown-link :href="route('questions.showMyQuestions', Auth::id())">
                                     マイ質問
                                 </x-dropdown-link>
                             </x-slot>
@@ -124,7 +136,7 @@
                 <!-- ユーザー検索 -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('searchUser')" :active="request()->routeIs('searchUser')">
-                            ユーザー検索
+                        ユーザー検索
                     </x-nav-link>
                 </div>
             </div>
@@ -151,27 +163,24 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            {{ __('プロフィール') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
-                            <x-dropdown-link :href="route('top')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                パスワード変更
-                            </x-dropdown-link>
                             <x-dropdown-link>
-                            <button class="w-full py-1 px-0.5 text-left rounded hover:bg-blue-300  focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" data-modal-toggle="authentication-modal">
-                                お問い合わせ
-                            </button>
+                                <button
+                                    class="w-full py-1 px-0.5 text-left rounded hover:bg-blue-300  focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                    type="button" data-modal-toggle="authentication-modal">
+                                    お問い合わせ
+                                </button>
                             </x-dropdown-link>
                             <x-dropdown-link :href="route('logout')"
                                 onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                {{ __('ログアウト') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -211,7 +220,7 @@
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
+                    {{ __('プロフィール') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('profile.edit')">
                     月報トップ
@@ -237,7 +246,7 @@
                 <x-responsive-nav-link :href="route('questions.create')">
                     質問投稿
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('questions.showMyQuestions',Auth::id())">
+                <x-responsive-nav-link :href="route('questions.showMyQuestions', Auth::id())">
                     マイ質問
                 </x-responsive-nav-link>
 
@@ -245,20 +254,17 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
-                    <x-responsive-nav-link :href="route('top')"
-                    onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        パスワード変更
-                    </x-responsive-nav-link>
                     <x-responsive-nav-link>
-                    <button class="w-full py-1 px-0.5 text-left rounded hover:bg-blue-300  focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" data-modal-toggle="authentication-modal">
-                        お問い合わせ
-                    </button>
+                        <button
+                            class="w-full py-1 px-0.5 text-left rounded hover:bg-blue-300  focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            type="button" data-modal-toggle="authentication-modal">
+                            お問い合わせ
+                        </button>
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('logout')"
                         onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                        {{ __('ログアウト') }}
                     </x-responsive-nav-link>
                 </form>
             </div>

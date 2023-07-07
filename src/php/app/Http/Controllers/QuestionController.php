@@ -27,6 +27,7 @@ class QuestionController extends Controller
      */
     public function index(Request $request)
     {
+
         $monthlyReportRanking = RankingService::MonthlyReportRanking();
         $articleRanking = RankingService::ArticleRanking();
         $rankingByNumberOfArticlesPerTag = RankingService::TagRanking();
@@ -54,49 +55,50 @@ class QuestionController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'title' => ['string', 'max:255','required'],
-            'body' => ['string', 'max:255','required'],
-            'tags' => ['array','required'],
+            'title' => ['string', 'max:255', 'required'],
+            'body' => ['string', 'max:255', 'required'],
+            'tags' => ['array', 'required'],
         ];
 
         DB::beginTransaction();
-        try{
+        try {
             $user = Auth::user();
             // 下書き保存処理
-            if(isset($request->saveAsDraft)){
+            if (isset($request->saveAsDraft)) {
                 $question = Question::create([
                     'user_id' => $user->id,
                     'title' => $request->title,
                     'body' => $request->body,
-                    'is_deleted' =>false,
+                    'is_deleted' => false,
                     'answer_count' => 0,
                     'shipped_at' => null,
                 ]);
-            // 保存して公開処理
-            }else if(isset($request->create)){
-                $this->validate($request,$rules);
+                // 保存して公開処理
+            } else if (isset($request->create)) {
+                $this->validate($request, $rules);
                 $question = Question::create([
                     'user_id' => $user->id,
                     'title' => $request->title,
                     'body' => $request->body,
-                    'is_deleted' =>false,
+                    'is_deleted' => false,
                     'answer_count' => 0,
                     'shipped_at' => Carbon::now()->format('Y/m/d H:i:s'),
                 ]);
-            };
+            }
+            ;
 
             $tags = [];
-            foreach($request->tags as $tag){
+            foreach ($request->tags as $tag) {
                 $tagInstance = Tag::firstOrCreate(['name' => $tag]);
                 $tags[] = $tagInstance->id;
             }
 
-            $question->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
+            $question->tags()->syncWithPivotValues($tags, ['is_deleted' => false]);
             DB::commit();
-            return to_route('questions.index')->with('status','投稿を作成しました。');
-        }catch(\Exception $e){
+            return to_route('questions.index')->with('status', '投稿を作成しました。');
+        } catch (\Exception $e) {
             DB::rollBack();
-            return to_route('questions.index')->with('status','エラー：更新処理に失敗しました。');
+            return to_route('questions.index')->with('status', 'エラー：更新処理に失敗しました。');
 
         }
     }
@@ -107,13 +109,13 @@ class QuestionController extends Controller
      * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function show(Question $question,User $user, MonthlyReportComments $comments)
+    public function show(Question $question, User $user, MonthlyReportComments $comments)
     {
         $question = Question::find($question->id);
-        if($question->is_deleted){
+        if ($question->is_deleted) {
             abort(404);
         }
-        return view('questions/show',compact('question'));
+        return view('questions/show', compact('question'));
     }
 
     /**
@@ -126,7 +128,7 @@ class QuestionController extends Controller
     {
         $question = Question::with(['tags'])->find($question->id);
         $tags = $question->tags;
-        return view('questions.edit',compact('question','tags'));
+        return view('questions.edit', compact('question', 'tags'));
     }
 
     /**
@@ -139,26 +141,26 @@ class QuestionController extends Controller
     public function update(Request $request, Question $question)
     {
         $rules = [
-            'title' => ['string', 'max:255','required'],
-            'body' => ['string', 'max:255','required'],
-            'tags' => ['array','required'],
+            'title' => ['string', 'max:255', 'required'],
+            'body' => ['string', 'max:255', 'required'],
+            'tags' => ['array', 'required'],
         ];
 
         DB::beginTransaction();
         try {
             // 下書き保存の更新処理
-            if(isset($request->saveAsDraft)){
+            if (isset($request->saveAsDraft)) {
                 $question->title = $request->title;
                 $question->body = $request->body;
                 $question->shipped_at = null;
-            // 公開した質問の更新処理
-            }else if(isset($request->update)){
-                $this->validate($request,$rules);
+                // 公開した質問の更新処理
+            } else if (isset($request->update)) {
+                $this->validate($request, $rules);
                 $question->title = $request->title;
                 $question->body = $request->body;
-            // 下書きを公開する処理
-            }else if(isset($request->saveAsPublicQuestion)){
-                $this->validate($request,$rules);
+                // 下書きを公開する処理
+            } else if (isset($request->saveAsPublicQuestion)) {
+                $this->validate($request, $rules);
                 $question->title = $request->title;
                 $question->body = $request->body;
                 $question->shipped_at = Carbon::now()->format('Y/m/d H:i:s');
@@ -167,16 +169,16 @@ class QuestionController extends Controller
 
             // タグの保存
             $tags = [];
-            foreach($request->tags as $tag){
+            foreach ($request->tags as $tag) {
                 $tagInstance = Tag::firstOrCreate(['name' => $tag]);
                 $tags[] = $tagInstance->id;
             }
-            $question->tags()->syncWithPivotValues($tags,['is_deleted' => false]);
+            $question->tags()->syncWithPivotValues($tags, ['is_deleted' => false]);
             DB::commit();
-            return to_route('questions.show',$request->id)->with('status','情報を更新しました。');
+            return to_route('questions.show', $request->id)->with('status', '情報を更新しました。');
         } catch (\Exception $e) {
             DB::rollBack();
-            return to_route('questions.show',$request->id)->with('status','エラー：更新処理に失敗しました。');
+            return to_route('questions.show', $request->id)->with('status', 'エラー：更新処理に失敗しました。');
         }
     }
 
@@ -191,83 +193,87 @@ class QuestionController extends Controller
         $question->is_deleted = true;
         $question->save();
 
-        return to_route('questions.showMyQuestions',Auth::id())->with('status','削除しました。');
+        return to_route('questions.showMyQuestions', Auth::id())->with('status', '削除しました。');
     }
 
-    public function showMyQuestions(User $user){
-        $questions =  Question::with(['user','tags','questionAnswers'])
-        ->whereNotNull('shipped_at')
-        ->where('is_deleted','=',false)->where('user_id','=',$user->id)
-        ->orderBy('created_at','desc')
-        ->paginate(2);
+    public function showMyQuestions(User $user)
+    {
+        $questions = Question::with(['user', 'tags', 'questionAnswers'])
+            ->whereNotNull('shipped_at')
+            ->where('is_deleted', '=', false)->where('user_id', '=', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(2);
 
-        return view('questions/myQuestions',compact('questions','user'));
+        return view('questions/myQuestions', compact('questions', 'user'));
     }
 
-    public function showMyDraftQuestions(User $user){
-        if(Auth::id() != $user->id){
+    public function showMyDraftQuestions(User $user)
+    {
+        if (Auth::id() != $user->id) {
             abort(404);
         }
-        $questions =  Question::with(['user','tags','questionAnswers'])
-        ->whereNull('shipped_at')->where('user_id','=',$user->id)
-        ->orderBy('created_at','desc')
-        ->paginate(2);
+        $questions = Question::with(['user', 'tags', 'questionAnswers'])
+            ->whereNull('shipped_at')->where('user_id', '=', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(2);
 
-        return view('questions/myDraftQuestions',compact('questions'));
+        return view('questions/myDraftQuestions', compact('questions'));
     }
-    public function noAnswers(){
+    public function noAnswers()
+    {
         $questions = Question::doesntHave('questionAnswers')
-        ->whereNotNull('shipped_at')
-        ->where('is_deleted',false)
-        ->orderBy('created_at','desc')->get();
+            ->whereNotNull('shipped_at')
+            ->where('is_deleted', false)
+            ->orderBy('created_at', 'desc')->get();
 
-        return view('questions/noAnswers',compact('questions'));
+        return view('questions/noAnswers', compact('questions'));
     }
     public function commentStore(Request $request, Question $question)
-{
-    $inputs = request()->validate([
-        'answer' => 'required|max:255'
-    ]);
+    {
+        $inputs = request()->validate([
+            'answer' => 'required|max:255'
+        ]);
 
-    $comments = QuestionAnswers::create([
-        'answer' => $inputs['answer'],
-        'user_id' => auth()->user()->id,
-        'question_id' => $question->id,
-        'is_reply' => false,
-        // 'reply_parent_id' => $comment->id,
-        'reply_parent_id' => 0,
-        'is_deleted' => false,
+        $comments = QuestionAnswers::create([
+            'answer' => $inputs['answer'],
+            'user_id' => auth()->user()->id,
+            'question_id' => $question->id,
+            'is_reply' => false,
+            // 'reply_parent_id' => $comment->id,
+            'reply_parent_id' => 0,
+            'is_deleted' => false,
 
-    ]);
+        ]);
 
+        return redirect()->route('questions.show', ['question' => $question->id]);
 
+    }
 
-    return redirect()->route('questions.show', ['question' => $question->id]);
+    public function commentUpdate(Request $request, $question, $comment)
+    {
+        $question = Question::findOrFail($question);
+        $comment = QuestionAnswers::findOrFail($comment);
 
-}
+        $comment->update([
+            'answer' => $request->input('answer'),
+            'user_id' => auth()->user()->id,
+            'question_id' => $question->id,
+            'is_reply' => false,
+            // 'reply_parent_id' => $comment->id,
+            'reply_parent_id' => 0,
+            'is_deleted' => false,
+        ]);
 
-public function commentUpdate(Request $request, $question, $comment)
-{
-    $question = Question::findOrFail($question);
-    $comment = QuestionAnswers::findOrFail($comment);
+        return redirect()->route('questions.show', ['question' => $question->id]);
+    }
 
-    $comment->update([
-        'answer' => $request->input('answer'),
-        'user_id' => auth()->user()->id,
-        'question_id' => $question->id,
-        'is_reply' => false,
-        // 'reply_parent_id' => $comment->id,
-        'reply_parent_id' => 0,
-        'is_deleted' => false,
-    ]);
+    public function commentDestroy(Question $question, QuestionAnswers $comment)
+    {
+        // $comment->delete();
 
-    return redirect()->route('questions.show', ['question' => $question->id]);
-}
+        // コメントの論理削除
+        $comment->update(['is_deleted' => true]);
 
-public function commentDestroy(Question $question, QuestionAnswers $comment)
-{
-    $comment->delete();
-
-    return redirect()->route('questions.show', ['question' => $question->id]);
-}
+        return redirect()->route('questions.show', ['question' => $question->id]);
+    }
 }

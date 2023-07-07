@@ -33,7 +33,7 @@
                                 <path class="heroicon-ui"
                                     d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zM5.68 7.1A7.96 7.96 0 0 0 4.06 11H5a1 1 0 0 1 0 2h-.94a7.95 7.95 0 0 0 1.32 3.5A9.96 9.96 0 0 1 11 14.05V9a1 1 0 0 1 2 0v5.05a9.96 9.96 0 0 1 5.62 2.45 7.95 7.95 0 0 0 1.32-3.5H19a1 1 0 0 1 0-2h.94a7.96 7.96 0 0 0-1.62-3.9l-.66.66a1 1 0 1 1-1.42-1.42l.67-.66A7.96 7.96 0 0 0 13 4.06V5a1 1 0 0 1-2 0v-.94c-1.46.18-2.8.76-3.9 1.62l.66.66a1 1 0 0 1-1.42 1.42l-.66-.67zM6.71 18a7.97 7.97 0 0 0 10.58 0 7.97 7.97 0 0 0-10.58 0z"/>
                             </svg>
-                            <input type="month" placeholder="入社日" name="hireMonth"
+                            <input type="month" placeholder="入社日" name="hiredMonth"
                                 class="w-full focus:outline-none text-gray-700"/>
                         </div>
                         <div class="flex border rounded items-center p-2 my-1">
@@ -124,33 +124,9 @@
                         </div>
                         <!-- タグ -->
                         <div class="flex border rounded items-center p-2 my-1" id="tagForm">
-                            <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">タグ</label>
-                            <div class="flex flex-wrap relative mb-6 flex justify-center" data-te-input-wrapper-init>
-                                <!--$tagsがあればcheckboxを表示-->
-                                @if (isset( $tags ))
-                                    @foreach ($tags as $tag )
-                                    <div class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]">
-                                        <input
-                                        class="relative float-left -ml-[1.5rem] mr-[6px] mt-[0.15rem] h-[1.125rem] w-[1.125rem] appearance-none rounded-[0.25rem] border-[0.125rem] border-solid border-neutral-300 outline-none before:pointer-events-none before:absolute before:h-[0.875rem] before:w-[0.875rem] before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] checked:border-primary checked:bg-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:-mt-px checked:after:ml-[0.25rem] checked:after:block checked:after:h-[0.8125rem] checked:after:w-[0.375rem] checked:after:rotate-45 checked:after:border-[0.125rem] checked:after:border-l-0 checked:after:border-t-0 checked:after:border-solid checked:after:border-white checked:after:bg-transparent checked:after:content-[''] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:transition-[border-color_0.2s] focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-[0.875rem] focus:after:w-[0.875rem] focus:after:rounded-[0.125rem] focus:after:content-[''] checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:after:-mt-px checked:focus:after:ml-[0.25rem] checked:focus:after:h-[0.8125rem] checked:focus:after:w-[0.375rem] checked:focus:after:rotate-45 checked:focus:after:rounded-none checked:focus:after:border-[0.125rem] checked:focus:after:border-l-0 checked:focus:after:border-t-0 checked:focus:after:border-solid checked:focus:after:border-white checked:focus:after:bg-transparent dark:border-neutral-600 dark:checked:border-primary dark:checked:bg-primary dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
-                                        name="tags[]"
-                                        type="checkbox"
-                                        id="inlineCheckbox1"
-                                        value="{{$tag->name}}"
-                                        checked/>
-                                        <label
-                                        class="inline-block pl-[0.15rem] hover:cursor-pointer"
-                                        for=""
-                                        >{{$tag->name}}</label
-                                        >
-                                    </div>
-                                    @endforeach
-                                @endif
-                            </div>
-
                             <button type="button" id="addTagBtn" class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg text-white" style="background-color:rgba(107, 159, 29, 0.89)">タグを増やす</button><br>
-                            <div class="tag-item">
+                            <div class="tag-item flex">
                                 <label>タグ：
-                                <input type="text" name="tags[]" id="tag" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 </label>
                             </div>
                         </div>
@@ -168,10 +144,10 @@
                     <a class="inline-flex items-center">
                     <img alt="blog" src="https://dummyimage.com/104x104" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
                     <span class="flex-grow flex flex-col pl-4">
-                        <span class="title-font font-medium text-gray-900">{{ $report->user->name }}</span>
+                        <span class="title-font font-medium text-gray-900"><a href="{{ route('profile.show', $report->user->id) }}">{{ $report->user->name }}</a></span>
                         <span class="title-font font-medium text-gray-900">{{ $report->target_month->format('Y')}}年{{ $report->target_month->format('m')}}月分</span>
                         <button type="submit" form="searchForm" name="department" value="{{$report->user->department->id}}">【{{$report->user->department->name}}】</button>
-                        <button type="submit" form="searchForm" name="hireMonth" value="{{$report->created_at->format('Y-m') }}" class="text-gray-400 text-xs tracking-widest mt-0.5">{{ \Carbon\Carbon::parse($report->user->entry_date)->format('Y年m月')}}入社</button>
+                        <button type="submit" form="searchForm" name="hiredMonth" value="{{$report->created_at->format('Y-m') }}" class="text-gray-400 text-xs tracking-widest mt-0.5">{{ \Carbon\Carbon::parse($report->user->entry_date)->format('Y年m月')}}入社</button>
                     </span>
                     </a>
                     @foreach ($report->tags as $tag )
@@ -195,9 +171,10 @@
                     <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                         <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
                     </svg>
+                    {{$report->comments_count}}
                     </span>
                 </div>
-                <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4"><a href="{{route('questions.show',['question' => $report->id])}}">{{$report->title}}</a></h2>
+                <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4"><a href="{{route('monthlyReport.show',['monthlyReport' => $report->id])}}">{{ $report->project_summary }}</a></h2>
                 @endforeach
 
                 {{$reports->appends(request()->query())->links()}}

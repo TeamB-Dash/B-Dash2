@@ -18,16 +18,16 @@
 							<div class="mb-4">
 								<label class="control-label col-sm-3" for="target_month">対象月</label>
                                 <input type="month" placeholder="対象月" name="target_month"
-                                class="w-full focus:outline-none text-gray-700"/>
+                                class="w-full focus:outline-none text-gray-700" value="{{ old('target_month', $report->target_month) }}"/>
 							</div>
 								<div class="mb-4">
 									<label class="control-label col-sm-3" for="assign">今月のアサイン状況</label>
 									<div class="col-sm-9 btn-group" data-toggle="buttons">
   										<label class="btn btn-default">
-    										<input type="radio" name="assign" id="assigned" autocomplete="off" value="2">アサイン中
+    										<input type="radio" name="assign" id="assigned" autocomplete="off" value="2" @if(old('assign', $report->assign) == '2') checked @endif>アサイン中
  										</label>
 										<label class="btn btn-default">
-   											 <input type="radio" name="assign" id="waiting" autocomplete="off" value="1"> 待機中
+   											 <input type="radio" name="assign" id="waiting" autocomplete="off" value="1" @if(old('assign', $report->assign) == '1') checked @endif> 待機中
  										</label>
 									</div>
 								</div>
@@ -39,7 +39,7 @@
 										<div class="markdown-editor">
 											<div class="tab-content markdown-content">
 												<div class="tab-pane active" id="project_summary-write">
-													<textarea rows="15" cols="30" class=" w-full" placeholder="例）# 英語学習アプリ開発" name="project_summary" id="project_summary">{{$report->project_summary}}</textarea>
+													<textarea rows="15" cols="30" class=" w-full" placeholder="例）# 英語学習アプリ開発" name="project_summary" id="project_summary">{{old('project_summary', $report->project_summary)}}</textarea>
 												</div>
 											</div>
 										</div>
@@ -75,7 +75,7 @@
 										<button type="button" id="addTagBtn" class="rounded mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg text-white" style="background-color:rgba(107, 159, 29, 0.89)">タグを増やす</button><br>
 										<div class="tag-item">
 											<label>使用した技術：
-											<input type="text" name="tags[]" id="tag" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+											{{-- <input type="text" name="tags[]" id="tag" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required> --}}
 											</label>
 										</div>
 									</div>
@@ -135,7 +135,7 @@
 #### API仕様を整理する
 既に利用しているAPIに関するドキュメントが散らばっている＆欠けている状態だったので、GithubのIssuesに整理したドキュメントを書いた。
 進捗 100%"
-														name="business_content" id="business_content">{{$report->business_content}}</textarea>
+														name="business_content" id="business_content">{{old('business_content', $report->business_content)}}</textarea>
 												</div>
 											</div>
 										</div>
@@ -167,7 +167,7 @@
 1. ・・・・のでできた。
 2. ・・・・なのであまりできなかった。
 3. ・・・・のでできなかった。"
-													 	name="looking_back" id="looking_back">{{$report->looking_back}}</textarea>
+													 	name="looking_back" id="looking_back">{{old('looking_back', $report->looking_back)}}</textarea>
 												</div>
 											</div>
 										</div>
@@ -186,16 +186,21 @@
 1.
 2.
 3."
-													 name="next_month_goals" id="next_month_goals">{{$report->next_month_goals}}</textarea>
+													 name="next_month_goals" id="next_month_goals">{{old('next_month_goals', $report->next_month_goals)}}</textarea>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
+                            @if (isset($report->shipped_at))
+                            <button name="update" value="update" type="submit" class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                            style="background-color: #1da1f2">更新する</button>
+                            @else
 							<button name="saveAsDraft" value="saveAsDraft" type="submit" class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
                             style="background-color: #f21dab">Save as WIP（下書き保存）</button>
-							<button name="create" value="create" type="submit" class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+							<button name="saveAsPublicReport" value="saveAsPublicReport" type="submit" class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
                             style="background-color: #1da1f2">Ship（保存して公開）</button>
+                            @endif
 						</form>
 					</div>
 				</div>
