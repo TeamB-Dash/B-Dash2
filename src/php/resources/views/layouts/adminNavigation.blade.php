@@ -154,12 +154,6 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
-                            <x-dropdown-link :href="route('top')"
-                                onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                パスワード変更
-                            </x-dropdown-link>
-
                             <x-dropdown-link>
                                 <button
                                     class="w-full py-1 px-0.5 text-left rounded hover:bg-blue-300  focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -244,11 +238,6 @@
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <x-responsive-nav-link :href="route('top')"
-                        onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        パスワード変更
-                    </x-responsive-nav-link>
                     <x-responsive-nav-link>
                         <button
                             class="w-full py-1 px-0.5 text-left rounded hover:bg-blue-300  focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
