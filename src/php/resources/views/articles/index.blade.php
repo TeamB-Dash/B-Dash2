@@ -28,15 +28,14 @@
 @endif
 
 
-    <section class="text-gray-600 body-font overflow-hidden">
-        @if (session('status'))
-        <div class="w-2/3 mx-auto container mt-6 text-center bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
-            <p class="font-bold">{{ session('status') }}</p>
-        </div>
-        @endif
-
-        <div class="container px-5 py-24 mx-auto flex">
-				<div class="m-search sticky">
+<section class="text-gray-600 body-font overflow-hidden">
+	@if (session('status'))
+	<div class="w-2/3 mx-auto container mt-6 text-center bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
+		<p class="font-bold">{{ session('status') }}</p>
+	</div>
+	@endif
+	<div class="flex justify-center my-4">
+	<div class="container px-5 py-24 mx-auto flex">
 					<div>
 						<div class="text-center" style="padding-bottom:1.5rem">
 						<form action="{{ route('articles.index') }}" method="GET">
@@ -131,9 +130,8 @@
 	
 				{{ $articles->links() }}
 			  </div>
-			
+	</div>
 			<!-- side content -->
-
              {{-- いいね獲得ランキング（ブログ） --}}
             <x-ranking-of-article-likes :articleRanking="$articleRanking">
             </x-ranking-of-article-likes>
