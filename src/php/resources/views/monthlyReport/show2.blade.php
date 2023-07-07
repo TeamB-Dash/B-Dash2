@@ -44,7 +44,7 @@
                             <label for="project_summary">プロジェクト概要</label>
                         </div>
                         <div class="tab-pane active" id="project_summary-write">
-                            <textarea rows="15" cols="30" class=" w-full" placeholder="{{ $report->project_summary }}" name="project_summary" id="project_summary" readonly></textarea>
+                            <textarea rows="15" cols="30" class=" w-full" placeholder="{{ $report->project_summary }}" name="project_summary" id="project_summary" readonly>{{ $report->project_summary }}</textarea>
                         </div>
                     </div>
 
@@ -100,8 +100,8 @@
                             <label for="business_content">業務内容</label>
                         </div>
                         <div class="tab-pane active" id="business_content-write">
-                            <textarea rows="15" cols="30" class=" w-full" placeholder={{ $report->business_content }}
-                                name="business_content" id="business_content" readonly>
+                            <textarea rows="15" cols="30" class=" w-full" placeholder="{{ $report->business_content }}"
+                                name="business_content" id="business_content" readonly>{{ $report->business_content }}
                             </textarea>
                         </div>
                     </div>
@@ -112,7 +112,7 @@
                             @if(is_null($previousMonthlyReport))
                             <span class="text-red-500 font-base">前月の月報が入力されていません。前月の月報の「来月の目標」が表示されます。</span>
                             @else
-                            <textarea rows="15" cols="30" class=" w-full" placeholder={{ $report->business_content }} readonly>
+                            <textarea rows="15" cols="30" class=" w-full" placeholder="{{ $report->business_content }}" readonly>
                             {{ $previousMonthlyReport->next_month_goals }}
                             @endif
                             </textarea>
@@ -124,8 +124,8 @@
                             <label for="looking_back">今月の振り返り</label>
                         </div>
                         <div class="tab-pane active" id="looking_back-write">
-                            <textarea rows="15" cols="30" class=" w-full" placeholder={{ $report->looking_back }}
-                                name="looking_back" id="looking_back" readonly></textarea>
+                            <textarea rows="15" cols="30" class=" w-full" placeholder="{{ $report->looking_back }}"
+                                name="looking_back" id="looking_back" readonly>{{ $report->looking_back }}</textarea>
                         </div>
                     </div>
 
@@ -134,8 +134,8 @@
                             <label for="next_month_goals">来月の目標</label>
                         </div>
                         <div class="tab-pane active" id="next_month_goals-write">
-                            <textarea rows="15" cols="30" class=" w-full" placeholder={{ $report->next_month_goals }}
-                                    name="next_month_goals" id="next_month_goals" readonly></textarea>
+                            <textarea rows="15" cols="30" class=" w-full" placeholder="{{ $report->next_month_goals }}"
+                                    name="next_month_goals" id="next_month_goals" readonly>{{ $report->next_month_goals }}</textarea>
                         </div>
                     </div>
 
