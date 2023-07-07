@@ -9,7 +9,7 @@
         @csrf
     </form>
 
-    {{-- <div>
+    <div>
         @foreach ($followers as $follower)
             {{ $follower->name }}
             @if ($follower->isFollowing(Auth::user()))
@@ -24,5 +24,5 @@
                 </form>
             @endif
         @endforeach
-    </div> --}}
+    </div>
 </section>
