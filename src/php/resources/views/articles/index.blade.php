@@ -68,8 +68,9 @@
 						</form>
 					</div>
 				</div>
+				<hr>
+				<br>
 			  <div class="flex flex-wrap -m-12">
-
 				@foreach($articles as $article) 
 				@if ($article->shipped_at)
 				<div class="p-12 md:w-1/2 flex flex-col items-start">
@@ -123,7 +124,6 @@
 	
 				{{ $articles->links() }}
 			  </div>
-			</div>
 			
 			<!-- side content -->
              {{-- いいね獲得ランキング（ブログ） --}}
