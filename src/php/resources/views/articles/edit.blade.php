@@ -1,58 +1,61 @@
-{{-- @extends('app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        ブログ編集
+        </h2>
+    </x-slot>
 
-@section('title', '記事更新')
+    <x-errorbar :errors="$errors"></x-errorbar>
+    <x-messagebar></x-messagebar>
 
-@include('nav')
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="mt-8 mx-auto block max-w-lg rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+                    <form method="POST" action="{{ route('articles.update', ['article' => $article]) }}">
+                        @method('PATCH')
 
-@section('content') --}}
-  <div class="container">
-    <div class="row">
-      <div class="col-12">
-        <div class="card mt-3">
-          <div class="card-body pt-0">
-            {{-- @include('error_card_list') --}}
-            <div class="card-text">
-              <form method="POST" action="{{ route('articles.update', ['article' => $article]) }}">
-                @method('PATCH')
-                @include('articles.form')
-  <!--Submit button-->
-  @if (isset($question->shipped_at))
-  <button
-  name="update"
-  value="update"
-  type="submit"
-  data-te-ripple-init
-  data-te-ripple-color="light"
-  class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
-  style="background-color: #1da1f2">
-  ブログを更新する
-  </button>
-@else
-  <button
-  type="submit"
-  name="saveAsDraft"
-  value="saveAsDraft"
-  data-te-ripple-init
-  data-te-ripple-color="light"
-  class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
-  style="background-color: #f21dab">
-  下書き保存する
-  </button>
-  <button
-  type="submit"
-  name="saveAsPublicArticle"
-  value="saveAsPublicArticle"
-  data-te-ripple-init
-  data-te-ripple-color="light"
-  class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
-  style="background-color: #1da1f2">
-  登録する
-  </button>
-@endif              </form>
+                        @include('articles.form')
+
+                        <!--Submit button-->
+                        @if (isset($article->shipped_at))
+                        <button
+                        name="update"
+                        value="update"
+                        type="submit"
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                        style="background-color: #1da1f2">
+                        ブログを更新する
+                        </button>
+                        @else
+                        <button
+                        type="submit"
+                        name="saveAsDraft"
+                        value="saveAsDraft"
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                        style="background-color: #f21dab">
+                        下書き保存する
+                        </button>
+                        <button
+                        type="submit"
+                        name="saveAsPublicArticle"
+                        value="saveAsPublicArticle"
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        class="mb-2 rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                        style="background-color: #1da1f2">
+                        登録する
+                        </button>
+                        @endif
+                    </form>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-{{-- @endsection --}}
+</x-app-layout>
+
+

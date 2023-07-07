@@ -1,58 +1,70 @@
-<head>
-	<meta charset="utf-8">
-	<meta content="IE=edge" http-equiv="X-UA-Compatible">
-	<meta content="width=device-width, initial-scale=1" name="viewport">
-	<title>Dash</title>
-	<link rel="stylesheet" media="all" href="/css/side_header.css">
-	<link rel="stylesheet" media="all" href="/css/template.css">
-	<link rel="stylesheet" href="/css/article/article_list.css">
-	<link rel="stylesheet" href="/css/header-profile.css">
-    <link rel="stylesheet" href="{{ asset('css/tailwind.css') }}">
-	<script src="/js/template.js"></script>
-	<script src="/js/common/inquiry.js"></script>
-	<script src="/js/article/article_list.js"></script>
-	<link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
-	<link rel="icon" type="image/png" href="/img/favicon/favicon-32x32.png" sizes="32x32">
-	<link rel="icon" type="image/png" href="/img/favicon/favicon-16x16.png" sizes="16x16">
-	<link rel="manifest" href="/img/favicon/manifest.json">
-	<link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#dd4814">
-	<link rel="shortcut icon" href="/img/favicon/favicon.ico">
-	<meta name="apple-mobile-web-app-title" content="Dash">
-	<meta name="application-name" content="Dash">
-	<meta name="msapplication-config" content="../../static/img/favicon/browserconfig.xml">
-	<meta name="theme-color" content="#ffffff">
-</head>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        お気に入りブログ一覧
+        </h2>
+    </x-slot>
 
-<body>
-			<div class="ml-par20 col-sm-6">
-				<div class="page-header">
-					<h1>お気に入りブログ一覧</h1>
-				</div>
-				<div class="article-user">
-					
-					<!-- /* ブログ削除時メッセージ */ -->
-					<!-- /* バッジ剥奪時メッセージ */ -->
-						
-		  			<div class="page-content mt-15px">
-						<!-- ブログ一覧 -->
-          @foreach($articleFavorites as $favorite)
-		  @if ($favorite->is_deleted === false)
-              <div class="card mt-3">
-                  <div class="card-body">
-					{{-- <a class="text-info" href="/articles?articleEntryDate={{ \Carbon\Carbon::parse($article->user->entry_date)->format('Y-m-d') }}">{{ $article->user->entry_date }}</a> --}}
-                      <a class="text-dark" href="{{ route('articles.show', ['article' => $favorite->articles->id]) }}">
-                          <h5 class="card-title">{{ $favorite->articles->title }}</h5>
-                      </a>  
-                  </div>
-              </div>
-			  @endif
-          @endforeach
+    <section class="text-gray-600 body-font overflow-hidden">
+        @if (session('status'))
+        <div class="w-2/3 mx-auto container mt-6 text-center bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
+            <p class="font-bold">{{ session('status') }}</p>
+        </div>
+        @endif
+        <x-messagebar></x-messagebar>
+        <div class="container px-5 py-24 mx-auto">
+          <div class="flex flex-wrap -m-12">
+            <div class="w-full">
 
-                          <!-- ページング -->
-                          {{$articleFavorites->links('pagination::bootstrap-4')}}
-            <hr>
-        </body>
-	  			<div class="page-footer"></div>
-                  <a class="bg-primary" href="/articles">ブログトップへ</a>
+            </div>
 
-	  		</div>
+            @if ($articleFavorites->count() === 0)
+            <div class="w-full">表示するブログはありません</div>
+            <a class="bg-primary" href="/articles">ブログトップへ</a>
+            @else
+
+
+            @foreach ( $articleFavorites as $favorite )
+                @if ($favorite->is_deleted === false)
+                <div class="p-12 md:w-1/2 items-start">
+                    <a class="inline-flex items-center">
+                    <img alt="blog" src="https://dummyimage.com/104x104" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
+                    <span class="flex-grow flex flex-col pl-4">
+                        <span class="title-font font-medium text-gray-900">{{ $favorite->articles->user->name }}</span>
+                        <span class="text-gray-400 text-xs tracking-widest mt-0.5">{{ $favorite->articles->updated_at->format('Y-m-d')  }}に保存</span><span>【{{$favorite->articles->user->department->name}}】</span>
+                    </span>
+                    </a>
+                    @foreach ($favorite->articles->tags as $tag )
+                    <span class="inline-block py-1 px-2 rounded bg-indigo-50 text-indigo-500 text-xs font-medium tracking-widest">{{ $tag->name }}</span>
+                    @endforeach
+                <div class="flex items-center flex-wrap pb-4 mb-4 border-b-2 border-gray-100 mt-auto w-full">
+                    <a class="text-indigo-500 inline-flex items-center">Learn More
+                    <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"></path>
+                        <path d="M12 5l7 7-7 7"></path>
+                    </svg>
+                    </a>
+                    <span class="text-gray-400 mr-3 inline-flex items-center ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
+                    <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>1.2K
+                    </span>
+                    <span class="text-gray-400 inline-flex items-center leading-none text-sm">
+                    <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
+                    </svg>
+                    </span>
+                </div>
+                <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4"><a href="{{route('articles.show',['article' => $favorite->articles->id])}}">{{$favorite->articles->title}}</a></h2>
+                <p class="leading-relaxed mb-8">{{$favorite->articles->body}}</p>
+                </div>
+                @endif
+            @endforeach
+
+            {{ $articleFavorites->links() }}
+          </div>
+          @endif
+        </div>
+      </section>
+</x-app-layout>

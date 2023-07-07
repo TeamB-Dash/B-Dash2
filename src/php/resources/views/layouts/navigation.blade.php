@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('top') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
@@ -17,7 +17,7 @@
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                        <x-nav-link :active="request()->routeIs('dashboard')">
+                                        <x-nav-link :active="request()->routeIs('monthlyReport.*')">
                                             <div>月報</div>
                                         </x-nav-link>
 
@@ -39,7 +39,7 @@
                                         月報登録
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('monthlyReport.showMyReports')">
+                                    <x-dropdown-link :href="route('monthlyReport.showMyReports',Auth::id())">
                                         マイ月報
                                     </x-dropdown-link>
                                 </x-slot>
@@ -52,7 +52,7 @@
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                        <x-nav-link :active="request()->routeIs('dashboard')">
+                                        <x-nav-link :active="request()->routeIs('articles.*')">
                                             <div>ブログ</div>
                                         </x-nav-link>
 
@@ -158,7 +158,7 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
-                            <x-dropdown-link :href="route('dashboard')"
+                            <x-dropdown-link :href="route('top')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
                                 パスワード変更
@@ -197,8 +197,8 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+            <x-responsive-nav-link :href="route('top')" :active="request()->routeIs('top')">
+                TOP
             </x-responsive-nav-link>
         </div>
 
@@ -245,7 +245,7 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
-                    <x-responsive-nav-link :href="route('dashboard')"
+                    <x-responsive-nav-link :href="route('top')"
                     onclick="event.preventDefault();
                                         this.closest('form').submit();">
                         パスワード変更

@@ -16,7 +16,7 @@ class BadgeService
 {
     // 記事公開によってバッジステータスを上げる処理
     public static function upGradeBadgeStatus($request){
-        $countOfArticles = Article::where('user_id',$request->user()->id)->where('is_deleted',false)->count();
+        $countOfArticles = Article::where('user_id',$request->user()->id)->where('is_deleted',false)->where('shipped_at',true)->count();
         $comment = null;
 
         if($countOfArticles === 1){
@@ -58,7 +58,7 @@ class BadgeService
 
     // 記事削除によってバッジステータスを下げる処理
     public static function downGradeBadgeStatus(){
-        $countOfArticles = Article::where('user_id',Auth::id())->where('is_deleted',false)->count();
+        $countOfArticles = Article::where('user_id',Auth::id())->where('is_deleted',false)->where('shipped_at',true)->count();
         $comment = '';
         if($countOfArticles === 0){
             $badge = UserBadge::updateOrCreate(['user_id' => Auth::id(),'badge_id' => 1,],
@@ -95,6 +95,12 @@ class BadgeService
         }
 
         session()->flash('message',$comment);
+    }
+
+    // ユーザーが保持するバッジを検索して返す処理
+    public static function checkBadges($id){
+        $badges = UserBadge::where('is_deleted',false)->where('user_id',$id)->orderBy('badge_id','asc')->get();
+        return ($badges);
     }
 
 }
