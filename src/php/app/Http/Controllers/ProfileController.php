@@ -34,7 +34,7 @@ class ProfileController extends Controller
         $blood_type = CheckFormService::checkBloodType($user_profile);
         $entry_date = Carbon::parse($user->entry_date)->format('Y年m月d日');
         $birthday = Carbon::parse($user_profile->birthday)->format('Y年m月d日');
-        // $badges = BadgeService::checkBadges($id);
+        $badges = BadgeService::checkBadges($id);
 
         return view('profile.show', [
             'user' => $user,
@@ -45,7 +45,7 @@ class ProfileController extends Controller
             'blood_type' => $blood_type,
             'entry_date' => $entry_date,
             'birthday' => $birthday,
-            // 'badges' => $badges,
+            'badges' => $badges,
         ]);
     }
 
@@ -60,6 +60,7 @@ class ProfileController extends Controller
         $entry_date = Carbon::parse($user->entry_date)->format('Y年m月d日');
         $followings = $user->followings()->orderBy('user_id')->get();
         $followers = $user->followers()->orderBy('followed_user_id')->get();
+        $badges = BadgeService::checkBadges($user->id);
 
         return view('profile.edit', [
             'user' => $user,
@@ -70,6 +71,7 @@ class ProfileController extends Controller
             'entry_date' => $entry_date,
             'followings' => $followings,
             'followers' => $followers,
+            'badges' => $badges,
         ]);
     }
 
@@ -151,7 +153,7 @@ class ProfileController extends Controller
     public function submitInquiry(Request $request)
     {
         $rules = [
-            'body' => ['max:1000', 'required'],
+            'inquiry' => ['max:1000','required'],
         ];
 
         $user_name = User::find($request->user_id)->name;

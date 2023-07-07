@@ -39,8 +39,8 @@ class SearchService
             }
         }
 
-        if(isset($request->hireMonth)){
-            $subQuery = $subQuery->where('entry_date','LIKE',$request->hireMonth.'%');
+        if(isset($request->hiredMonth)){
+            $subQuery = $subQuery->where('entry_date','LIKE',$request->hiredMonth.'%');
         }
 
         if(isset($request->department)){
@@ -89,12 +89,17 @@ class SearchService
                 $query->where('entry_date', 'LIKE', $hiredMonth.'%');
             });
             $filteredBy = '入社日：'.$hiredMonth;
+        } else if(isset($request->tag)){
+            $tag = $request->tag;
+            $subQuery = $subQuery->whereHas('tags',function($query) use ($tag) {
+                $query->where('name', $tag);
+            });
+            $filteredBy = 'タグ：「'.$tag.'」';
         } else {
-            $questions = $subQuery->whereNotNull('shipped_at');
             $filteredBy = null;
         }
 
-        $questions = $subQuery->where('is_deleted',false)->orderBy('created_at','desc')->paginate(4);
+        $questions = $subQuery->where('is_deleted',false)->whereNotNull('shipped_at')->orderBy('created_at','desc')->paginate(4);
 
         return [$questions,$filteredBy];
     }
@@ -126,7 +131,7 @@ class SearchService
                 $query->where('department_id',$department);
             });
         } else if(isset($request->hiredMonth)){
-            $hiredMonth = $request->hireMonth;
+            $hiredMonth = $request->hiredMonth;
             $subQuery = $subQuery->whereHas('user',function($query) use ($hiredMonth) {
                 $query->where('entry_date', 'LIKE', $hiredMonth.'%');
             });
@@ -146,8 +151,21 @@ class SearchService
             }
         }
 
-
         $monthlyReports = $subQuery->where('is_deleted',false)->whereNotNull('shipped_at')->orderBy('shipped_at', 'desc')->paginate(10);
+        return $monthlyReports;
+    }
+
+    public static function recentMonthlyReports($request){
+        $subQuery = MonthlyReport::with(['user', 'tags']);
+
+        $monthlyReports = $subQuery->where('is_deleted',false)->whereNotNull('shipped_at')->orderBy('shipped_at', 'desc')->take(3)->get();
+        return $monthlyReports;
+    }
+
+    public static function reportsOfFollowingUser($request){
+        $subQuery = MonthlyReport::with(['user', 'tags']);
+
+        $monthlyReports = $subQuery->where('is_deleted',false)->whereNotNull('shipped_at')->orderBy('shipped_at', 'desc')->take(3)->get();
         return $monthlyReports;
     }
 }
