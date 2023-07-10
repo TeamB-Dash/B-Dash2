@@ -30,7 +30,7 @@ class QuestionController extends Controller
 
         list($questions, $filteredBy) = SearchService::searchQuestions($request);
 
-        return view('questions/index', compact('questions', 'monthlyReportRanking', 'articleRanking', 'rankingByNumberOfArticlesPerTag', 'filteredBy'));
+        return view('questions/index', compact('questions', 'filteredBy'));
     }
 
     /**
