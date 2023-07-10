@@ -223,7 +223,7 @@ class ArticleController extends Controller
             $article->body = $request->body;
             $article->article_category_id = $request->article_category_id;
             $article->shipped_at = null;
-        // 公開した質問の更新処理
+        // 公開したブログの更新処理
         }else if(isset($request->update)){
             $article->title = $request->title;
             $article->body = $request->body;
@@ -352,6 +352,9 @@ public function commentStore(Request $request, Article $article)
 {
     $inputs = request()->validate([
         'comment' => 'required|max:255'
+    ], [
+        'comment.required' => 'コメントを入力してください。',
+        'comment.max' => 'コメントは255文字以内で入力してください。',
     ]);
 
     $comments = ArticleComments::create([
@@ -373,6 +376,13 @@ public function commentUpdate(Request $request, $article, $comment)
     $article = Article::findOrFail($article);
     $comment = ArticleComments::findOrFail($comment);
 
+    $inputs = request()->validate([
+        'comment' => 'required|max:255'
+    ], [
+        'comment.required' => 'コメントを入力してください。',
+        'comment.max' => 'コメントは255文字以内で入力してください。',
+    ]); 
+
     $comment->update([
         'comment' => $request->input('comment'),
         'user_id' => auth()->user()->id,
@@ -380,7 +390,7 @@ public function commentUpdate(Request $request, $article, $comment)
         'is_deleted' => false,
     ]);
 
-    return redirect()->route('articles.show', ['article' => $article->id]);
+    return redirect()->route('articles.show', ['article' => $article->id])->withErrors($inputs);
 }
 
 public function commentDestroy(Article $article, ArticleComments $comment)
