@@ -17,6 +17,11 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use League\CommonMark\CommonMarkConverter;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\HtmlString;
+use ParsedownExtra;
+
 
 
 class ArticleController extends Controller
@@ -172,16 +177,37 @@ class ArticleController extends Controller
      */
     public function show(Article $article, User $user, ArticleFavorites $articleFavorites, ArticleComments $comments, ArticleCategories $articleCategories)
 {
-    if ($article->is_deleted) {
-        abort(404); // 論理削除された記事の場合は404エラーを返す
-    }
+if ($article->is_deleted) {
+    abort(404); // 論理削除された記事の場合は404エラーを返す
+}
 
     $article->load('articleComments.user');
     $category = $articleCategories->find($article->article_category_id);
     $comments = $comments->where('is_deleted', false)->get();
 
-    return view('articles.show', [
+    // $article = Article::where('slug', $slug)->first();
+        // マークダウンをhtmlに
+        // $article->body = Markdown::convert($article->body)->getContent();
+
+         // マークダウンをHTMLに変換
+        // $converter = new CommonMarkConverter();
+        // $convertedBody = new HtmlString($converter->convertToHtml($article->body));
+        $markdownBody = $article->body;
+        $parsedown = new ParsedownExtra();
+        $convertedBody = $parsedown->text($markdownBody);
+
+    // return view('articles.show', [
+    //     'article' => $article,
+    //     'user' => $user,
+    //     'articleFavorites' => $articleFavorites,
+    //     'comments' => $comments,
+    //     'articleCategory' => $category, 
+    //     'convertedBody' => $convertedBody,
+    // ]);
+
+    return View::make('articles.show', [
         'article' => $article,
+        'convertedBody' => $convertedBody,
         'user' => $user,
         'articleFavorites' => $articleFavorites,
         'comments' => $comments,

@@ -62,8 +62,27 @@
                                     @foreach ($article->tags as $tag)
                                         <span class="bg-cyan-400 text-white">{{ $tag->name }}</span>
                                     @endforeach
-                                    <div>{{ $article->body }}</div>
-                                </div>
+                                    {{-- <div>{{ $article->body }}</div> --}}
+                                    {{-- <div>{!! $convertedBody !!}</div> --}}
+                                    {{-- <div>{!! $article->body !!}</div> --}}
+                                    {{-- <div>
+                                        {!! markdown($article->body) !!}
+                                    </div> --}}
+                                    {{-- @php
+                                        $parsedown = new Parsedown();
+                                    @endphp
+
+                                    {!! $parsedown->text($article->body ?? old('body')) !!} --}}
+                                    @php
+                                        $parsedown = new ParsedownExtra();
+                                    @endphp
+                                    
+
+                                    <div class="prose">
+                                        {!! $parsedown->text($article->body ?? old('body')) !!}
+                                    </div>
+
+
                                 <span class="text-gray-400 inline-flex items-center leading-none text-sm">
                                     <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none"
                                         stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -77,6 +96,8 @@
                         {{-- 自分以外のブログだったら表示のみ --}}
                     @else
                         <div>
+                            @stack('styles')
+                            @stack('scripts')
                             <a class="inline-flex items-center">
                                 <img alt="blog" src="https://dummyimage.com/104x104"
                                     class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
@@ -90,15 +111,20 @@
                                 </span>
                             </a>
                         </div>
-                        <h3 class="text-center font-semibold text-xl text-gray-800 leading-tight">
-							【{{$articleCategory->name}}】
-                            {{ $article->title }}</h3>
-                        <div
-                            class="mx-auto block max-w-lg rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-                            @foreach ($article->tags as $tag)
-                                <span class="bg-cyan-400 text-white">{{ $tag->name }}</span>
-                            @endforeach
-                            <div>{{ $article->body }}</div>
+                        <div>
+                            <h3 class="text-center font-semibold text-xl text-gray-800 leading-tight">
+                                【{{$articleCategory->name}}】
+                                {{ $article->title }}
+                            </h3>
+                            <div class="mx-auto block max-w-lg rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+                                @foreach ($article->tags as $tag)
+                                
+                                    <span class="bg-cyan-400 text-white">{{ $tag->name }}</span>
+                                @endforeach
+                                {{-- <div>{{$article->body}}</div> --}}
+                                <div>{!! $convertedBody !!}</div>
+                            </div>
+                            
                         </div>
                         <span class="text-gray-400 inline-flex items-center leading-none text-sm">
                             <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none"
@@ -241,7 +267,7 @@
         padding: 10px;
         margin-bottom: 10px;
     }
-
+    
     .comment-content {
         margin-bottom: 10px;
     }
@@ -253,6 +279,24 @@
         resize: vertical;
     }
 </style>
+
+<!-- 必要なスクリプトの読み込み -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<script>
+    // マークダウンをHTMLに変換して表示する関数
+    function displayMarkdownContent(markdown) {
+        const html = marked(markdown);
+        document.getElementById('markdownContent').innerHTML = html;
+    }
+
+    // ページの読み込み完了時にマークダウンを表示する処理を実行
+    window.addEventListener('DOMContentLoaded', () => {
+        const markdownContent = "{{ $article->body ?? '' }}"; // Laravelの変数からマークダウンを取得
+        displayMarkdownContent(markdownContent);
+    });
+</script>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -309,6 +353,7 @@
         });
     });
 </script>
+
 
 
 {{-- <x-answerpanel></x-answerpanel> --}}

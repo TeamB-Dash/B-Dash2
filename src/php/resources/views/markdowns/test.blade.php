@@ -20,4 +20,4 @@
 
 [リンク](https://example.com)
 
-![プロフィール画像](https://blog.capilano-fw.com/wp-content/uploads/2020/04/profile_piano_150x150.png)
+[プロフィール画像](https://blog.capilano-fw.com/wp-content/uploads/2020/04/profile_piano_150x150.png)
