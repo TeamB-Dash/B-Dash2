@@ -437,6 +437,9 @@ public function likeStore(Article $article)
 {
     $user = Auth::user();
 
+    // 現在のいいね数を取得
+    $likeCount = $article->likes->where('is_deleted', false)->count();
+
     $existingLike = ArticleLikes::where('user_id', $user->id)
         ->where('article_id', $article->id)
         ->first();
@@ -456,29 +459,31 @@ public function likeStore(Article $article)
         $like->is_deleted = false;
         $like->save();
     }
+     // いいね数を再取得
+     $likeCount = $article->likeCount();
 
-    return response()->json(['message' => 'いいねしました']); 
+    // return response()->json(['message' => 'いいねしました', 'likeCount' => $likeCount + 1]);
+    return response()->json(['message' => 'いいねしました', 'likeCount' => $likeCount]);
 }
 
 public function likeDestroy(Article $article)
 {
     $user = Auth::user();
+    
+    // 現在のいいね数を取得
+    $likeCount = $article->likes->where('is_deleted', false)->count();
 
+    
     $like = ArticleLikes::where('user_id', $user->id)
-        ->where('article_id', $article->id)
-        ->first();
-
+    ->where('article_id', $article->id)
+    ->first();
+    
     if ($like) {
         // いいねが存在する場合はis_deletedをtrueに更新
         $like->is_deleted = true;
         $like->save();
     }
-
-    return response()->json(['message' => 'いいねを解除しました']); 
+    
+    return response()->json(['message' => 'いいねを解除しました', 'likeCount' => $likeCount - 1]);
 }
-public function likeCount(Article $article)
-{
-    return $article->likes()->count();
-}
-
 }

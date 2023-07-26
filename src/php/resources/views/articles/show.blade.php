@@ -163,7 +163,7 @@
 @endif
 		</favorite-button>
 
-        <div id="likeButtonContainer">
+        {{-- <div id="likeButtonContainer">
             @if(Auth::user()->isLiked($article->id))
                 <button onclick="unlike({{ $article->id }})" class="btn unlike-btn">いいね解除</button>
             @else
@@ -175,7 +175,25 @@
             {{ $article->likes->where('is_deleted', false)->count() }} いいね
             @endif
                 </div>
-        <br>
+        <br> --}}
+
+ <!-- ボタンの表示を切り替える部分 -->
+<div id="likeButtonContainer">
+    @if(Auth::user()->isLiked($article->id))
+        <button onclick="unlike({{ $article->id }})" class="btn unlike-btn">いいね解除</button>
+    @else
+        <button onclick="like({{ $article->id }})" class="btn like-btn">いいね</button>
+    @endif
+</div>
+
+<!-- いいねの総数表示部分 -->
+<div id="likeCountContainer">
+    <span id="likeCount">{{ $article->likes->where('is_deleted', false)->count() }}</span> いいね
+</div>
+
+
+
+
 
 		<div class="pull-right article-user-link">
 			@if($article->user_id === Auth::id())
@@ -383,42 +401,60 @@
         });
     });
 
+    let isLiked = {{ (Auth::check() && $article->isLikedByUser(Auth::user()->id)) ? 'true' : 'false' }};
+    let likeCount = {{ $article->likes->where('is_deleted', false)->count() }};
+    let isProcessing = false;
+
     // いいねの処理
     function like(articleId) {
-        // Ajaxリクエストを送信
-        $.ajax({
-            url: `/like/${articleId}`,
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}'
-            },
-            success: function (response) {
-                console.log(response.message); // 成功した場合の処理（ここではコンソールに表示する）
-                updateLikeButton(true); // いいね解除ボタンに切り替える
-            },
-            error: function (xhr) {
-                console.log(xhr.responseText); // エラー時の処理（エラーメッセージをコンソールに表示する）
-            }
-        });
+        if (!isProcessing && !isLiked) {
+            isProcessing = true;
+            $.ajax({
+                url: `/like/${articleId}`,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    console.log(response.message);
+                    updateLikeButton(true); // いいね解除ボタンに切り替える
+                    updateLikeCount(response.likeCount); // 総数を更新する
+                    isLiked = true;
+                    likeCount = response.likeCount;
+                    isProcessing = false;
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                    isProcessing = false;
+                }
+            });
+        }
     }
 
     // いいね解除の処理
     function unlike(articleId) {
-        // Ajaxリクエストを送信
-        $.ajax({
-            url: `/unlike/${articleId}`,
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}'
-            },
-            success: function (response) {
-                console.log(response.message);
-                updateLikeButton(false); // いいねボタンに切り替える
-            },
-            error: function (xhr) {
-                console.log(xhr.responseText);
-            }
-        });
+        if (!isProcessing && isLiked) {
+            isProcessing = true;
+            $.ajax({
+                url: `/unlike/${articleId}`,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    console.log(response.message);
+                    updateLikeButton(false); // いいねボタンに切り替える
+                    updateLikeCount(response.likeCount); // 総数を更新する
+                    isLiked = false;
+                    likeCount = response.likeCount;
+                    isProcessing = false;
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                    isProcessing = false;
+                }
+            });
+        }
     }
 
     // いいねボタンの表示を切り替える関数
@@ -429,6 +465,12 @@
         } else {
             likeButtonContainer.innerHTML = '<button onclick="like({{ $article->id }})" class="btn like-btn">いいね</button>';
         }
+    }
+
+    // 総数を更新する関数
+    function updateLikeCount(likeCount) {
+        const likeCountContainer = document.getElementById('likeCount');
+        likeCountContainer.innerText = likeCount;
     }
 
 </script>
