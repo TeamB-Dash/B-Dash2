@@ -231,7 +231,7 @@ class QuestionController extends Controller
     public function commentStore(Request $request, Question $question)
     {
         $inputs = request()->validate([
-            'answer' => 'required|max:255'
+            'answer' => 'required|max:255',
         ]);
 
         $comments = QuestionAnswers::create([
@@ -244,6 +244,7 @@ class QuestionController extends Controller
             'is_deleted' => false,
 
         ]);
+        
 
         return redirect()->route('questions.show', ['question' => $question->id]);
 
@@ -267,6 +268,7 @@ class QuestionController extends Controller
         return redirect()->route('questions.show', ['question' => $question->id]);
     }
 
+
     public function commentDestroy(Question $question, QuestionAnswers $comment)
     {
         // $comment->delete();
@@ -276,4 +278,45 @@ class QuestionController extends Controller
 
         return redirect()->route('questions.show', ['question' => $question->id]);
     }
+
+    public function replyStore(Request $request, Question $question, QuestionAnswers $comment)
+{
+    $inputs = $request->validate([
+        'answer' => 'required|max:255',
+    ]);
+
+    $reply = new QuestionAnswers();
+    $reply->answer = $inputs['answer'];
+    $reply->user_id = auth()->user()->id;
+    $reply->question_id = $question->id;
+    $reply->is_reply = true;
+    $reply->reply_parent_id = $comment->id;
+    $reply->is_deleted = false;
+    $reply->save();
+
+    return redirect()->route('questions.show', ['question' => $question->id]);
+}
+
+public function replyUpdate(Request $request, Question $question, QuestionAnswers $reply)
+{
+    $inputs = $request->validate([
+        'answer' => 'required|max:255',
+    ]);
+
+    $reply->answer = $inputs['answer'];
+    $reply->save();
+
+    return redirect()->route('questions.show', ['question' => $question->id]);
+}
+
+public function replyDestroy(Question $question, QuestionAnswers $reply)
+{
+    $reply->is_deleted = true;
+    $reply->save();
+
+    return redirect()->route('questions.show', ['question' => $question->id]);
+}
+
+
+
 }
