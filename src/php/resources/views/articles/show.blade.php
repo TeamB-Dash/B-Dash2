@@ -163,13 +163,27 @@
 @endif
 		</favorite-button>
 
+        <div id="likeButtonContainer">
+            @if(Auth::user()->isLiked($article->id))
+                <button onclick="unlike({{ $article->id }})" class="btn unlike-btn">いいね解除</button>
+            @else
+                <button onclick="like({{ $article->id }})" class="btn like-btn">いいね</button>
+            @endif
+        </div>
+        <div id="likeCountContainer">
+            @if (!$article->is_deleted)
+            {{ $article->likes->where('is_deleted', false)->count() }} いいね
+            @endif
+                </div>
+        <br>
+
 		<div class="pull-right article-user-link">
 			@if($article->user_id === Auth::id())
 				<li><a class="bg-primary" href="{{ route('articles.myblog', Auth::id()) }}">マイブログへ</a></li>
 			@else
 				<a href="{{ route('articles.myblog', ['id' => $article->user_id]) }}"><span>{{ $article->user->name }}</span>さんのブログ一覧へ</a>
 			@endif
-		</div>
+		</div>    
 
 <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -278,6 +292,22 @@
         border-radius: 4px;
         resize: vertical;
     }
+    .like-btn, .unlike-btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        color: #ffffff;
+    }
+
+    .like-btn {
+        background-color: #2196F3;
+    }
+
+    .unlike-btn {
+        background-color: #f44336;
+    }
 </style>
 
 <!-- 必要なスクリプトの読み込み -->
@@ -352,6 +382,55 @@
             });
         });
     });
+
+    // いいねの処理
+    function like(articleId) {
+        // Ajaxリクエストを送信
+        $.ajax({
+            url: `/like/${articleId}`,
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                console.log(response.message); // 成功した場合の処理（ここではコンソールに表示する）
+                updateLikeButton(true); // いいね解除ボタンに切り替える
+            },
+            error: function (xhr) {
+                console.log(xhr.responseText); // エラー時の処理（エラーメッセージをコンソールに表示する）
+            }
+        });
+    }
+
+    // いいね解除の処理
+    function unlike(articleId) {
+        // Ajaxリクエストを送信
+        $.ajax({
+            url: `/unlike/${articleId}`,
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                console.log(response.message);
+                updateLikeButton(false); // いいねボタンに切り替える
+            },
+            error: function (xhr) {
+                console.log(xhr.responseText);
+            }
+        });
+    }
+
+    // いいねボタンの表示を切り替える関数
+    function updateLikeButton(isLiked) {
+        const likeButtonContainer = document.getElementById('likeButtonContainer');
+        if (isLiked) {
+            likeButtonContainer.innerHTML = '<button onclick="unlike({{ $article->id }})" class="btn unlike-btn">いいね解除</button>';
+        } else {
+            likeButtonContainer.innerHTML = '<button onclick="like({{ $article->id }})" class="btn like-btn">いいね</button>';
+        }
+    }
+
 </script>
 
 

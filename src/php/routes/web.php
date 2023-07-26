@@ -62,6 +62,10 @@ Route::middleware('auth')->group(function(){
         Route::post('/articles/{article}/comments', [ArticleController::class, 'commentStore'])->name('articles.commentStore');
         Route::patch('/articles/{article}/comments/{comment}', [ArticleController::class, 'commentUpdate'])->name('articles.commentUpdate');
         Route::delete('/articles/{article}/{comment}', [ArticleController::class, 'commentDestroy'])->name('articles.commentDestroy');
+        
+        // いいね関連のルーティング
+        Route::post('/like/{article}', [ArticleController::class, 'likeStore'])->name('articles.likeStore');
+        Route::post('/unlike/{article}', [ArticleController::class, 'likeDestroy'])->name('articles.likeDestroy');
     });
 
     // プロフィール関連のルート

@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Tag;
 use App\Models\ArticleFavorites;
 use App\Models\ArticleComments;
+use App\Models\ArticleLikes;
 use App\Services\RankingService;
 use App\Services\BadgeService;
 use Ramsey\Uuid\Type\Integer;
@@ -430,6 +431,54 @@ public function commentDestroy(Article $article, ArticleComments $comment)
 
 
     return redirect()->route('articles.show', ['article' => $article->id]);
+}
+
+public function likeStore(Article $article)
+{
+    $user = Auth::user();
+
+    $existingLike = ArticleLikes::where('user_id', $user->id)
+        ->where('article_id', $article->id)
+        ->first();
+
+    if ($existingLike) {
+        // 既にいいねが存在する場合
+        if ($existingLike->is_deleted) {
+            // 削除されている場合はis_deletedをfalseに更新
+            $existingLike->is_deleted = false;
+            $existingLike->save();
+        }
+    } else {
+        // 新しいいいねレコードを作成
+        $like = new ArticleLikes();
+        $like->user_id = $user->id;
+        $like->article_id = $article->id;
+        $like->is_deleted = false;
+        $like->save();
+    }
+
+    return response()->json(['message' => 'いいねしました']); 
+}
+
+public function likeDestroy(Article $article)
+{
+    $user = Auth::user();
+
+    $like = ArticleLikes::where('user_id', $user->id)
+        ->where('article_id', $article->id)
+        ->first();
+
+    if ($like) {
+        // いいねが存在する場合はis_deletedをtrueに更新
+        $like->is_deleted = true;
+        $like->save();
+    }
+
+    return response()->json(['message' => 'いいねを解除しました']); 
+}
+public function likeCount(Article $article)
+{
+    return $article->likes()->count();
 }
 
 }

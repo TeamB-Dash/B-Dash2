@@ -74,7 +74,10 @@ class Article extends Model
     return $this->belongsTo(ArticleCategories::class, 'article_category_id', 'id');
 }
 
-    
+public function likes(): HasMany
+{
+    return $this->hasMany(ArticleLikes::class);
+} 
 
     
 

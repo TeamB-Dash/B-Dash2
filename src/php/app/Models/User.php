@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Models\Article;
 use App\Models\Department;
 use App\Models\ArticleFavorites;
+use App\Models\ArticleLikes;
 use App\Models\MonthlyReport;
 use App\Models\Question;
 use App\Models\UserRole;
@@ -139,8 +140,15 @@ class User extends Authenticatable
     // ArticleLikesへの関連を定義
     public function articleLikes()
     {
-        return $this->belongsToMany(Article::class, 'article_likes')->withTimestamps();
+        // return $this->belongsToMany(Article::class, 'article_likes', 'user_id', 'article_id')->withTimestamps();
+        return $this->hasMany(ArticleLikes::class)->where('is_deleted', false);
     }
+
+    // この投稿に対して既にいいねしたかどうかを判別する
+public function isLiked($articleId)
+{
+    return $this->articleLikes()->where('article_id', $articleId)->exists();
+}
 
     // Badgeへの関連を定義
     public function badge()
