@@ -89,8 +89,6 @@ class ArticleController extends Controller
             });
         }
 
-
-
         // タグ検索
         $tagId = $request->input('tag_id');
         if (!empty($tagId)) {
@@ -186,25 +184,10 @@ class ArticleController extends Controller
         $category = $articleCategories->find($article->article_category_id);
         $comments = $comments->where('is_deleted', false)->get();
 
-        // $article = Article::where('slug', $slug)->first();
-        // マークダウンをhtmlに
-        // $article->body = Markdown::convert($article->body)->getContent();
-
         // マークダウンをHTMLに変換
-        // $converter = new CommonMarkConverter();
-        // $convertedBody = new HtmlString($converter->convertToHtml($article->body));
         $markdownBody = $article->body;
         $parsedown = new ParsedownExtra();
         $convertedBody = $parsedown->text($markdownBody);
-
-        // return view('articles.show', [
-        //     'article' => $article,
-        //     'user' => $user,
-        //     'articleFavorites' => $articleFavorites,
-        //     'comments' => $comments,
-        //     'articleCategory' => $category, 
-        //     'convertedBody' => $convertedBody,
-        // ]);
 
         return View::make('articles.show', [
             'article' => $article,
