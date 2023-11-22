@@ -74,8 +74,21 @@ class Article extends Model
     return $this->belongsTo(ArticleCategories::class, 'article_category_id', 'id');
 }
 
-    
+public function likes(): HasMany
+{
+    return $this->hasMany(ArticleLikes::class);
+} 
+ // いいね数をカウントする関数を定義
+    public function likeCount()
+    {
+        return $this->likes()->where('is_deleted', false)->count();
+    }
 
+    // この記事に対して、指定されたユーザーがいいねしたかどうかを判定する関数
+    public function isLikedByUser($userId)
+    {
+        return $this->likes()->where('user_id', $userId)->where('is_deleted', false)->exists();
+    }
     
 
 }

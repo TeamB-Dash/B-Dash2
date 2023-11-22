@@ -50,6 +50,11 @@
 </div>
 
 <!--Body input-->
+{{-- <div class="mb-6 min-h-[1.5rem] items-center justify-center">
+    <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ブログ内容</label> --}}
+    {{-- <textarea id="message" name="body" rows="30" required class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here...">{{ $article->body ?? old('body') }}</textarea> --}}
+    {{-- <textarea id="message" name="body" rows="30" required class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here...">{{ htmlspecialchars($article->body ?? old('body')) }}</textarea>
+</div> --}}
 <div class="mb-6 min-h-[1.5rem] items-center justify-center">
     <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ブログ内容</label>
     <textarea id="message" name="body" rows="30" required class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here...">{{ $article->body ?? old('body') }}</textarea>
@@ -57,8 +62,25 @@
 
 
 
+{{-- @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+<script>
+    const easyMDE = new EasyMDE({
+        showIcons: ['strikethrough', 'code', 'table', 'redo', 'heading', 'undo', 'heading-bigger', 'heading-smaller', 'heading-1', 'heading-2', 'heading-3', 'clean-block', 'horizontal-rule'], element: document.getElementById('markdown-editor')});
+</script>
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+<script>
+    const markdownParser = new EasyMDE({
+        element: document.getElementById('message'),
+    });
+</script>
+@endpush --}}
+
  {{-- タグ機能のjs --}}
- <script>
+ {{-- <script>
     const addTagBtn = document.getElementById('addTagBtn');
     const form = document.getElementById('tagForm');
     const closeIcons = document.querySelectorAll('.close-icon');
@@ -103,5 +125,58 @@
     addTagBtn.addEventListener('click', () => {
     form.appendChild(createNewForm());
     });
+</script> --}}
+
+<script>
+    // タグを追加するボタン
+    const addTagBtn = document.getElementById('addTagBtn');
+    // タグ入力フォームの親要素
+    const form = document.getElementById('tagForm');
+    // 「✖」をクリックしてタグを削除するアイコン
+    const closeIcons = document.querySelectorAll('.close-icon');
+    // タグの入力フォームの要素
+    const tagItems = document.querySelectorAll('.tag-item');
+
+    // 新しいタグ入力フォームを作成する関数
+    function createNewForm() {
+        const newDiv = document.createElement('div');
+        newDiv.classList.add('tag-item');
+
+        const newForm = document.createElement('input');
+        newForm.type = 'text';
+        newForm.className = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline-block w-2/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
+        newForm.setAttribute('name', 'tags[]');
+
+        const newLabel = document.createElement('label');
+        newLabel.textContent = 'タグ：';
+
+        const newSpan = document.createElement('span');
+        newSpan.classList.add('close-icon', 'text-white', 'rounded-full', 'bg-red-600', 'hover:bg-red-500', 'px-2', 'py-1');
+        newSpan.textContent = '✖';
+
+        newLabel.appendChild(newForm);
+        newDiv.appendChild(newLabel);
+        newDiv.appendChild(newSpan);
+
+        // 「✖」をクリックしたときの処理を追加
+        newSpan.addEventListener('click', () => {
+            newDiv.remove();
+        });
+
+        return newDiv;
+    }
+
+    // 「✖」をクリックしたときの処理
+    for (let j = 0; j < closeIcons.length; j++) {
+        closeIcons[j].addEventListener('click', () => {
+            tagItems[j].remove();
+        });
+    }
+
+    // ボタンをクリックしたときの処理
+    addTagBtn.addEventListener('click', () => {
+        form.appendChild(createNewForm());
+    });
 </script>
+
 

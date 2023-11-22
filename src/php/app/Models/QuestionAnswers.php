@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Question;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
 class QuestionAnswers extends Model
 {
     use HasFactory;
@@ -30,4 +29,12 @@ class QuestionAnswers extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
+//     public function isReply()
+// {
+//     return $this->is_reply;
+// }
+public function replies()
+{
+    return $this->hasMany(QuestionAnswers::class, 'reply_parent_id');
+}
 }

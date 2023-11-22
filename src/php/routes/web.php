@@ -42,6 +42,11 @@ Route::middleware('auth')->group(function(){
         Route::post('/questions/{question}/comments', [QuestionController::class, 'commentStore'])->name('questions.commentStore');
         Route::patch('/questions/{question}/comments/{comment}', [QuestionController::class, 'commentUpdate'])->name('questions.commentUpdate');
         Route::delete('/questions/{question}/{comment}', [QuestionController::class, 'commentDestroy'])->name('questions.commentDestroy');
+        
+        // リプライ関連
+        Route::post('/questions/{question}/comments/{comment}/reply', [QuestionController::class, 'replyStore'])->name('questions.replyStore');
+        Route::patch('/questions/{question}/comments/{reply}/update', [QuestionController::class, 'replyUpdate'])->name('questions.replyUpdate');
+        Route::delete('/questions/{question}/comments/{reply}', [QuestionController::class, 'replyDestroy'])->name('questions.replyDestroy');
     });
 
     //ブログ関連のルーティング
@@ -57,6 +62,10 @@ Route::middleware('auth')->group(function(){
         Route::post('/articles/{article}/comments', [ArticleController::class, 'commentStore'])->name('articles.commentStore');
         Route::patch('/articles/{article}/comments/{comment}', [ArticleController::class, 'commentUpdate'])->name('articles.commentUpdate');
         Route::delete('/articles/{article}/{comment}', [ArticleController::class, 'commentDestroy'])->name('articles.commentDestroy');
+        
+        // いいね関連のルーティング
+        Route::post('/like/{article}', [ArticleController::class, 'likeStore'])->name('articles.likeStore');
+        Route::post('/unlike/{article}', [ArticleController::class, 'likeDestroy'])->name('articles.likeDestroy');
     });
 
     // プロフィール関連のルート
