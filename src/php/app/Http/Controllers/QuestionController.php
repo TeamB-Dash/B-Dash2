@@ -28,12 +28,9 @@ class QuestionController extends Controller
     public function index(Request $request)
     {
 
-        $monthlyReportRanking = RankingService::MonthlyReportRanking();
-        $articleRanking = RankingService::ArticleRanking();
-        $rankingByNumberOfArticlesPerTag = RankingService::TagRanking();
+        list($questions, $filteredBy) = SearchService::searchQuestions($request);
 
-        list($questions,$filteredBy) = SearchService::searchQuestions($request);
-        return view('questions/index',compact('questions','monthlyReportRanking','articleRanking','rankingByNumberOfArticlesPerTag','filteredBy'));
+        return view('questions/index', compact('questions', 'filteredBy'));
     }
 
     /**
